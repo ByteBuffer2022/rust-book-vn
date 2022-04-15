@@ -1,20 +1,20 @@
-## Variables and Mutability
+## Biến (variables) và Tính biến đổi (Mutability)
 
-As mentioned in the [“Storing Values with
-Variables”][storing-values-with-variables]<!-- ignore --> section, by default
-variables are immutable. This is one of many nudges Rust gives you to write
-your code in a way that takes advantage of the safety and easy concurrency that
-Rust offers. However, you still have the option to make your variables mutable.
-Let’s explore how and why Rust encourages you to favor immutability and why
-sometimes you might want to opt out.
+Như đã đề cập trong phần [“Lưu trữ giá trị bằng các
+biến”][storing-values-with-variables]<!-- ignore -->, theo mặc định
+các biến có tính chất bất biến/không thể thay đổi (immutable). Đây là một trong số nhiều khuyến khích
+mà Rust cung cấp cho bạn để viết code theo cách tận dụng sự an toàn và đồng thời dễ dàng mà
+Rust cung cấp. Tuy nhiên, bạn vẫn có tùy chọn để làm cho các biến của bạn có thể thay đổi (mutable).
+Hãy cùng khám phá cách thức và lý do tại sao Rust khuyến khích bạn ưu tiên tính bất biến và tại sao
+đôi khi bạn có thể muốn chọn không tham gia.
 
-When a variable is immutable, once a value is bound to a name, you can’t change
-that value. To illustrate this, let’s generate a new project called *variables*
-in your *projects* directory by using `cargo new variables`.
+Khi một biến không thể thay đổi, khi một giá trị được liên kết với một tên, bạn không thể thay đổi
+giá trị đó. Để minh họa điều này, hãy tạo ra một dự án mới có tên *variables*
+trong thư mục *projects* của bạn bằng cách sử dụng `cargo new variables`.
 
-Then, in your new *variables* directory, open *src/main.rs* and replace its
-code with the following code. This code won’t compile just yet, we’ll first
-examine the immutability error.
+Sau đó, trong thư mục mới *variables*, mở *src/main.rs* và thay thế đoạn code của nó bằng đoạn code
+bên dưới. Code này sẽ chưa được biên dịch, đầu tiên chúng ta sẽ kiểm tra lỗi không thể thay đổi
+(immutability error).
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -22,40 +22,39 @@ examine the immutability error.
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-01-variables-are-immutable/src/main.rs}}
 ```
 
-Save and run the program using `cargo run`. You should receive an error
-message, as shown in this output:
+Lưu lại và chạy chương trình sử dụng `cargo run`. Bạn sẽ nhận được một thông báo lỗi,
+như được hiển thị trong đầu ra này:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-01-variables-are-immutable/output.txt}}
 ```
 
-This example shows how the compiler helps you find errors in your programs.
-Compiler errors can be frustrating, but really they only mean your program
-isn’t safely doing what you want it to do yet; they do *not* mean that you’re
-not a good programmer! Experienced Rustaceans still get compiler errors.
+Ví dụ này cho thấy cách trình biên dịch giúp bạn tìm ra lỗi trong chương trình.
+Lỗi trình biên dịch có thể gây khó chịu, nhưng thực sự chúng chỉ có ý nghĩa là
+chương trình của bạn chưa thực hiện một cách an toàn những gì bạn muốn; chúng *không* có nghĩa là
+bạn không phải là một lập trình viên giỏi! Các Rustacean có kinh nghiệm vẫn gặp lỗi trình biên dịch.
 
-The error message indicates that the cause of the error is that you `` cannot
-assign twice to immutable variable `x` ``, because you tried to assign a second
-value to the immutable `x` variable.
+Thông báo lỗi chỉ ra nguyên nhân lỗi là `` cannot
+assign twice to immutable variable `x` ``, bởi vì bạn đã cố gắng gán một giá trị thứ hai
+vào biến `x` không thể thay đổi.
 
-It’s important that we get compile-time errors when we attempt to change a
-value that’s designated as immutable because this very situation can lead to
-bugs. If one part of our code operates on the assumption that a value will
-never change and another part of our code changes that value, it’s possible
-that the first part of the code won’t do what it was designed to do. The cause
-of this kind of bug can be difficult to track down after the fact, especially
-when the second piece of code changes the value only *sometimes*. The Rust
-compiler guarantees that when you state a value won’t change, it really won’t
-change, so you don’t have to keep track of it yourself. Your code is thus
-easier to reason through.
+Điều quan trọng là chúng ta gặp lỗi compile-time khi chúng ta cố gắng thay đổi một giá trị
+được chỉ định là bất biến (immutable) bởi vì chính tình huống này có thể dẫn đến các bug.
+Nếu một phần code của chúng ta hoạt động dựa trên giả định rằng một giá trị sẽ không bao giờ
+thay đổi và một phần khác của đoạn code thay đổi giá trị đó, thì có thể phần đầu tiên của đoạn
+code sẽ không thực hiện những gì nó được thiết kế để làm. Nguyên nhân của loại bug này có thể khó
+lần ra sau thực tế, đặc biệt là khi đoạn code thứ hai chỉ *đôi lúc* thay đổi.
+Trình biên dịch Rust đảm bảo rằng khi bạn ghi một giá trị sẽ không thay đổi,
+nó sẽ thực sự không thay đổi, vì vậy bạn không cần phải tự theo dõi nó. Do đó,
+code của bạn dễ dàng lập luận hơn.
 
-But mutability can be very useful, and can make code more convenient to write.
-Variables are immutable only by default; as you did in Chapter 2, you can make
-them mutable by adding `mut` in front of the variable name. Adding `mut` also
-conveys intent to future readers of the code by indicating that other parts of
-the code will be changing this variable’s value.
+Nhưng khả năng thay đổi (mutability) có thể rất hữu ích và có thể giúp viết code thuận tiện hơn.
+Các biến chỉ immutable theo mặc định; như bạn đã làm trong Chương 2, bạn có thể làm cho chúng
+trở nên mutable bằng cách thêm `mut` vào trước tên biến. Việc thêm `mut` cũng
+truyền tải ý định đến những người đọc code trong tương lai bằng cách chỉ ra rằng các phần khác của 
+code sẽ thay đổi giá trị của biến này.
 
-For example, let’s change *src/main.rs* to the following:
+Ví dụ, hãy thay đổi *src/main.rs* thành như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -63,26 +62,24 @@ For example, let’s change *src/main.rs* to the following:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-02-adding-mut/src/main.rs}}
 ```
 
-When we run the program now, we get this:
+Khi chúng ta chạy chương trình bây giờ, chúng ta nhận được điều này:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-02-adding-mut/output.txt}}
 ```
 
-We’re allowed to change the value bound to `x` from `5` to `6` when `mut`
-is used. There are multiple trade-offs to consider in addition to the
-prevention of bugs. For example, in cases where you’re using large data
-structures, mutating an instance in place may be faster than copying and
-returning newly allocated instances. With smaller data structures, creating new
-instances and writing in a more functional programming style may be easier to
-think through, so lower performance might be a worthwhile penalty for gaining
-that clarity.
+Chúng ta được phép thay đổi giá trị gán của `x` từ `5` thành `6` khi sử dụng `mut`.
+Có nhiều sự đánh đổi cần cân nhắc ngoài việc ngăn ngừa bug. Ví dụ, trong trường hợp
+bạn đang sử dụng cấu trúc dữ liệu lớn, việc thay đổi một instance tại chỗ có thể
+nhanh hơn sao chép và trả lại các instance mới được phân bổ. Với cấu trức dữ liệu
+nhỏ hơn, việc tạo mới các instance và viết theo phong cách lập trình chức năng
+có thể dễ dàng hơn để suy nghĩ kỹ hơn, vì vậy hiệu suất thấp hơn có thể là
+một hình phạt đáng giá để đạt được sự rõ ràng đó.
 
-### Constants
+### Hằng số (constants)
 
-Like immutable variables, *constants* are values that are bound to a name and
-are not allowed to change, but there are a few differences between constants
-and variables.
+Giống như các biến immutable, *constants* là các giá trị được ràng buộc với một tên và
+không được phép thay đổi, nhưng có một vài khác biệt giữa hằng số và biến.
 
 First, you aren’t allowed to use `mut` with constants. Constants aren’t just
 immutable by default—they’re always immutable. You declare constants using the
