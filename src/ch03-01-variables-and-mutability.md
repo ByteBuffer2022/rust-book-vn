@@ -81,56 +81,55 @@ một hình phạt đáng giá để đạt được sự rõ ràng đó.
 Giống như các biến immutable, *constants* là các giá trị được ràng buộc với một tên và
 không được phép thay đổi, nhưng có một vài khác biệt giữa hằng số và biến.
 
-First, you aren’t allowed to use `mut` with constants. Constants aren’t just
-immutable by default—they’re always immutable. You declare constants using the
-`const` keyword instead of the `let` keyword, and the type of the value *must*
-be annotated. We’re about to cover types and type annotations in the next
-section, [“Data Types,”][data-types]<!-- ignore --> so don’t worry about the
-details right now. Just know that you must always annotate the type.
+Đầu tiên, bạn không được phép sử dụng `mut` với hằng số. Hằng số không chỉ
+immutable theo mặc định - chúng luôn luôn immutable. Bạn khai báo hằng số sử dụng từ khóa
+`const` thay vì từ khóa `let`, và kiểu dữ liệu của giá trị *buộc phải*
+được chú thích. Chúng ta sắp đề cập đến kiểu dữ liệu và chú thích kiểu dữ liệu trong
+phần tiếp theo, [“Các kiểu dữ liệu”][data-types]<!-- ignore --> vì vậy bây giờ đừng lo lắng
+về chi tiết. Chỉ biết rằng bạn phải luôn luôn chú thích kiểu dữ liệu.
 
-Constants can be declared in any scope, including the global scope, which makes
-them useful for values that many parts of code need to know about.
+Hằng số có thể được khai báo trong bất kì phạm vi nào, bao gồm cả phạm vi toàn cục (global scope),
+điều này làm chúng trở nên hữu ích cho các giá trị mà nhiều phần của code cần biết.
 
-The last difference is that constants may be set only to a constant expression,
-not the result of a value that could only be computed at runtime.
+Sự khác biệt cuối cùng là các hằng số chỉ có thể khai báo ở dạng biểu thức, chứ không phải
+kết quả của một giá trị chỉ có thể được tính toán lúc runtime.
 
-Here’s an example of a constant declaration:
+Dưới đây là một ví dụ về khai báo hằng số:
 
 ```rust
 const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 ```
 
-The constant’s name is `THREE_HOURS_IN_SECONDS` and its value is set to the
-result of multiplying 60 (the number of seconds in a minute) by 60 (the number
-of minutes in an hour) by 3 (the number of hours we want to count in this
-program). Rust’s naming convention for constants is to use all uppercase with
-underscores between words. The compiler is able to evaluate a limited set of
-operations at compile time, which lets us choose to write out this value in a
-way that’s easier to understand and verify, rather than setting this constant
-to the value 10,800. See the [Rust Reference’s section on constant
-evaluation][const-eval] for more information on what operations can be used
-when declaring constants.
+Tên của hằng số là `THREE_HOURS_IN_SECONDS` và giá trị của nó được thiết lập là
+kết quả của 60 (số giây trong một phút) nhân 60 (số phút trong một giờ)
+nhân 3 (số giờ chúng ta muốn đếm trong chương trình). Quy ước đặt tên hằng số
+của Rust là đặt tên với chữ in hoa và phân cách giữa các từ bằng dấu gạch dưới.
+Trình biên dịch có thể tính toán hạn chế một số phép toán ở thời điểm biên dịch,
+điều này cho phép chúng ta chọn viết ra giá trị này theo một cách dễ hiểu và dễ
+xác minh hơn, hơn là để giá trị 10,800 cho hằng số này.
+Hãy xem [Mục tham khảo của Rust về đánh giá hằng số][const-eval] để biết thêm
+thông tin về những phép toán có thể được dùng khi khai báo hằng số.
 
-Constants are valid for the entire time a program runs, within the scope they
-were declared in. This property makes constants useful for values in your
-application domain that multiple parts of the program might need to know about,
-such as the maximum number of points any player of a game is allowed to earn or
-the speed of light.
+Hằng số có hiệu lực trong toàn bộ thời gian chương trình chạy, trong phạm vi
+mà chúng được khai báo. Thuộc tính này làm cho hằng số trở nên hữu ích trong cho
+các giá trị trong miền ứng dụng của bạn mà nhiều phần của chương trình có thể cần biết,
+chẳng hạn như số điểm tối đa mà bất cứ người chơi nào trong game có thể kiếm được
+hoặc tốc độ ánh sáng.
 
-Naming hardcoded values used throughout your program as constants is useful in
-conveying the meaning of that value to future maintainers of the code. It also
-helps to have only one place in your code you would need to change if the
-hardcoded value needed to be updated in the future.
+Đặt tên cho các giá trị được mã hóa cứng được sử dụng trong suốt chương trình của bạn
+dưới dạng hằng số  rất hữu ích trong việc truyền đạt ý nghĩa của giá trị đó đến với những
+người bảo trì code trong tương lai. Nó cũng hữu ích khi chỉ có một vị trí trong code của bạn
+mà bạn sẽ cần thay đổi nếu giá trị được mã hóa cứng đó cần được cập nhật trong tương lai.
 
-### Shadowing
+### Phủ bóng (Shadowing)
 
-As you saw in the guessing game tutorial in [Chapter
-2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, you can declare a
-new variable with the same name as a previous variable. Rustaceans say that the
-first variable is *shadowed* by the second, which means that the second
-variable’s value is what the program sees when the variable is used. We can
-shadow a variable by using the same variable’s name and repeating the use of
-the `let` keyword as follows:
+Như bạn đã thấy trong bài hướng dẫn game đoán số trong [Chương 
+2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, bạn có thể khai báo
+một biến mới với cùng tên gọi như biến trước đó. Rustaceans nói rằng biến đầu
+tiên bị *phủ bóng (shadowed)* bởi biến thứ hai, điều này có nghĩa là giá trị của
+biến thứ hai là giá trị mà chương trình thấy khi biến đó được sử dụng. Chúng ta
+có thể phủ bóng một biến bằng cách sử dụng tên của biến đó và sử dụng lại từ khóa 
+`let` như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -138,51 +137,52 @@ the `let` keyword as follows:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-03-shadowing/src/main.rs}}
 ```
 
-This program first binds `x` to a value of `5`. Then it shadows `x` by
-repeating `let x =`, taking the original value and adding `1` so the value of
-`x` is then `6`. Then, within an inner scope, the third `let` statement also
-shadows `x`, multiplying the previous value by `2` to give `x` a value of `12`.
-When that scope is over, the inner shadowing ends and `x` returns to being `6`.
-When we run this program, it will output the following:
+Đầu tiên, chương trình gán `x` với giá trị `5`. Sau đó phủ bóng `x` bằng cách 
+lặp lại `let x =`, lấy giá trị ban đầu và cộng `1` do đó, giá trị của 
+`x` khi đó là `6`. Sau đó, trong phạm vi bên trong, câu lệnh `let` thứ ba cũng 
+phủ bóng `x`, nhân giá trị trước đó với `2` để `x` được giá trị là `12`.
+Khi phạm vi kết thúc, việc phủ bóng ở phạm vi bên trong kết thúc và `x` trả về giá trị `6`.
+Khi chúng ta chạy chương trình, đầu ra sẽ như sau:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-03-shadowing/output.txt}}
 ```
 
-Shadowing is different from marking a variable as `mut`, because we’ll get a
-compile-time error if we accidentally try to reassign to this variable without
-using the `let` keyword. By using `let`, we can perform a few transformations
-on a value but have the variable be immutable after those transformations have
-been completed.
+Phủ bóng khác với đánh dấu một biến với `mut`, bởi vì chúng ta sẽ gặp lỗi
+compile-time nếu chúng ta vô tình cố gắng gán lại cho biến này mà không 
+sử dụng từ khóa `let`. Bằng cách sử dụng `let`, chúng ta có thể  thực hiện
+một số phép biến đổi trên một giá trị nhưng biến đó không thể thay đổi được
+sau khi các phép biến đổi đó hoàn tất.
 
-The other difference between `mut` and shadowing is that because we’re
-effectively creating a new variable when we use the `let` keyword again, we can
-change the type of the value but reuse the same name. For example, say our
-program asks a user to show how many spaces they want between some text by
-inputting space characters, and then we want to store that input as a number:
+Sự khác biệt khác giữa `mut` and shadowing là do chúng ta đang tạo ra một biến
+mới một cách hiệu quả khi chúng ta sử dụng lại từ khóa `let`, chúng ta có thể
+thay đổi kiểu dữ liệu của giá trị nhưng sử dụng lại tên đó. Ví dụ, giả sử
+chương trình của chúng ta yêu cầu người dùng hiển thị bao nhiêu khoảng cách mà
+họ muốn giữa một số đoạn text bằng cách nhập các ký tự khoảng trắng và sau đó
+chúng ta muốn lưu trữ đầu vào đó dưới dạng số:
 
 ```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-04-shadowing-can-change-types/src/main.rs:here}}
 ```
 
-The first `spaces` variable is a string type and the second `spaces` variable
-is a number type. Shadowing thus spares us from having to come up with
-different names, such as `spaces_str` and `spaces_num`; instead, we can reuse
-the simpler `spaces` name. However, if we try to use `mut` for this, as shown
-here, we’ll get a compile-time error:
+Biến `spaces` đầu tiên có kiểu string và biến `spaces` thứ hai có kiểu
+số. Do đo shadowing giúp chúng ta không cần phải đặt các tên khác nhau như
+`spaces_str` và `spaces_num`; thay vào đó, chúng ta có thể sử dụng lại cái
+tên đơn giản hơn `spaces`. Tuy nhiên, nếu chúng ta cố gắng sử dụng `mut` cho
+việc này, chúng ta sẽ gặp lỗi compile-time như bên dưới:
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-05-mut-cant-change-types/src/main.rs:here}}
 ```
 
-The error says we’re not allowed to mutate a variable’s type:
+Lỗi cho biết chúng ta không được phép thay đổi kiểu dữ liệu của một biến:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-05-mut-cant-change-types/output.txt}}
 ```
 
-Now that we’ve explored how variables work, let’s look at more data types they
-can have.
+Bây giờ chúng ta đã khám phá cách các biến hoạt động, hãy cùng xem xét
+thêm các loại dữ liệu mà chúng có thể có.
 
 [comparing-the-guess-to-the-secret-number]:
 ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number
