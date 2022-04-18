@@ -17,7 +17,7 @@ truyền thống liên quan đến việc kiểm soát như vậy.
 
 ## Rust dành cho ai
 
-Rust lý tưởng cho nhiều người cho nhiều lý do. 
+Rust là lý tưởng cho nhiều người vì nhiều lý do. 
 Hãy xem xét một số nhóm quan trọng nhất.
 
 ### Nhóm các developer
@@ -147,8 +147,8 @@ khảo hơn. Phụ lục A bao gồm các từ khóa của Rust, Phụ lục B b
 Phụ lục C bao gồm các derivable traits được cung cấp bởi thư viện chuẩn, Phụ lục D bao gồm một số công
 cụ phát triển hữu ích và Phụ lục E giải thích các phiên bản Rust.
 
-Không có cách nào sai khi đọc cuốn sách này: nếu bạn muốn bỏ qua, hãy tiếp tục!
-Bạn có thể phải quay lại các chương trước đó nếu bạn gặp bất kỳ sự nhầm lẫn nào.
+Mọi phương pháp đọc cuốn sách này đều đúng: nếu bạn muốn bỏ qua chương nào đó, hãy làm điều đó .
+Bạn có thể phải quay lại các chương trước đó nếu bạn gặp bất kỳ sự khó hiểu nào.
 Nhưng hãy làm bất cứ điều gì có ích cho bạn.
 
 <span id="ferris"></span>
