@@ -47,10 +47,46 @@ Nếu tham số truyền vào trùng tên với tên trường dữ liệu, ta c
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-05/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 5-5: A `build_user` function that uses field init
-shorthand because the `email` and `username` parameters have the same name as
-struct fields</span>
+<span class="caption">Listing 5-5: Hàm `build_user` sử dụng cách khởi tạo mới bởi vì `email` và `username` ở tham số truyền vào trùng tên với tên trường dữ liệu struct</span>
 
+Ở đây, chúng ta tạo mới một instance của User struct, có trường `email`. Ta cũng muốn gán giá trị của trường `email` bởi giá trị của tham số `email` truyền vào hàm `build_user`. Do chúng đều có cùng tên, nên ta chỉ cần viết `email` thay vì `email:email`.
+
+### Tạo Instances từ Instances khác với Struct Update Syntax
+
+Việc tạo ra một instance từ một instance khác gần giống nhau là một việc làm rất phổ biến trong lập trình. Với Rust, bạn có thể sử dụng *struct update syntax*.
+
+Đầu tiên, Listing 5-6 sẽ cho ta thấy cách tạo User instance một cách thông thường, không sử dụng *update syntax*. Ta sẽ gán giá trị mới cho trường `email`, còn các trường còn lại sẽ giữ nguyên như ở `user1` trong Listing 5-2.
+
+```rust
+{{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-06/src/main.rs:here}}
+```
+
+<span class="caption">Listing 5-6: Tạo mới `User` instance sử dụng lại một vài giá trị của `user1`</span>
+
+Sử dụng struct syntax update, ta có thể có kết quả tương tự nhưng với ít dòng code hơn, như ở Listing 5-7. Cú pháp `..` chú thích rằng các trường còn lại không được khai báo một cách tường minh sẽ có cùng một giá trị với instance cho trước.
+
+```rust
+{{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-07/src/main.rs:here}}
+```
+
+<span class="caption">Listing 5-7: Sử dụng struct update syntax để gán giá trị cho
+`email` của `User` instance nhưng sử dụng các giá trị còn lại từ `user1`</span>
+
+Đoạn code ở Listing 5-7 tạo ra instance `user2` khác `email` nhưng lại giống `username`, `active` và `sign_in_count` với `user1`. Cú pháp `..user1` phải được đặt ở cuối để thể hiện rằng các giá trị còn lại sẽ phải bằng với các trường tương ứng của `user1`.
+
+Chú ý rằng struct update syntax sử dụng `=` như một phép gán; điều này có đươc là bởi vì nó đã chuyển quyền sở hữu dữ liệu (move), như chúng ta đã biết trong phần [“Ways Variables and Data Interact: Move”][move]<!-- ignore -->. Ở trong ví dụ này, ta không thể sử dung `user1` sau khi đã tạo `user2` vì `String` trong trường `username` của `user1` đã chuyển quyền sở hữu (move) vào trong `user2`. Do đó, ta chỉ có thể sử dụng `active` và `sign_in_count` từ `user1`. Kiểu dữ liệu của `active` và `sign_in_count` là những kiểu đã implement `Copy` trait, vì vậy các hành vi (behavior) mà ta đã bàn trong phần [“Stack-Only Data: Copy”][copy]<!-- ignore --> có thể dùng để giải thích.
+
+### Sử dụng Tuple Structs
+
+Rust cũng hỗ trợ tạo structs trông giống như tuples, được gọi là *tuple struct*. Tuple structs không có tên của các trường dữ liệu trong struct đó; chúng chỉ có các kiểu dữ liệu. Tuple structs rất hữu dụng khi bạn muốn tạo cho tuple đó một cái tên và khiến cho chúng khác với những tuples còn lại.
+
+Để định nghĩa một tuple struct, hãy bắt đầu với từ khóa `struct` và tên của struct, sau đó đến kiểu dữ liệu trong tuple. Ví dụ, hãy tạo hai tuple structs có tên là `Color` và `Point`:
+
+```rust
+{{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/no-listing-01-tuple-structs/src/main.rs}}
+```
+
+Chú ý rằng `black` và `origin` có kiểu dữ liệu khác nhau. Mỗi struct bạn định nghĩa đều có kiểu riêng của nó, kể cả khi các trường trong struct đó có chung một kiểu dữ liệu. Ví dụ, một hàm truyền tham số kiểu `Color` không thể nhận tham số truyền vào kiểu `Point`, kể cả khi chúng đều có chung kiểu dữ liệu của từng trường (là `i32`). Mặt khác, instance của  tuple struct có thể sự dụng như một tuple: bạn có thể tách chúng thành nhiều phần bằng cách sử dụng `.` để truy cập đến từng trường.
 > ### Ownership of Struct Data
 >
 > In the User struct definition in Listing 5-1, we used the owned String
