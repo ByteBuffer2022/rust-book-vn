@@ -10,7 +10,7 @@ Structs tương tự như tuples (trình bày tại phần ["The Tuple Type"][tu
 
 <span class="caption">Listing 5-1: Định nghĩa một struct có tên `User`</span>
 
-Để sử dụng struct sau khi đã định nghĩa, chúng ta sẽ tạo ra một *instance* của struct đó bằng cách đặt giá trị cho từng trường. Một instance được tạo ra bắt đầu bằng tên struct, bên trong cặp ngoặc nhọn sẽ chứa các cặp `khóa: giá trị` (`key: value`), trong đó keys đại diện cho tên của từng trường và value thể hiện cho giá trị cần lưu của trưởng đó trong struct. Nói một cách khác, struct như một bản mẫu chung cho kiểu dữ liệu, còn instances sẽ hoàn thiện struct đó bằng cách *điền* các giá trị vào mẫu chung đó. Ví dụ, ta có thể khởi tạo một user cụ thể như sau.
+Để sử dụng struct sau khi đã định nghĩa, chúng ta sẽ tạo ra một *instance* của struct đó bằng cách đặt giá trị cho từng trường. Một instance được tạo ra bắt đầu bằng tên struct, bên trong cặp ngoặc nhọn sẽ chứa các cặp `khóa: giá trị` (`key: value`), trong đó keys đại diện cho tên của từng trường và value thể hiện cho giá trị cần lưu của trường đó trong struct. Nói một cách khác, struct như một bản mẫu chung cho kiểu dữ liệu, còn instances sẽ hoàn thiện struct đó bằng cách *điền* các giá trị vào mẫu chung đó. Ví dụ, ta có thể khởi tạo một user cụ thể như sau.
 
 ```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-02/src/main.rs:here}}
@@ -36,12 +36,12 @@ Listing 5-4 cho ta thấy một hàm `build_user` trả về  một `User` insta
 
 <span class="caption">Listing 5-4: Hàm `build_user` trả về  `User` instance với email và username</span>
 
-Đặt tên các tham số truyền vào của hàm trùng với tên của các trường trong struct sẽ giúp chương trình dễ đọc hơn, tuy nhiên việc này sẽ khiến ta cảm thấy hơi "tẻ nhạt". Việc này sẽ khiến bạn cảm thấy hơi khó chịu nếu gặp một struct phức tạp. May mắn thay, ta đã có một cách thuận tiện hơn!
+Đặt tên các tham số truyền vào của hàm trùng với tên của các trường trong struct sẽ giúp chương trình dễ đọc hơn, tuy nhiên việc này sẽ khiến ta cảm thấy hơi "khó chịu" nếu gặp một struct phức tạp. May mắn thay, ta đã có một cách thuận tiện hơn!
 
 <a id="using-the-field-init-shorthand-when-variables-and-fields-have-the-same-name"></a>
-### Using the Field Init Shorthand
+### Khởi tạo vắn tắt (Field Init Shorthand)
 
-Nếu tham số truyền vào trùng tên với tên trường dữ liệu, ta có thể sử dụng cú pháp viết tắt (*field init shorthand*) để viết lại như sau.
+Nếu tham số truyền vào trùng tên với tên trường dữ liệu, ta có thể sử dụng cú pháp vắn tắt (*field init shorthand*) để viết lại như sau.
 
 ```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-05/src/main.rs:here}}
@@ -53,7 +53,7 @@ Nếu tham số truyền vào trùng tên với tên trường dữ liệu, ta c
 
 ### Tạo Instances từ Instances khác với Struct Update Syntax
 
-Việc tạo ra một instance từ một instance khác gần giống nhau là một việc làm rất phổ biến trong lập trình. Với Rust, bạn có thể sử dụng *struct update syntax*.
+Việc tạo ra một instance từ một instance khác gần giống nó là một việc làm rất phổ biến trong lập trình. Với Rust, bạn có thể sử dụng *struct update syntax*.
 
 Đầu tiên, Listing 5-6 sẽ cho ta thấy cách tạo User instance một cách thông thường, không sử dụng *update syntax*. Ta sẽ gán giá trị mới cho trường `email`, còn các trường còn lại sẽ giữ nguyên như ở `user1` trong Listing 5-2.
 
@@ -74,11 +74,11 @@ Sử dụng struct syntax update, ta có thể có kết quả tương tự như
 
 Đoạn code ở Listing 5-7 tạo ra instance `user2` khác `email` nhưng lại giống `username`, `active` và `sign_in_count` với `user1`. Cú pháp `..user1` phải được đặt ở cuối để thể hiện rằng các giá trị còn lại sẽ phải bằng với các trường tương ứng của `user1`.
 
-Chú ý rằng struct update syntax sử dụng `=` như một phép gán; điều này có đươc là bởi vì nó đã chuyển quyền sở hữu dữ liệu (move), như chúng ta đã biết trong phần [“Ways Variables and Data Interact: Move”][move]<!-- ignore -->. Ở trong ví dụ này, ta không thể sử dung `user1` sau khi đã tạo `user2` vì `String` trong trường `username` của `user1` đã chuyển quyền sở hữu (move) vào trong `user2`. Do đó, ta chỉ có thể sử dụng `active` và `sign_in_count` từ `user1`. Kiểu dữ liệu của `active` và `sign_in_count` là những kiểu đã implement `Copy` trait, vì vậy các hành vi (behavior) mà ta đã bàn trong phần [“Stack-Only Data: Copy”][copy]<!-- ignore --> có thể dùng để giải thích.
+Chú ý rằng struct update syntax sử dụng `=` như một phép gán; điều này có đươc là bởi vì nó đã chuyển quyền sở hữu dữ liệu (move), như chúng ta đã biết trong phần [“Ways Variables and Data Interact: Move”][move]<!-- ignore -->. Ở trong ví dụ này, ta không thể sử dung `user1` sau khi đã tạo `user2` vì `String` trong trường `username` của `user1` đã chuyển quyền sở hữu (move) vào trong `user2`. Do đó, ta chỉ có thể sử dụng `active` và `sign_in_count` từ `user1`. Kiểu dữ liệu của `active` và `sign_in_count` là những kiểu đã implement `Copy` trait, các bạn có thể xem thêm phần [“Stack-Only Data: Copy”][copy]<!-- ignore --> để hiểu hơn.
 
 ### Sử dụng Tuple Structs
 
-Rust cũng hỗ trợ tạo structs trông giống như tuples, được gọi là *tuple struct*. Tuple structs không có tên của các trường dữ liệu trong struct đó; chúng chỉ có các kiểu dữ liệu. Tuple structs rất hữu dụng khi bạn muốn tạo cho tuple đó một cái tên và khiến cho chúng khác với những tuples còn lại.
+Rust cũng hỗ trợ tạo structs trông giống như tuples, được gọi là *tuple struct*. Tuple structs không có tên của các trường dữ liệu trong struct đó; chúng chỉ có các kiểu dữ liệu. Tuple structs rất hữu dụng khi bạn muốn tạo cho tuple đó một cái tên và khiến cho chúng nổi bật hơn so với những tuples còn lại.
 
 Để định nghĩa một tuple struct, hãy bắt đầu với từ khóa `struct` và tên của struct, sau đó đến kiểu dữ liệu trong tuple. Ví dụ, hãy tạo hai tuple structs có tên là `Color` và `Point`:
 
