@@ -87,6 +87,16 @@ Rust cũng hỗ trợ tạo structs trông giống như tuples, được gọi l
 ```
 
 Chú ý rằng `black` và `origin` có kiểu dữ liệu khác nhau. Mỗi struct bạn định nghĩa đều có kiểu riêng của nó, kể cả khi các trường trong struct đó có chung một kiểu dữ liệu. Ví dụ, một hàm truyền tham số kiểu `Color` không thể nhận tham số truyền vào kiểu `Point`, kể cả khi chúng đều có chung kiểu dữ liệu của từng trường (là `i32`). Mặt khác, instance của  tuple struct có thể sự dụng như một tuple: bạn có thể tách chúng thành nhiều phần bằng cách sử dụng `.` để truy cập đến từng trường.
+
+### Unit-like Structs
+
+Bạn có thể định nghĩa một struct mà không hề có bất kì một trường dữ liệu nào! Những kiểu structs này được gọi là *unit-like structs* vì chúng tương tự như `()`, là một kiểu dữ liệu được đề cập trong phần [“The Tuple Type”][tuples]<!-- ignore -->. Unit-like structs rất thích hợp khi bạn muốn implement một *trait* và không có bất kì dữ liệu nào cần lưu trữ. Ta sẽ bàn thêm về *trait* ở chương 10. Sau đây là ví dụ về việc tạo unit struct có tên là `AlwaysEqual`.
+
+```rust
+{{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/no-listing-04-unit-like-structs/src/main.rs}}
+```
+
+Để định nghĩa `AlwaysEqual`, ta sử dụng từ khóa `struct` đi kèm với tên mình muốn, kết thúc bởi dấu chấm phẩy và không cần có ngoặc nhọn hay ngoặc đơn đi kèm! Khi đó ta có thể tạo ra một instance của `AlwaysEqual` là `subject`.
 > ### Ownership of Struct Data
 >
 > In the User struct definition in Listing 5-1, we used the owned String
