@@ -1,13 +1,3 @@
-# Using Structs to Structure Related Data
+# Sử dụng Structs để "đóng gói" các trường dữ liệu có liên quan
 
-A *struct*, or *structure*, is a custom data type that lets you package
-together and name multiple related values that make up a meaningful group. If
-you’re familiar with an object-oriented language, a *struct* is like an
-object’s data attributes. In this chapter, we’ll compare and contrast tuples
-with structs to build on what you already know and demonstrate when structs are
-a better way to group data. We’ll demonstrate how to define and instantiate
-structs. We’ll discuss how to define associated functions, especially the kind
-of associated functions called *methods*, to specify behavior associated with a
-struct type. Structs and enums (discussed in Chapter 6) are the building blocks
-for creating new types in your program’s domain to take full advantage of
-Rust’s compile time type checking.
+Một *struct*, hay *structure*, có thể coi là một kiểu dữ liệu mà lập trình viên tự định nghĩa, được tạo ra để nhóm các giá trị có mối liên hệ với nhau và tạo thành một tập giá trị có ý nghĩa. Nếu bạn đã quen thuộc với lập trình hướng đối tượng (object-oriented language - OOP), *struct* giống như khái niệm *object* ở trong đó. Trong chương này, chúng ta sẽ so sánh *struct* trong Rust và kiểu *struct* mà bạn đã biết, khi nào nên sử dụng *struct*, làm cách nào để định nghĩa và khởi tạo một struct, hay làm sao để tạo ra một *associated function* (một trong những *associated function* phổ biến đó chính là *method*). *Method* trong Rust cũng tương tự như trong OOP, dùng để mô tả một hành vi (behavior) cụ thể của một struct. Structs và enums (trong chương 6) là một trong những cách tạo kiểu dữ liệu mới mà có thể tận dụng tối đa tính năng kiểm tra kiểu dữ liệu (type checking) tại thời điểm biên dịch (compile time).
