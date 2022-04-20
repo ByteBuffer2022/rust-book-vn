@@ -98,17 +98,11 @@ Bạn có thể định nghĩa một struct mà không hề có bất kì một 
 
 Để định nghĩa `AlwaysEqual`, ta sử dụng từ khóa `struct` đi kèm với tên mình muốn, kết thúc bởi dấu chấm phẩy và không cần có ngoặc nhọn hay ngoặc đơn đi kèm! Khi đó ta có thể tạo ra một instance của `AlwaysEqual` là `subject`.
 > ### Ownership of Struct Data
+> 
+> User struct định nghĩa ở Listing 5-1 dùng kiểu String thay vì dùng &str. Việc này là có chủ ý vì ta muốn struct sở hữu toàn bộ dữ liệu bên trong nó, như vậy vòng đời của dữ liệu sẽ ngang bằng với vòng đời của struct.
 >
-> In the User struct definition in Listing 5-1, we used the owned String
-> type rather than the &str string slice type. This is a deliberate choice
-> because we want each instance of this struct to own all of its data and for
-> that data to be valid for as long as the entire struct is valid.
->
-> It’s also possible for structs to store references to data owned by something
-> else, but to do so requires the use of *lifetimes*, a Rust feature that we’ll
-> discuss in Chapter 10. Lifetimes ensure that the data referenced by a struct
-> is valid for as long as the struct is. Let’s say you try to store a reference
-> in a struct without specifying lifetimes, like the following; this won’t work:
+> Struct hoàn toàn có thể lưu trữ các tham chiếu, nhưng để làm được điều đó thì cần sử dụng tới *lifetimes*, một tính năng của Rust sẽ được đề cập đến trong chương 10.
+> Lifetimes sẽ đảm bảo rằng dữ liệu trong struct sẽ có vòng đời ít nhất là ngang với vòng đời của chính struct đó. Nếu bạn làm như ví dụ sau, lỗi sẽ xảy ra:
 >
 > <span class="filename">Filename: src/main.rs</span>
 >
@@ -133,7 +127,7 @@ Bạn có thể định nghĩa một struct mà không hề có bất kì một 
 > }
 > ```
 >
-> The compiler will complain that it needs lifetime specifiers:
+> Compiler sẽ nói rằng bạn cần dùng lifetime:
 >
 > 
 > ```console
@@ -170,9 +164,7 @@ Bạn có thể định nghĩa một struct mà không hề có bất kì một 
 > error: could not compile `structs` due to 2 previous errors
 > ```
 >
-> In Chapter 10, we’ll discuss how to fix these errors so you can store
-> references in structs, but for now, we’ll fix errors like these using owned
-> types like String instead of references like &str.
+> Trong chương 10, ta sẽ tìm hiểu cách để sửa lỗi trên. Còn hiện tại, hãy cứ sử dụng String thay vì &str.
 
 <!-- manual-regeneration
 for the error above
