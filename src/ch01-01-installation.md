@@ -1,4 +1,4 @@
-## Cài dặt
+## Cài đặt
 
 Đầu tiên chúng ta phải cài Rust. Chúng ta sẽ cài Rust thông qua `rustup` - Command line tool 
 quản lý phiên bản Rust và các tool liên quan.

@@ -30,7 +30,7 @@ Với Windows CMD:
 
 ### Viết và chạy một chương trình Rust
 
-Tiếp theo, tạo một file tên *main.rs*. Rust file luôn kết thúc với đuôi *.rs*. Nếu có hay từ
+Tiếp theo, tạo một file tên *main.rs*. Rust file luôn kết thúc với đuôi *.rs*. Nếu có hai từ
 trong tên file, hãy thêm dấu gạch dưới để tách nó. Ví dụ, dùng *hello_world.rs* thay vì *helloworld.rs*.
 
 Bây giờ mở file *main.rs* và nhập đoạn code ở Mục 1-1.
