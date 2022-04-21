@@ -146,7 +146,7 @@ $ ./main # hoặc .\main.exe trên Windows
 
 Nếu *main.rs* là chương trình “Hello, world!”, terminal sẽ in ra `Hello, world!`
 
-Rust là ngôn ngữ đi trước thời đại, bạn
+Rust là ngôn ngữ biên dịch trước, bạn
 có thể biên dịch 1 chương trình và đưa file thực thi cho người khác, và họ có thể chạy nó mà không
 cần cài đặt Rust. Nếu bạn đưa người khác một file *.rb*, *.py*, hoặc
 *.js* họ cần cài Ruby, Python, JavaScript để chạy nó. Đánh đổi lại, các ngôn ngữ đó
