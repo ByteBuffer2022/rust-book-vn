@@ -49,9 +49,6 @@ Cách dễ nhất là cài [Build Tools for Visual Studio 2019][visualstudio]. H
 [install]: https://www.rust-lang.org/tools/install
 [visualstudio]: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
-The rest of this book uses commands that work in both *cmd.exe* and PowerShell.
-If there are specific differences, we’ll explain which to use.
-
 ### Cập nhật và gỡ cài đặt
 
 Sau khi cài Rust bằng `rustup`, bạn có thể cập nhật phiên bản mới nhất bằng lệnh:
