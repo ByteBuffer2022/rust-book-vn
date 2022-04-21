@@ -28,13 +28,13 @@ Structs tương tự như tuples (trình bày tại phần ["The Tuple Type"][tu
 
 Chú ý rằng instance này phải thay đổi được (mutable); Rust không cho phép chúng ta đánh dấu mutable cho các trường dữ liệu bên trong struct. Ta cũng có thể tạo ra một instance và đặt nó ở cuối của thân hàm (last expression) để ngầm định giá trị trả về cho hàm đó.
 
-Listing 5-4 cho ta thấy một hàm `build_user` trả về  một `User` instance với email và username. Trường `active` có giá trị `true` và trường `sign_in_count` có giá trị 1.
+Listing 5-4 cho ta thấy một hàm `build_user` trả về một `User` instance với email và username. Trường `active` có giá trị `true` và trường `sign_in_count` có giá trị 1.
 
 ```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-04/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 5-4: Hàm `build_user` trả về  `User` instance với email và username</span>
+<span class="caption">Listing 5-4: Hàm `build_user` trả về `User` instance với email và username</span>
 
 Đặt tên các tham số truyền vào của hàm trùng với tên của các trường trong struct sẽ giúp chương trình dễ đọc hơn, tuy nhiên việc này sẽ khiến ta cảm thấy hơi "khó chịu" nếu gặp một struct phức tạp. May mắn thay, ta đã có một cách thuận tiện hơn!
 
@@ -86,7 +86,7 @@ Rust cũng hỗ trợ tạo structs trông giống như tuples, được gọi l
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/no-listing-01-tuple-structs/src/main.rs}}
 ```
 
-Chú ý rằng `black` và `origin` có kiểu dữ liệu khác nhau. Mỗi struct bạn định nghĩa đều có kiểu riêng của nó, kể cả khi các trường trong struct đó có chung một kiểu dữ liệu. Ví dụ, một hàm truyền tham số kiểu `Color` không thể nhận tham số truyền vào kiểu `Point`, kể cả khi chúng đều có chung kiểu dữ liệu của từng trường (là `i32`). Mặt khác, instance của  tuple struct có thể sự dụng như một tuple: bạn có thể tách chúng thành nhiều phần bằng cách sử dụng `.` để truy cập đến từng trường.
+Chú ý rằng `black` và `origin` có kiểu dữ liệu khác nhau. Mỗi struct bạn định nghĩa đều có kiểu riêng của nó, kể cả khi các trường trong struct đó có chung một kiểu dữ liệu. Ví dụ, một hàm truyền tham số kiểu `Color` không thể nhận tham số truyền vào kiểu `Point`, kể cả khi chúng đều có chung kiểu dữ liệu của từng trường (là `i32`). Mặt khác, instance của tuple struct có thể sự dụng như một tuple: bạn có thể tách chúng thành nhiều phần bằng cách sử dụng `.` để truy cập đến từng trường.
 
 ### Unit-like Structs
 
