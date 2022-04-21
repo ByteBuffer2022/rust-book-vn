@@ -42,7 +42,7 @@ nó sẽ không tạo Git repository mới. Nếu bạn vẫn muốn tạo Git r
 > Note: Git là hệ thống quản lý phiên bản phổ biến. Bạn có thể dùng hệ thống quản lý phiên bản khác
 > với cờ `--vcs`. Sử dụng `cargo new --help` để xem những options có thể chọn.
 
-Mở file *Cargo.toml*.  Nó sẽ giống với code ở Listing 1-2.
+Mở file *Cargo.toml*. Nó sẽ giống với code ở Listing 1-2.
 
 <span class="filename">Filename: Cargo.toml</span>
 
@@ -69,7 +69,7 @@ Chúng ta sẽ nói về `edition` trong phần [Appendix E][appendix-e]<!-- ign
 
 Dòng cuối, `[dependencies]`, là bắt đầu của một đoạn liệt kê các dependency của project.
 Trong Rust, các package được coi như các *crate*. Chúng ta không cần bất kỳ crate nào cho project này, 
-nhưng chúng ta sẽ cần trong project đầu tiên ở Chương 2, nên chũng ta sẽ sử dùng đoạn khai báo dependencies này sau.
+nhưng chúng ta sẽ cần trong project đầu tiên ở Chương 2, nên chúng ta sẽ sử dùng đoạn khai báo dependencies này sau.
 
 Giờ mở file *src/main.rs* và xem thử:
 
@@ -81,7 +81,7 @@ fn main() {
 }
 ```
 
-Cargo đã tạo ra một chương trình “Hello, world!” cho bạn, giống như cái chúng ta đã viện trong Listing 1-1! 
+Cargo đã tạo ra một chương trình “Hello, world!” cho bạn, giống như cái chúng ta đã viết trong Listing 1-1! 
 Cho đến giờ, điểm khác biệt giữa project trước và project Cargo tạo ra là Cargo đặt code bên trong thư mục *src*,
 và chúng ta có một file cấu hình *Cargo.toml* ở thư mục ngoài cùng.
 
@@ -89,7 +89,7 @@ Cargo yêu cầu những file mã nguồn của bạn nằm trong thư mục *sr
 README, thông tin bản quyền, các file cấu hình, và những thứ không liên quan tới code. 
 Việc sử dụng Cargo giúp bạn tổ chức project khoa học hơn.
 
-Nếu bạn đã tạp một project mà không sử dụng Cargo, như project “Hello, world!”,
+Nếu bạn đã tạo một project mà không sử dụng Cargo, như project “Hello, world!”,
 bạn có thể chuyển nó thành một project sử dụng Cargo. Chuyển code vào trong thư mục *src* và tạo một
 file *Cargo.toml* phù hợp.
 
@@ -128,7 +128,7 @@ $ cargo run
 Hello, world!
 ```
 
-Lưu ý rằng lần này chúng ta không nhìn thấy output chỉ ra rằng Cargo đang biên dịc `hello_cargo`.
+Lưu ý rằng lần này chúng ta không nhìn thấy output chỉ ra rằng Cargo đang biên dịch `hello_cargo`.
 Cargo thấy rằng các file không thay đổi nên nó chỉ thực thi file nhị phân. 
 Nếu bạn đã sửa source code, Cargo sẽ build lại project trước khi chạy nó và bạn sẽ nhìn thấy output này:
 
