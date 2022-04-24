@@ -1,19 +1,19 @@
 ## Comments
 
-All programmers strive to make their code easy to understand, but sometimes
-extra explanation is warranted. In these cases, programmers leave *comments* in
-their source code that the compiler will ignore but people reading the source
-code may find useful.
+Tất cả lập trình viên đều cố gắng làm cho code dễ hiểu, nhưng đôi khi cần
+những lời giải thích thêm. Trong các trường hợp này, lập trình viên sẽ để
+lại *comments* trong code, trình biên dịch sẽ bỏ qua các comment này nhưng
+chúng lại có thể có ích cho những ai đọc code.
 
-Here’s a simple comment:
+Đây là một comment đơn giản:
 
 ```rust
 // hello, world
 ```
 
-In Rust, the idiomatic comment style starts a comment with two slashes, and the
-comment continues until the end of the line. For comments that extend beyond a
-single line, you’ll need to include `//` on each line, like this:
+Trong Rust, comment bắt đầu với hai dấu gạch chéo và kéo dài cho đến cuối
+dòng. Đối với các comment vượt quá một dòng, bạn sẽ cần viết thêm `//` ở
+mỗi dòng như thế này:
 
 ```rust
 // So we’re doing something complicated here, long enough that we need
@@ -21,7 +21,7 @@ single line, you’ll need to include `//` on each line, like this:
 // explain what’s going on.
 ```
 
-Comments can also be placed at the end of lines containing code:
+Comments cũng có thể được đặt ở cuối dòng chứa mã code:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -29,8 +29,8 @@ Comments can also be placed at the end of lines containing code:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-24-comments-end-of-line/src/main.rs}}
 ```
 
-But you’ll more often see them used in this format, with the comment on a
-separate line above the code it’s annotating:
+Nhưng bạn sẽ thường xuyên thấy chúng ở định dạng comment ở trên một dòng
+riêng biệt với code cần chú thích:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -38,5 +38,5 @@ separate line above the code it’s annotating:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-25-comments-above-line/src/main.rs}}
 ```
 
-Rust also has another kind of comment, documentation comments, which we’ll
-discuss in the “Publishing a Crate to Crates.io” section of Chapter 14.
+Rust cũng có một loại comment khác, documentation comments, chúng ta sẽ thảo luận
+về nó trong phần “Publishing a Crate to Crates.io” ở Chương 14.

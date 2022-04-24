@@ -1,49 +1,48 @@
-## Data Types
+## Kiểu dữ liệu
 
-Every value in Rust is of a certain *data type*, which tells Rust what kind of
-data is being specified so it knows how to work with that data. We’ll look at
-two data type subsets: scalar and compound.
+Mọi giá trị trong Rust đều có một *kiểu dữ liệu* xác định, dựa vào kiểu dữ liệu
+Rust sẽ biết phải làm việc với dữ liệu đó như thế nào. Chúng ta sẽ xem xét
+hai tập con của kiểu dữ liệu: vô hướng và kết hợp.
 
-Keep in mind that Rust is a *statically typed* language, which means that it
-must know the types of all variables at compile time. The compiler can usually
-infer what type we want to use based on the value and how we use it. In cases
-when many types are possible, such as when we converted a `String` to a numeric
-type using `parse` in the [“Comparing the Guess to the Secret
-Number”][comparing-the-guess-to-the-secret-number]<!-- ignore --> section in
-Chapter 2, we must add a type annotation, like this:
+Hãy nhớ rằng Rust là ngôn ngữ *định kiểu tĩnh (statically typed)*, tức là Rust phải biết được kiểu 
+dữ liệu của tất cả các biến tại thời điểm biên dịch. Trình biên dịch thông thường
+có thể suy luận kiểu dữ liệu mà chúng ta đang dùng dựa trên giá trị và cách chúng ta sử dụng
+giá trị đó. Trong các trường hợp có nhiều kiểu, chẳng hạn như khi chúng ta chuyển
+đổi `String` sang kiểu số bằng cách sử dụng `parse` trong phần [“So sánh số dự đoán với
+số bí mật”][comparing-the-guess-to-the-secret-number]<!-- ignore --> trong Chương 2,
+chúng ta phải chú thích rõ kiểu dữ liệu như sau:
 
 ```rust
 let guess: u32 = "42".parse().expect("Not a number!");
 ```
 
-If we don’t add the type annotation here, Rust will display the following
-error, which means the compiler needs more information from us to know which
-type we want to use:
+Nếu chúng ta không thêm chú thích kiểu dữ liệu vào, Rust sẽ hiển thị lỗi như bên dưới, trình
+biên dịch cần thêm thông tin để biết chúng ta đang sử dụng kiểu dữ liệu nào:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/output-only-01-no-type-annotations/output.txt}}
 ```
 
-You’ll see different type annotations for other data types.
+Các loại dữ liệu khác nhau sẽ chú thích khác nhau.
 
-### Scalar Types
+### Kiểu dữ liệu vô hướng
 
-A *scalar* type represents a single value. Rust has four primary scalar types:
-integers, floating-point numbers, Booleans, and characters. You may recognize
-these from other programming languages. Let’s jump into how they work in Rust.
+Một kiểu dữ liệu *vô hướng (scalar)* đại diện cho một giá trị duy nhất. Rust có 4 kiểu vô hướng chính:
+số nguyên (integers), số thực dấu phẩy động (floating-point numbers), Booleans và ký tự (characters).
+Bạn có thể thấy chúng quen thuộc ở các ngôn ngữ lập trình khác. Hãy cùng tìm hiểu cách chúng hoạt
+động trong Rust.
 
-#### Integer Types
+#### Kiểu số nguyên (interger)
 
-An *integer* is a number without a fractional component. We used one integer
-type in Chapter 2, the `u32` type. This type declaration indicates that the
-value it’s associated with should be an unsigned integer (signed integer types
-start with `i`, instead of `u`) that takes up 32 bits of space. Table 3-1 shows
-the built-in integer types in Rust. We can use any of these variants to declare
-the type of an integer value.
+*Số nguyên* là một số không có phần thập phân. Chúng ta đã sử dụng kiểu số nguyên
+trong Chương 2, kiểu `u32`. Việc khai báo kiểu dữ liệu này cho giá trị chỉ ra rằng giá trị
+được khai báo phải là một số nguyên không dấu chiếm 32 bit (kiểu số nguyên có dấu bắt đầu bằng `i`,
+thay vì `u`). Bảng 3-1 chỉ ra các kiểu số nguyên được xây dựng sẵn trong Rust. Chúng ta
+có thể sử dụng bất kì variant nào trong này để khai báo kiểu số nguyên.
 
-<span class="caption">Table 3-1: Integer Types in Rust</span>
+<span class="caption">Bảng 3-1: Các kiểu số nguyên trong Rust</span>
 
-| Length  | Signed  | Unsigned |
+| Độ dài  | Signed  | Unsigned |
 |---------|---------|----------|
 | 8-bit   | `i8`    | `u8`     |
 | 16-bit  | `i16`   | `u16`    |
@@ -52,35 +51,34 @@ the type of an integer value.
 | 128-bit | `i128`  | `u128`   |
 | arch    | `isize` | `usize`  |
 
-Each variant can be either signed or unsigned and has an explicit size.
-*Signed* and *unsigned* refer to whether it’s possible for the number to be
-negative—in other words, whether the number needs to have a sign with it
-(signed) or whether it will only ever be positive and can therefore be
-represented without a sign (unsigned). It’s like writing numbers on paper: when
-the sign matters, a number is shown with a plus sign or a minus sign; however,
-when it’s safe to assume the number is positive, it’s shown with no sign.
-Signed numbers are stored using [two’s
+Mỗi variant có thể có dấu hoặc không dấu và có kích thước rõ ràng.
+*Signed* và *unsigned* chỉ ra rằng số đó liệu có thể có giá trị âm 
+hay không, một số có dấu (signed) có thể chứa giá trị âm và dương, trong
+khi một số không có dấu (unsigned) sẽ chỉ chứa giá trị dương. Giống như
+việc viết số trên giấy: khi dấu là quan trọng, một số sẽ được ghi kèm với
+dấu cộng hoặc dấu trừ; tuy nhiên, thông thường khi viết số dương thường không
+có dấu. Các số có dấu được lưu trữ sử dụng [two’s
 complement](https://en.wikipedia.org/wiki/Two%27s_complement)<!-- ignore -->
 representation.
 
-Each signed variant can store numbers from -(2<sup>n - 1</sup>) to 2<sup>n -
-1</sup> - 1 inclusive, where *n* is the number of bits that variant uses. So an
-`i8` can store numbers from -(2<sup>7</sup>) to 2<sup>7</sup> - 1, which equals
--128 to 127. Unsigned variants can store numbers from 0 to 2<sup>n</sup> - 1,
-so a `u8` can store numbers from 0 to 2<sup>8</sup> - 1, which equals 0 to 255.
+Mỗi signed variant có dấu có thể lưu trữ các số từ -(2<sup>n - 1</sup>) đến 2<sup>n -
+1</sup> - 1, trong đó *n* là số bits mà variant sử dụng. Do đó,
+`i8` có thể chứa các số từ -(2<sup>7</sup>) đến 2<sup>7</sup> - 1, tương ứng từ
+-128 đến 127. Unsigned variants có thể chứa các số từ 0 đến 2<sup>n</sup> - 1,
+do đó `u8` chứa các số từ 0 đến 2<sup>8</sup> - 1, tương ứng từ 0 đến 255.
 
-Additionally, the `isize` and `usize` types depend on the architecture of the
-computer your program is running on, which is denoted in the table as “arch”:
-64 bits if you’re on a 64-bit architecture and 32 bits if you’re on a 32-bit
-architecture.
+Ngoài ra, kiểu `isize` and `usize` phụ thuộc vào cấu hình máy tính mà chương trình bạn
+đang chạy, các kiểu này được ký hiệu trong bảng là “arch”:
+64 bits nếu bạn đang dùng máy tính cấu hình 64-bit và 32 bits nếu bạn
+đang dùng cấu hình 32-bit.
 
-You can write integer literals in any of the forms shown in Table 3-2. Note
-that number literals that can be multiple numeric types allow a type suffix,
-such as `57u8`, to designate the type. Number literals can also use `_` as a
-visual separator to make the number easier to read, such as `1_000`, which will
-have the same value as if you had specified `1000`.
+Bạn có thể viết số nguyên ở bất kỳ dạng nào như trong Bảng 3-2. Lưu ý rằng
+các ký tự số (number literals) có thể là nhiều kiểu số cho phép một hậu tố để chỉ
+định kiểu dữ liệu, chẳng hạn như `57u8`. Number literals cũng có thể sử dụng `_` để phân
+tách số cho dễ đọc hơn, ví dụ `1_000` sẽ có cùng giá trị như khi bạn khai
+báo `1000`.
 
-<span class="caption">Table 3-2: Integer Literals in Rust</span>
+<span class="caption">Bảng 3-2: Integer Literals trong Rust</span>
 
 | Number literals  | Example       |
 |------------------|---------------|
@@ -90,51 +88,50 @@ have the same value as if you had specified `1000`.
 | Binary           | `0b1111_0000` |
 | Byte (`u8` only) | `b'A'`        |
 
-So how do you know which type of integer to use? If you’re unsure, Rust’s
-defaults are generally good places to start: integer types default to `i32`.
-The primary situation in which you’d use `isize` or `usize` is when indexing
-some sort of collection.
+Vì vậy làm cách nào bạn biết nên sử dụng loại số nguyên nào? Nếu bạn không chắc chắn
+về điều đó, kiểu dữ liệu mặc định của Rust thường hữu ích: ví dụ, kiểu dữ liệu mặc định của
+số nguyên trong Rust là `i32`. Còn `isize` và `usize` bạn sẽ sử dụng khi cần lập chỉ mục một
+số loại collection.
 
-> ##### Integer Overflow
+> ##### Tràn số nguyên (Integer Overflow)
 >
-> Let’s say you have a variable of type `u8` that can hold values between 0 and
-> 255. If you try to change the variable to a value outside of that range, such
-> as 256, *integer overflow* will occur, which can result in one of two
-> behaviors. When you’re compiling in debug mode, Rust includes checks for
-> integer overflow that cause your program to *panic* at runtime if this
-> behavior occurs. Rust uses the term panicking when a program exits with an
-> error; we’ll discuss panics in more depth in the [“Unrecoverable Errors with
-> `panic!`”][unrecoverable-errors-with-panic]<!-- ignore --> section in Chapter
+> Giả sử bạn có một biến có kiểu dữ liệu `u8` có thể lưu giá trị từ 0 đến
+> 255. Nếu bạn cố gắng thay đổi giá trị của biến vượt ra khỏi phạm vi trên,
+> chẳng hạn như 256, *integer overflow* sẽ xảy ra có thể dẫn đến một trong hai
+> hành vi. Khi bạn biên dịch ở chế độ debug, Rust sẽ bao gồm các kiểm tra về
+> integer overflow có phải là nguyên nhân khiến chương trình của bạn *panic* ở thời
+> gian chạy nếu hành vi này xảy ra. Rust sử dụng thuật ngữ panicking khi thoát một
+> chương trình bị lỗi, chúng ta sẽ thảo luận panics sâu hơn trong phần
+> [“Các lỗi không thể phục hồi với
+> `panic!`”][unrecoverable-errors-with-panic]<!-- ignore --> trong Chương
 > 9.
 >
-> When you’re compiling in release mode with the `--release` flag, Rust does
-> *not* include checks for integer overflow that cause panics. Instead, if
-> overflow occurs, Rust performs *two’s complement wrapping*. In short, values
-> greater than the maximum value the type can hold “wrap around” to the minimum
-> of the values the type can hold. In the case of a `u8`, the value 256 becomes
-> 0, the value 257 becomes 1, and so on. The program won’t panic, but the
-> variable will have a value that probably isn’t what you were expecting it to
-> have. Relying on integer overflow’s wrapping behavior is considered an error.
+> Khi bạn biên dịch trong chế độ release với cờ `--release`, Rust sẽ
+> *không* bao gồm các kiểm tra về integer overflow. Thay vào đó, nếu
+> overflow xảy ra, Rust thực hiện *two’s complement wrapping*. Tóm lại, các giá trị
+> lớn hơn giá trị mà kiểu dữ liệu có thể chứa sẽ “wrap around” vào giá trị nhỏ nhất
+> mà kiểu dữ liệu có thể lưu giữ. Trong trường hợp `u8`, giá trị 256 trở thành
+> 0, giá trị 257 trở thành 1, v..v.. Chương trình sẽ không panic, nhưng biến sẽ
+> có một giá trị mà bạn không mong đợi. Đây được coi là một lỗi.
 >
-> To explicitly handle the possibility of overflow, you can use these families
-> of methods provided by the standard library for primitive numeric types:
+> Để xử lý rõ ràng khả năng overflow, bạn có thể sử dụng các phương thức do thư viện
+> chuẩn cung cấp cho các kiểu số nguyên thủy:
 >
-> - Wrap in all modes with the `wrapping_*` methods, such as `wrapping_add`
-> - Return the `None` value if there is overflow with the `checked_*` methods
-> - Return the value and a boolean indicating whether there was overflow with
->   the `overflowing_*` methods
-> - Saturate at the value’s minimum or maximum values with `saturating_*`
->   methods
+> - Wrap trong tất cả các chế độ bằng các phương thức `wrapping_*`, như `wrapping_add`
+> - Trả về giá trị `None` nếu overflow xảy ra bằng phương thức `checked_*`
+> - Trả về giá trị và một boolean cho biết liệu overflow có xảy ra hay không bằng
+>   phương thức `overflowing_*`
+> - Saturate ở các giá trị tối thiểu hoặc tối đa bằng phương thức `saturating_*`
 
-#### Floating-Point Types
+#### Kiểu dấu phẩy động
 
-Rust also has two primitive types for *floating-point numbers*, which are
-numbers with decimal points. Rust’s floating-point types are `f32` and `f64`,
-which are 32 bits and 64 bits in size, respectively. The default type is `f64`
-because on modern CPUs it’s roughly the same speed as `f32` but is capable of
-more precision. All floating-point types are signed.
+Rust cũng có hai kiểu dữ liệu nguyên thủy cho *số thực dấu phẩy động*, các số
+có dấu phần thập phân. Kiểu dấu phẩy động của Rust là `f32` và `f64`,
+tương ứng với kích thước 32 bits và 64 bits. Kiểu mặc định trong Rust là `f64`
+bởi vì các CPU hiện đại bây giờ tốc độ giống như `f32` nhưng chính xác hơn.
+Tất cả kiểu dấu phẩy động đều có dấu.
 
-Here’s an example that shows floating-point numbers in action:
+Dưới đây là một ví dụ về sử dụng số thực dấu phẩy động:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -142,15 +139,15 @@ Here’s an example that shows floating-point numbers in action:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-06-floating-point/src/main.rs}}
 ```
 
-Floating-point numbers are represented according to the IEEE-754 standard. The
-`f32` type is a single-precision float, and `f64` has double precision.
+Số thực dấu phẩy động được biểu diễn theo tiêu chuẩn IEEE-754 standard. Kiểu float
+`f32` có độ chính xác đơn và `f64` có độ chính xác gấp đôi.
 
-#### Numeric Operations
+#### Các phép toán số học
 
-Rust supports the basic mathematical operations you’d expect for all of the
-number types: addition, subtraction, multiplication, division, and remainder.
-Integer division rounds down to the nearest integer. The following code shows
-how you’d use each numeric operation in a `let` statement:
+Rust hỗ trợ tất cả các phép toán cơ bản cho tất cả kiểu số:
+cộng, trừ, nhân, chia và phần dư. Phép chia số nguyên được làm
+tròn đến số nguyên gần nhất. Code bên dưới chỉ bạn cách sử dụng
+mỗi phép toán trong câu lệnh `let`:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -158,15 +155,15 @@ how you’d use each numeric operation in a `let` statement:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-07-numeric-operations/src/main.rs}}
 ```
 
-Each expression in these statements uses a mathematical operator and evaluates
-to a single value, which is then bound to a variable. [Appendix B][appendix_b]<!-- ignore --> contains a
-list of all operators that Rust provides.
+Mỗi biểu thức trong các câu lệnh sử dụng một toán tử toán học và cho ra kết quả là một
+giá trị đơn được gán vào một biến. [Phụ lục B][appendix_b]<!-- ignore --> chứa danh sách
+bao gồm tất cả các toán tử mà Rust cung cấp.
 
-#### The Boolean Type
+#### Kiểu Boolean
 
-As in most other programming languages, a Boolean type in Rust has two possible
-values: `true` and `false`. Booleans are one byte in size. The Boolean type in
-Rust is specified using `bool`. For example:
+Như trong hầu hết các ngôn ngữ lập trình khác, kiểu Boolean trong Rust chứa hai giá trị:
+`true` và `false`. Booleans có kích thước 1 byte. Sử dụng `bool` để chỉ ra kiểu Boolean
+trong Rust. Ví dụ:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -174,14 +171,14 @@ Rust is specified using `bool`. For example:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-08-boolean/src/main.rs}}
 ```
 
-The main way to use Boolean values is through conditionals, such as an `if`
-expression. We’ll cover how `if` expressions work in Rust in the [“Control
-Flow”][control-flow]<!-- ignore --> section.
+Giá trị Boolean được sử dụng chủ yếu trong các câu điều kiện, chẳng hạn như biểu thức `if`.
+Chúng ta sẽ đề cập về biểu thức `if` được sử dụng như thế nào trong Rust trong phần [“Control
+Flow”][control-flow]<!-- ignore -->.
 
-#### The Character Type
+#### Kiểu ký tự
 
-Rust’s `char` type is the language’s most primitive alphabetic type. Here’s
-some examples of declaring `char` values:
+Kiểu `char` trong Rust là kiểu chữ cái nguyên thủy nhất của ngôn ngữ. Sau đây là
+một vài ví dụ về khai báo giá trị `char`:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -189,32 +186,33 @@ some examples of declaring `char` values:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-09-char/src/main.rs}}
 ```
 
-Note that we specify `char` literals with single quotes, as opposed to string
-literals, which use double quotes. Rust’s `char` type is four bytes in size and
-represents a Unicode Scalar Value, which means it can represent a lot more than
-just ASCII. Accented letters; Chinese, Japanese, and Korean characters; emoji;
-and zero-width spaces are all valid `char` values in Rust. Unicode Scalar
-Values range from `U+0000` to `U+D7FF` and `U+E000` to `U+10FFFF` inclusive.
-However, a “character” isn’t really a concept in Unicode, so your human
-intuition for what a “character” is may not match up with what a `char` is in
-Rust. We’ll discuss this topic in detail in [“Storing UTF-8 Encoded Text with
-Strings”][strings]<!-- ignore --> in Chapter 8.
+Lưu ý rằng chúng ta chỉ định ký tự `char` bằng dấu nháy đơn, trong khi ký tự chuỗi
+sử dụng dấu nháy kép. Kiểu `char` trong Rust có kích thước 4 bytes và đại diện
+cho một Giá trị Vô hướng Unicode (Unicode Scalar Value), tức là nó có thể đại diện
+cho nhiều thứ hơn ASCII. Tấy cả các chữ cái có dấu; chữ Trung Quốc, Nhật Bản và Hàn Quốc; emoji
+và zero-width spaces đều là giá trị `char` hợp lệ trong Rust. Unicode Scalar
+Values nằm trong khoảng từ `U+0000` đến `U+D7FF` và `U+E000` đến `U+10FFFF`.
+Tuy nhiên, một “ký tự” không thực sự là một khái niệm trong Unicode, vì vậy trực giác của
+con người về “ký tự” là gì có thể không trùng khớp với `char` trong
+Rust. Chúng ta sẽ thảo luận chi tiết về chủ đề này trong [“Storing UTF-8 Encoded Text with
+Strings”][strings]<!-- ignore --> ở Chương 8.
 
-### Compound Types
+### Kiểu kết hợp (Compound Types)
 
-*Compound types* can group multiple values into one type. Rust has two
-primitive compound types: tuples and arrays.
+*Compound types* có thể nhóm nhiều giá trị vào một kiểu. Rust có hai
+kiểu kết hợp nguyên thủy là: tuples và arrays.
 
-#### The Tuple Type
+#### Kiểu Tuple
 
-A tuple is a general way of grouping together a number of values with a variety
-of types into one compound type. Tuples have a fixed length: once declared,
-they cannot grow or shrink in size.
+Tuple là cách thông thường nhóm một số giá trị tương ứng với những kiểu 
+dữ liệu khác nhau lại. Tuples có độ dài cố định: một khi được khai báo,
+chúng ta không thể tăng hoặc giảm kích thước của chúng.
 
-We create a tuple by writing a comma-separated list of values inside
-parentheses. Each position in the tuple has a type, and the types of the
-different values in the tuple don’t have to be the same. We’ve added optional
-type annotations in this example:
+Chúng ta tạo ra tuple bằng cách viết một danh sách các giá trị được phân
+cách nhau bằng dấu phẩy bên trong dấu ngoặc tròn. Mỗi vị trí trong tuple
+mang một kiểu dữ liệu và không nhất thiết tất cả các giá trị trong tuple
+phải có kiểu dữ liệu giống nhau. Chúng tôi đã thêm chú thích kiểu dữ liệu
+như trong ví dụ sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -222,9 +220,9 @@ type annotations in this example:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-10-tuples/src/main.rs}}
 ```
 
-The variable `tup` binds to the entire tuple, because a tuple is considered a
-single compound element. To get the individual values out of a tuple, we can
-use pattern matching to destructure a tuple value, like this:
+Toàn bộ tuple được gán cho biến `tup` , vì một tuple được coi là một phần tử
+kết hợp đơn lẻ. Để lấy các giá trị riêng lẻ ra khỏi tuple, chúng ta có thể
+sử dụng pattern matching để destructure giá trị như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -232,14 +230,14 @@ use pattern matching to destructure a tuple value, like this:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-11-destructuring-tuples/src/main.rs}}
 ```
 
-This program first creates a tuple and binds it to the variable `tup`. It then
-uses a pattern with `let` to take `tup` and turn it into three separate
-variables, `x`, `y`, and `z`. This is called *destructuring*, because it breaks
-the single tuple into three parts. Finally, the program prints the value of
-`y`, which is `6.4`.
+Chương trình ban đầu tạo ra một a tuple và gán nó vào biến `tup`. Sau đó
+sử dụng pattern với `let` để biến `tup` trở thành ba biến riêng biệt,
+`x`, `y` và `z`. Cách làm này được gọi là *destructuring*, bởi vì nó chia một
+tuple đơn lẻ thành ba phần riêng biệt. Cuối cùng, chương trình in ra giá trị của
+`y` là `6.4`.
 
-We can also access a tuple element directly by using a period (`.`) followed by
-the index of the value we want to access. For example:
+Chúng ta cũng có thể truy cập trực tiếp vào một tuple bằng cách sử dụng dấu chấm (`.`)
+theo sau đó là vị trí của giá trị mà chúng ta muốn truy cập. Ví dụ:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -247,23 +245,23 @@ the index of the value we want to access. For example:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-12-tuple-indexing/src/main.rs}}
 ```
 
-This program creates the tuple `x` and then makes new variables for each
-element by using their respective indices. As with most programming languages,
-the first index in a tuple is 0.
+Chương trình tạo ra một tuple `x`, sau đó tạo các biến mới cho từng phần tử
+bằng cách sử dụng chỉ số ứng với chúng. Như với hầu hết các ngôn ngữ lập trình,
+vị trí đầu tiên trong tuple là 0.
 
-The tuple without any values, `()`, is a special type that has only one value,
-also written `()`. The type is called the *unit type* and the value is called
-the *unit value*. Expressions implicitly return the unit value if they don’t
-return any other value.
+Tuple không chứa bất kì giá trị nào là một kiểu đặc biệt chỉ chứa một giá trị,
+`()`. Kiểu này được gọi là *unit type* và giá trị đó được gọi là
+*unit value*. Các biểu thức sẽ trả về unit value nếu chúng không trả về bất kì
+giá trị nào khác.
 
-#### The Array Type
+#### Kiểu Mảng (Array)
 
-Another way to have a collection of multiple values is with an *array*. Unlike
-a tuple, every element of an array must have the same type. Unlike arrays in
-some other languages, arrays in Rust have a fixed length.
+Một cách khác để có một collection với nhiều giá trị là sử dụng *array*. Không
+giống như tuple, mọi phần tử của array phải có kiểu dữ liệu giống nhau. Không giống
+như array trong các ngôn ngữ khác, các array trong Rust có độ dài cố định.
 
-We write the values in an array as a comma-separated list inside square
-brackets:
+Chúng ta tạo array bằng cách viết một danh sách các giá trị được phân cách nhau bằng
+dấu phẩy đặt bên trong dấu ngoặc vuông:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -271,52 +269,51 @@ brackets:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-13-arrays/src/main.rs}}
 ```
 
-Arrays are useful when you want your data allocated on the stack rather than
-the heap (we will discuss the stack and the heap more in [Chapter
-4][stack-and-heap]<!-- ignore -->) or when you want to ensure you always have a
-fixed number of elements. An array isn’t as flexible as the vector type,
-though. A vector is a similar collection type provided by the standard library
-that *is* allowed to grow or shrink in size. If you’re unsure whether to use an
-array or a vector, chances are you should use a vector. [Chapter
-8][vectors]<!-- ignore --> discusses vectors in more detail.
+Arrays rất hữu ích khi bạn muốn dữ liệu của mình được phân bổ trên stack hơn là
+trên heap (chúng ta sẽ thảo luận nhiều hơn về stack và heap trong [Chương
+4][stack-and-heap]<!-- ignore -->) hoặc khi bạn muốn đảm bảo rằng bạn luôn luôn
+có số lượng phần tử cố định. Tuy nhiên array không linh hoạt như kiểu vector.
+Vector là một kiểu collection tương tự như array do thư viện chuẩn cung cấp, vector
+*cho phép* bạn tăng hoặc giảm kích thước. Nếu bạn không chắc liệu nên sử dụng array
+hay vector thì bạn nên sử dụng vector. Chúng ta sẽ thảo luận chi tiết hơn về vector trong
+[Chương 8][vectors]<!-- ignore -->.
 
-However, arrays are more useful when you know the number of elements will not
-need to change. For example, if you were using the names of the month in a
-program, you would probably use an array rather than a vector because you know
-it will always contain 12 elements:
+Tuy nhiên, array sẽ hữu ích hơn khi bạn đã biết được số lượng phần tử mà bạn cần.
+Ví dụ, nếu bạn sử dụng tên của các tháng trong chương trình, bạn nên sử dụng array
+hơn là vector bởi vì bạn biết chắc chắn rằng nó sẽ luôn luôn chứa 12 phần tử:
 
 ```rust
 let months = ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"];
 ```
 
-You write an array’s type using square brackets with the type of each element,
-a semicolon, and then the number of elements in the array, like so:
+Bạn viết kiểu array bằng cách sử dụng dấu ngoặc vuông với bên trong là kiểu của phần tử, dấu chấm
+phẩy và sau đó là số lượng phần tử trong array, như sau:
 
 ```rust
 let a: [i32; 5] = [1, 2, 3, 4, 5];
 ```
 
-Here, `i32` is the type of each element. After the semicolon, the number `5`
-indicates the array contains five elements.
+Ở đây `i32` là kiểu dữ liệu của tất cả phần tử. Số `5`nằm sau dấu chấm phẩy
+cho biết rằng array chứ 5 phần tử.
 
-You can also initialize an array to contain the same value for each element by
-specifying the initial value, followed by a semicolon, and then the length of
-the array in square brackets, as shown here:
+Bạn cũng có thể tạo ra một array chứa các phần tử có cùng giá trị bằng cách chỉ
+định giá trị ban đầu, theo sau là dấu chấm phẩy và kế đó là độ dài của array, tất cả
+được đặt bên trong dấu ngoặc vuông như bên dưới:
 
 ```rust
 let a = [3; 5];
 ```
 
-The array named `a` will contain `5` elements that will all be set to the value
-`3` initially. This is the same as writing `let a = [3, 3, 3, 3, 3];` but in a
-more concise way.
+Array `a` sẽ chứa `5` phần tử có cùng giá trị ban đầu là
+`3`. Tương tự như khi chúng ta viết `let a = [3, 3, 3, 3, 3];` nhưng
+ngắn gọn hơn.
 
-##### Accessing Array Elements
+##### Truy cập các phần tử của array
 
-An array is a single chunk of memory of a known, fixed size that can be
-allocated on the stack. You can access elements of an array using indexing,
-like this:
+Array là một đoạn bộ nhớ đơn đã biết có kích thước cố định có thể được phân
+bổ trên stack. Bạn có thể truy cập các phần tử của array bằng cách sử dụng chỉ mục
+như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -324,15 +321,15 @@ like this:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-14-array-indexing/src/main.rs}}
 ```
 
-In this example, the variable named `first` will get the value `1`, because
-that is the value at index `[0]` in the array. The variable named `second` will
-get the value `2` from index `[1]` in the array.
+Trong ví dụ này, biến `first` sẽ nhận giá trị `1`, bởi vì đó
+là giá trị tại chỉ mục `[0]` trong array. Biến `second` sẽ
+nhận giá trị `2` từ chỉ mục `[1]` trong array.
 
-##### Invalid Array Element Access
+##### Truy cập phần tử array không hợp lệ
 
-Let’s see what happens if you try to access an element of an array that is past
-the end of the array. Say you run this code, similar to the guessing game in
-Chapter 2, to get an array index from the user:
+Hãy xem điều gì xảy ra nếu bạn cố gắng truy cập vào một phần tử nằm vượt quá
+phần cuối của array. Giả sử bạn chạy code này, tương tự như game đoán số trong
+Chương 2, để nhận chỉ mục array từ người dùng:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -340,10 +337,10 @@ Chapter 2, to get an array index from the user:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-15-invalid-array-access/src/main.rs}}
 ```
 
-This code compiles successfully. If you run this code using `cargo run` and
-enter 0, 1, 2, 3, or 4, the program will print out the corresponding value at
-that index in the array. If you instead enter a number past the end of the
-array, such as 10, you’ll see output like this:
+Code này sẽ biên dịch thành công. Nếu bạn chạy `cargo run` và nhập
+0, 1, 2, 3, hoặc 4, chương trình sẽ in ra giá trị tương ứng tại chỉ
+mục trong array đó. Thay vào đó nếu bạn nhập một số vượt quá phần cuối
+của array, ví dụ như 10, bạn sẽ thấy đầu ra như sau:
 
 <!-- manual-regeneration
 cd listings/ch03-common-programming-concepts/no-listing-15-invalid-array-access
@@ -356,20 +353,19 @@ thread 'main' panicked at 'index out of bounds: the len is 5 but the index is 10
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 
-The program resulted in a *runtime* error at the point of using an invalid
-value in the indexing operation. The program exited with an error message and
-didn’t execute the final `println!` statement. When you attempt to access an
-element using indexing, Rust will check that the index you’ve specified is less
-than the array length. If the index is greater than or equal to the length,
-Rust will panic. This check has to happen at runtime, especially in this case,
-because the compiler can’t possibly know what value a user will enter when they
-run the code later.
+Chương trình sẽ dẫn đến lỗi *runtime* tại điểm mà bạn sử dụng giá trị không hợp lệ
+trong thao tác lập chỉ mục. Chương trình thoát ra với thông báo lỗi và không
+thực thi câu lệnh `println!` cuối cùng. Khi bạn cố gắng truy cập một phần tử sử dụng
+lập chỉ mục, Rust sẽ kiểm tra xem chỉ mục mà bạn chỉ định có nhỏ đơn độ dài của array
+hay không. Nếu chỉ mục lớn hơn hoặc bằng chiều dài của array, Rust sẽ panic.
+Kiểm tra này diễn ra tại thời điểm runtime, nhất là trong trường hợp này, bởi vì
+trình biên dịch không thể biết người dùng sau đó sẽ nhập giá trị nào khi họ chạy code.
 
-This is an example of Rust’s memory safety principles in action. In many
-low-level languages, this kind of check is not done, and when you provide an
-incorrect index, invalid memory can be accessed. Rust protects you against this
-kind of error by immediately exiting instead of allowing the memory access and
-continuing. Chapter 9 discusses more of Rust’s error handling.
+Đây là một ví dụ về nguyên tắc an toàn bộ nhớ của Rust đang hoạt động. Trong nhiều
+ngôn ngữ cấp thấp, loại kiểm tra này không được thực hiện và khi bạn cung cấp một
+chỉ mục không chính xác, bộ nhớ không hợp lệ có thể được truy cập. Rust bảo vệ bạn
+tránh khỏi lỗi này bằng cách thoát chương trình ngay lập tức, thay vì cho phép truy
+cập bộ nhớ và tiếp tục chạy. Chương 9 sẽ thảo luận nhiều hơn về cách xử lý lỗi của Rust.
 
 [comparing-the-guess-to-the-secret-number]:
 ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number
