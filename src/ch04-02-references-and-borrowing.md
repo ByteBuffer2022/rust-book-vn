@@ -23,7 +23,7 @@ Chúng ta hãy xem xét kỹ hơn lệnh gọi hàm tại đây:
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-07-reference/src/main.rs:here}}
 ```
 
-`&s1` cú pháp cho phép chúng ta tạo một tham chiếu đề cập đến giá trị của `s1` nhưng không sở hữu nó.Bởi vì nó không sở hữu nó, giá trị nó trỏ đến sẽ không bị drop khi tham chiếu ngừng được sử dụng.
+`&s1` cú pháp cho phép chúng ta tạo một tham chiếu đề cập đến giá trị của `s1` nhưng không sở hữu nó. Bởi vì nó không sở hữu nó, giá trị nó trỏ đến sẽ không bị drop khi tham chiếu ngừng được sử dụng.
 
 Tương tự như vậy, chữ ký hàm (signature of the function) sử dụng uses `&` để chỉ ra rằng kiểu tham số
  `s` là một tham chiếu. Hãy xem một số chú thích để giải thích cho việc này:
@@ -64,7 +64,7 @@ Chúng ta có thể sửa code từ Listing 4-6 để cho phép chúng ta sửa 
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-09-fixes-listing-04-06/src/main.rs}}
 ```
 
-Đầu tiên, chúng ta thay đổi s `s` thành `mut` để có thể thay đổi. TSau đó, chúng tôi tạo một tham chiếu có thể thay đổi với `&muts` nơi chúng ta gọi hàm `change`, và cập nhật chữ ký hàm (function signature) để chấp nhận một tham chiếu có thể thay đổi với `some_string: &mut String`. Điều này làm cho nó rất rõ ràng rằng hàm `change` sẽ thay đổi giá trị mà nó vay.
+Đầu tiên, chúng ta thay đổi s `s` thành `mut` để có thể thay đổi. Sau đó, chúng tôi tạo một tham chiếu có thể thay đổi với `&muts` nơi chúng ta gọi hàm `change`, và cập nhật chữ ký hàm (function signature) để chấp nhận một tham chiếu có thể thay đổi với `some_string: &mut String`. Điều này làm cho nó rất rõ ràng rằng hàm `change` sẽ thay đổi giá trị mà nó vay.
 
 Tham chiếu có thể thay đổi có một hạn chế lớn: bạn chỉ có thể có một tham chiếu có thể thay đổi cho một phần dữ liệu cụ thể tại một thời điểm. Code này cố gắng tạo hai tham chiếu có thể thay đổi cho `s` sẽ không thành công:
 
@@ -80,7 +80,7 @@ Tham chiếu có thể thay đổi có một hạn chế lớn: bạn chỉ có 
 {{#include ../listings/ch04-understanding-ownership/no-listing-10-multiple-mut-not-allowed/output.txt}}
 ```
 
-Lỗi này cho biết rằng code không hợp lệ vì chúng ta không thể mượn (borrow) `s` có thể thay đổi nhiều lần tại một thời điểm. Đầu tiên là tại s1 `r1` and must và nó kéo dài cho tới khi sử dụng `println!`, nhưng giữa chừng, chúng ta đã cố gắng tạo một tham chiếu có thể thay đổi khác tại `r2` mượn cùng một dữ liệu như `r1`.
+Lỗi này cho biết rằng code không hợp lệ vì chúng ta không thể mượn (borrow) `s` có thể thay đổi nhiều lần tại một thời điểm. Đầu tiên là tại s1 `r1` và nó kéo dài cho tới khi sử dụng `println!`, nhưng giữa chừng, chúng ta đã cố gắng tạo một tham chiếu có thể thay đổi khác tại `r2` mượn cùng một dữ liệu như `r1`.
 
 Hạn chế ngăn nhiều tham chiếu có thể thay đổi đến cùng một dữ liệu cùng một lúc cho phép tạo ra đột biến nhưng theo cách rất được kiểm soát. Đó là điều mà những Rustaceans mới gặp khó khăn vì hầu hết các ngôn ngữ đều cho phép bạn thay đổi bất cứ khi nào bạn muốn. Lợi ích của việc hạn chế này là Rust có thể ngăn chặn hiện tượng data race tại thời điểm biên dịch. Một *data race* tương tự như một race condition và xảy ra khi ba hành vi này xảy ra:
 
@@ -110,7 +110,7 @@ Here’s the error:
 
 Chà! Chúng ta cũng không thể có một tham chiếu có thể thay đổi (mutable reference) trong khi chúng ta có một tham chiếu bất biến (immutable reference) với cùng một giá trị. Người dùng tham chiếu bất biến không mong đợi giá trị đột ngột thay đổi! Tuy nhiên, việc sử dụng nhiều tham chiếu bất biến thì được cho phép vì không ảnh hưởng đến việc đọc dữ liệu của bất kỳ ai khác.
 
-Lưu ý rằng phạm vi của tham chiếu bắt đầu từ nơi nó tạo ra và tiếp tục cho đến lần cuối cùng tham chiếu đó được sử dụng. Ví dụ: code này vãn sẽ biên dịch vì nơi sử dụng cuối cùng của các tham chiếu bất biến tại `println!`, xảy ra trước khi tham chiếu có thể thay đổi được tạo ra:
+Lưu ý rằng phạm vi của tham chiếu bắt đầu từ nơi nó tạo ra và tiếp tục cho đến lần cuối cùng tham chiếu đó được sử dụng. Ví dụ: code này vẫn sẽ biên dịch vì nơi sử dụng cuối cùng của các tham chiếu bất biến tại `println!`, xảy ra trước khi tham chiếu có thể thay đổi được tạo ra:
 
 ```rust,edition2021
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-13-reference-scope-ends/src/main.rs:here}}
@@ -155,7 +155,7 @@ Chúng ta hãy xem xét kỹ hơn chính xác những gì đang xảy ra ở m�
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-15-dangling-reference-annotated/src/main.rs:here}}
 ```
 
-Bởi vì `s` được tạo ra bên trong `dangle`, khi code của `dangle` đã hoàn thành, `s` sẽ được phân bổ. Nhưng chúng ta đã cố gắng trả về một tham chiếu đến nó. Điều đó có nghĩa là tham chiếu này sẽ trỏ đến một `String` không còn giá trị. Điêu đó không tôt! Rust sẽ không để chúng ta làm điều này.
+Bởi vì `s` được tạo ra bên trong `dangle`, khi code của `dangle` đã hoàn thành, `s` sẽ được phân bổ. Nhưng chúng ta đã cố gắng trả về một tham chiếu đến nó. Điều đó có nghĩa là tham chiếu này sẽ trỏ đến một `String` không còn giá trị. Điều đó không tốt! Rust sẽ không để chúng ta làm điều này.
 
 Giải pháp ở đây là trả về `String` trực tiếp:
 
@@ -168,9 +168,9 @@ Giải pháp ở đây là trả về `String` trực tiếp:
 
 ### Các quy tắc của References
 
-Hãy tóm tắt lại những gì chúng ta đã thảo luận về  tham chiếu (references):
+Hãy tóm tắt lại những gì chúng ta đã thảo luận về tham chiếu (references):
 
-* Tại một thời điểm, bạn  chỉ có thể có một tham chiếu có thể thay đổi (mutable reference) và có thể có nhiều tham chiếu bất biến (immutable references).
+* Tại một thời điểm, bạn chỉ có thể có một tham chiếu có thể thay đổi (mutable reference) và có thể có nhiều tham chiếu bất biến (immutable references).
 * Tham chiếu phải luôn có giá trị.
 
 Tiếp theo, chúng ta sẽ xem xét một loại tham chiếu khác: slices.

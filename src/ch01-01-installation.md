@@ -43,7 +43,7 @@ Người dùng linux nên cài GCC hoặc Clang
 
 Trên Windows, truy cập [https://www.rust-lang.org/tools/install][install] và làm theo 
 hướng dẫn để cài Rust. Bạn cũng sẽ cần C++ build tools cho Visual Studio 2013 hoặc mới hơn. 
-Cách dễ nhất là cài [Build Tools for Visual Studio 2019][visualstudio]. Hãy đảm bảm “C++ build tools”
+Cách dễ nhất là cài [Build Tools for Visual Studio 2019][visualstudio]. Hãy đảm bảo “C++ build tools”
 được chọn.
 
 [install]: https://www.rust-lang.org/tools/install
