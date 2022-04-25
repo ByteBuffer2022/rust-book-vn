@@ -1,23 +1,22 @@
 fn main() {
-    let s = String::from("hello");  // s comes into scope
+    let s = String::from("hello");  // s đi vào scope
 
-    takes_ownership(s);             // s's value moves into the function...
-                                    // ... and so is no longer valid here
+    takes_ownership(s);             // giá trị của s di chuyển vào hàm...
+                                    // ... và như vậy không còn giá trị ở đây
 
-    let x = 5;                      // x comes into scope
+    let x = 5;                      // x đi vào scope
 
-    makes_copy(x);                  // x would move into the function,
-                                    // but i32 is Copy, so it's okay to still
-                                    // use x afterward
+    makes_copy(x);                  // x sẽ di chuyển vào hàm,
+                                    // nhưng i32 là Copy, vì vậy vẫn hoàn toàn có thể
+                                    // sử dụng x sau đó
 
-} // Here, x goes out of scope, then s. But because s's value was moved, nothing
-  // special happens.
+} // Tại đây, x đi ra khỏi scope, sau đó là s. Nhưng vì giá trị của s đã được move, nên không có gì 
+  // đặc biệt xảy ra.
 
-fn takes_ownership(some_string: String) { // some_string comes into scope
+fn takes_ownership(some_string: String) { // some_string đi vào scope
     println!("{}", some_string);
-} // Here, some_string goes out of scope and `drop` is called. The backing
-  // memory is freed.
+} // Tại đây, some_string đi ra khỏi scope và `drop` được gọi. Bộ nhớ được giải phóng.
 
-fn makes_copy(some_integer: i32) { // some_integer comes into scope
+fn makes_copy(some_integer: i32) { // some_integer đi vào scope
     println!("{}", some_integer);
-} // Here, some_integer goes out of scope. Nothing special happens.
+} // Tại đây, some_integer đi ra khỏi scope. Không có gì đặc biệt xảy ra.

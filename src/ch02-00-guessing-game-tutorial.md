@@ -1,33 +1,21 @@
-# Programming a Guessing Game
+# Lập trình Trò chơi đoán số
 
-Let’s jump into Rust by working through a hands-on project together! This
-chapter introduces you to a few common Rust concepts by showing you how to use
-them in a real program. You’ll learn about `let`, `match`, methods, associated
-functions, using external crates, and more! In the following chapters, we’ll
-explore these ideas in more detail. In this chapter, you’ll practice the
-fundamentals.
+Bây giờ, hãy nhảy vào Rust bằng cách bắt tay vào làm một dự án cùng nhau! Chương này sẽ giới thiệu một vài ý tưởng Rust thông thường, Bạn sẽ học về `let`, `match`, các phương thức, các hàm liên quan, sử dụng các external crates, và còn nhiều hơn nữa! Trong chương tiếp theo, chúng ta sẽ khám phá những ý tưởng này chi tiết hơn. Trong chương này, bạn sẽ luyện tập được những nguyên tắc cơ bản.
 
-We’ll implement a classic beginner programming problem: a guessing game. Here’s
-how it works: the program will generate a random integer between 1 and 100. It
-will then prompt the player to enter a guess. After a guess is entered, the
-program will indicate whether the guess is too low or too high. If the guess is
-correct, the game will print a congratulatory message and exit.
+Chúng ta sẽ triển khai một vài vấn đề lập trình cơ bản dành cho người mới: một trò chơi đoán số. Đây là cách nó thực hiện: Chương trình này sẽ khởi tạo một số nguyên ngẫu nhiên trong khoảng 1 đến 100. Nó sẽ yêu cầu người chơi phải đoán. Sau khi người chơi nhập số, chương trình sẽ hiển thị rằng: dự đoán của người chơi quá thấp hoặc quá cao. Nếu dự đoán chính xác, chương trình sẽ in ra thông báo chúc mừng và thoát ra.
 
-## Setting Up a New Project
+## Cấu hình một dự án mới
 
-To set up a new project, go to the *projects* directory that you created in
-Chapter 1 and make a new project using Cargo, like so:
+Để cấu hình một dự án mới, đến thư mục *project*, nơi mà được bạn tạo ra trong chương 1 và tạo mới một dự án mới sử dụng Cargo, ví dụ như sau:
 
 ```console
 $ cargo new guessing_game
 $ cd guessing_game
 ```
 
-The first command, `cargo new`, takes the name of the project (`guessing_game`)
-as the first argument. The second command changes to the new project’s
-directory.
+Câu lệnh đầu tiên, `cargo new`, đặt tên cho dự án này, (`guessing_game`) là thông số đầu tiên. Câu lệnh tiếp theo để thay đổi thư mục, đưa bạn tới thư mục của dự án.
 
-Look at the generated *Cargo.toml* file:
+Nhìn vào file *Cargo.toml* đã được khởi tạo trước đó.
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial
@@ -43,8 +31,7 @@ cargo run
 {{#include ../listings/ch02-guessing-game-tutorial/no-listing-01-cargo-new/Cargo.toml}}
 ```
 
-As you saw in Chapter 1, `cargo new` generates a “Hello, world!” program for
-you. Check out the *src/main.rs* file:
+Như bạn đã thấy trong Chương 1, `cargo new` khởi tạo chương trình "Hello, world!" cho bạn. Kiểm tra file *src/main.rs*:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -52,25 +39,19 @@ you. Check out the *src/main.rs* file:
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-01-cargo-new/src/main.rs}}
 ```
 
-Now let’s compile this “Hello, world!” program and run it in the same step
-using the `cargo run` command:
+Bây giờ, hãy cùng biên dịch chương trình "Hello, world!" và chạy nó, sử dụng câu lệnh `cargo run`:
 
 ```console
 {{#include ../listings/ch02-guessing-game-tutorial/no-listing-01-cargo-new/output.txt}}
 ```
 
-The `run` command comes in handy when you need to rapidly iterate on a project,
-as we’ll do in this game, quickly testing each iteration before moving on to
-the next one.
+Câu lệnh `run` sẽ có ích khi bạn cần lặp lại nhanh chóng trong một dự án, cũng như cách mà chúng ra thực hiện trong trò chơi này, nhanh chóng kiểm tra từng lần lặp lại trước khi chuyển tới bước tiếp theo.
 
-Reopen the *src/main.rs* file. You’ll be writing all the code in this file.
+Mở lại file *src/main.rs*. Bạn sẽ phải viết lại tất cả code trong file này.
 
-## Processing a Guess
+## Tiến hành dự đoán
 
-The first part of the guessing game program will ask for user input, process
-that input, and check that the input is in the expected form. To start, we’ll
-allow the player to input a guess. Enter the code in Listing 2-1 into
-*src/main.rs*.
+Phần đầu tiên của trò chơi dự đoán này là sẽ hỏi người chơi nhập đầu vào, xử lý đầu vào đó, và kiểm tra đầu vào đó có trong định dạng được kì vọng hay không. Để bắt đầu, chúng ta sẽ cho người chơi nhập vào một đầu vào dự đoán. Nhập đoạn code trong Listing 2-1 vào trong file *src/main.rs*.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -78,205 +59,118 @@ allow the player to input a guess. Enter the code in Listing 2-1 into
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:all}}
 ```
 
-<span class="caption">Listing 2-1: Code that gets a guess from the user and
-prints it</span>
+<span class="caption">Listing 2-1: Đoạn mã nhận dự đoán của người dùng và in nó ra</span>
 
-This code contains a lot of information, so let’s go over it line by line. To
-obtain user input and then print the result as output, we need to bring the
-`io` input/output library into scope. The `io` library comes from the
-standard library, known as `std`:
+Đoạn code này hàm chứa rất nhiều thông tin, vì vậy hãy cùng nhau giải thích nó từng dòng một. Để lựa chọn đầu vào của người dùng và in kết quả đầu ra, ta cần mang thư viện `io` input/output vào trong phạm vi này. Thư viện `io` từ thư viện tiêu chuẩn, được viết tới là `std`:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:io}}
 ```
 
-By default, Rust has a set of items defined in the standard library that it brings
-into the scope of every program. This set is called the *prelude*, and you can
-see everything in it [in the standard library documentation][prelude].
+Trong mặc định, Rust có một tập các items định nghĩa các thư viện tiêu chuẩn được mang vào trong phạm vi của mỗi dự án. Tập này được gọi là *prelude*, và bạn có thể nhìn thấy tất cả chúng trong [tài liệu về thư viện tiêu chuẩn][prelude].
 
-If a type you want to use isn’t in the prelude, you have to bring that type
-into scope explicitly with a `use` statement. Using the `std::io` library
-provides you with a number of useful features, including the ability to accept
-user input.
+Nếu kiểu thư viện bạn muốn không ở trong phần dạo đầu, bạn cần mang nó vào trong một phạm vi rõ ràng với statement `use`. Sử dụng thư viện `std::id` cung cấp cho bạn một vài tính năng hữu dụng, bao gồm khả năng chấp nhận đầu vào của người dùng.
 
-As you saw in Chapter 1, the `main` function is the entry point into the
-program:
+Như bạn từng thấy trong Chương 1, hàm `main` sẽ là điểm vào trong chương trình.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:main}}
 ```
 
-The `fn` syntax declares a new function, the parentheses, `()`, indicate there
-are no parameters, and the curly bracket, `{`, starts the body of the function.
+Cú pháp `fn` khai báo hàm mới, dấu ngoặc đơn, `()`, biểu thị rằng nó không có tham số, và dấu ngoặc nhọn, `{` bắt đầu phần thân của một hàm.
 
-As you also learned in Chapter 1, `println!` is a macro that prints a string to
-the screen:
+Như bạn đã từng học trong Chương 1, `println!` cũng là một macro in ra chuỗi ngoài màn hình.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:print}}
 ```
 
-This code is printing a prompt stating what the game is and requesting input
-from the user.
+Đoạn code này in ra một lời nhắc đây là trò chơi gì và yêu cầu nhập đầu vào từ người dùng.
 
-### Storing Values with Variables
+### Lưu giữ giá trị với biến.
 
-Next, we’ll create a *variable* to store the user input, like this:
+Tiếp theo, chúng ta sẽ tạo một *biến* để lưu trữ giá trị từ đầu vào của người dùng, như sau:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:string}}
 ```
 
-Now the program is getting interesting! There’s a lot going on in this little
-line. We use the `let` statement to create the variable. Here’s another example:
+Bây giờ chương trình đang dần thú vị hơn! Có rất nhiều điều xảy ra trong dòng này. Chúng ta sẽ sử dụng câu lệnh `let` để tạo giá trị. Sau đây là một ví dụ:
 
 ```rust,ignore
 let apples = 5;
 ```
 
-This line creates a new variable named `apples` and binds it to the value 5. In
-Rust, variables are immutable by default, meaning once we give the variable a
-value, the value won't change. We’ll be discussing this concept in detail in
-the [“Variables and Mutability”][variables-and-mutability]<!-- ignore -->
-section in Chapter 3. To make a variable mutable, we add `mut` before the
-variable name:
+Dòng code này tạo mới một biến được đặt tên là `apples` và gắn nó với giá trị là 5. Trong Rust, các biến đều mắc định là *bất biến*, nghĩa là một khi chúng được đưa một giá trị nhất định, giá trị này sẽ không thay đổi. Chúng ta sẽ bàn đến ý tưởng này chi tiết hơn trong phần ["Các biến và tính bất biến"][variables-and-mutability]<!-- ignore --> ở chương 3. Để làm cho một biến có thể biến đổi được, ta thêm `mut` trước tên biến: 
 
 ```rust,ignore
 let apples = 5; // immutable
 let mut bananas = 5; // mutable
 ```
 
-> Note: The `//` syntax starts a comment that continues until the end of the
-> line. Rust ignores everything in comments. We’ll discuss comments in more
-> detail in [Chapter 3][comments]<!-- ignore -->.
+> Ghi chú: Cú pháp `\\` bắt đầu một bình luận kéo dài đến cuối dòng. Rust sẽ bỏ qua tất cả ở trong phần bình luận này. Chúng ta sẽ bàn đến phần bình luận này chi tiết hơn ở trong [Chương 3][comments]<!-- ignore -->.
 
-Returning to the guessing game program, you now know that `let mut guess` will
-introduce a mutable variable named `guess`. The equal sign (`=`) tells Rust we
-want to bind something to the variable now. On the right of the equals sign is
-the value that `guess` is bound to, which is the result of calling
-`String::new`, a function that returns a new instance of a `String`.
-[`String`][string]<!-- ignore --> is a string type provided by the standard
-library that is a growable, UTF-8 encoded bit of text.
+Trở về chương trình trò chơi đoán số, bạn biết rằng `let mut guess` sẽ giới thiệu biến khả biến được đặt tên là `guess`. Dấu bằng (`=`) nói với Rust rằng chúng ta muốn gắn gì đó vào biến. Bên phải của dấu bằng là giá trị mà `guess` được gắn vào, thứ là kết quả của việc gọi `String::new`, một hàm trả về một instance của `String`. [`String`][string]<!-- ignore --> là kiểu dữ liệu được cung cấp bởi thư viện tiêu chuẩn, nó có thể phát triển được, UTF-8 encoded bit hoặc text.
 
-The `::` syntax in the `::new` line indicates that `new` is an associated
-function of the `String` type. An *associated function* is a function that’s
-implemented on a type, in this case `String`. This `new` function creates a
-new, empty string. You’ll find a `new` function on many types, because it’s a
-common name for a function that makes a new value of some kind.
+Cú pháp `::` trong dòng `::new` chỉ ra rằng `new` có liên quá đến hàm của kiểu dữ liệu `String`. Một *hàm liên quan* là một hàm được triển khai thực hiện trên một kiểu, trong trường hợp này là `String`. Hàm `new` này tạo ra một chuỗi mới và trống. Bạn sẽ tìm được hàm `new` trong nhiều kiểu dữ liệu, bởi vì nó là cái tên phổ biến cho hàm tạo ra giá trị mới, hoặc đại loại vậy.
 
-In full, the `let mut guess = String::new();` line has created a mutable
-variable that is currently bound to a new, empty instance of a `String`. Whew!
+Về cụ thể, dòng `let mut guess = String::new()` đã tạo ra một biến khả biến, nó được gắn liền với một chuỗi mới, trống và là instance của `String`. Phù!
 
-### Receiving User Input
+### Nhận dữ liệu đầu vào từ người dùng.
 
-Recall that we included the input/output functionality from the standard
-library with `use std::io;` on the first line of the program. Now we’ll call
-the `stdin` function from the `io` module, which will allow us to handle user
-input:
+Quay lại với việc chúng ta đã bao gồm chức năng đầu vào/đầu ra từ một thư viện tiêu chuẩn với `use std::io;` trong dòng đầu tiên của chương trình. Bây giờ chúng ta sẽ gọi hàm `stdin` từ module `io`, thứ mà cho phép chúng ta xử lý đầu vào được nhập từ người dùng: 
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:read}}
 ```
 
-If we hadn’t imported the `io` library with `use std::io` at the beginning of
-the program, we could still use the function by writing this function call as
-`std::io::stdin`. The `stdin` function returns an instance of
-[`std::io::Stdin`][iostdin]<!-- ignore -->, which is a type that represents a
-handle to the standard input for your terminal.
+Nếu chúng ta chưa bổ sung thư viện `io` với `use std::io` ở phần đầu của chương trình, chúng ta vẫn có thể sử dụng hàm bằng cách viết hàm gọi, ví dụ `std::io::stdin`. Hàm `stdin` trả về instance của [`std::io::Stdin`][iostdin]<!-- ignore -->, thứ mà đại diện xử lý đầu vào tiêu chuẩn cho terminal của bạn.
 
-Next, the line `.read_line(&mut guess)` calls the [`read_line`][read_line]<!--
-ignore --> method on the standard input handle to get input from the user.
-We’re also passing `&mut guess` as the argument to `read_line` to tell it what
-string to store the user input in. The full job of `read_line` is to take
-whatever the user types into standard input and append that into a string
-(without overwriting its contents), so we therefore pass that string as an
-argument. The string argument needs to be mutable so the method can change the
-string’s content.
+Tiếp theo, dòng `.read_line(&mut guess)` gọi đến phương thức [`read_line`][read_line]<!--ignore --> trên chuẩn xử lý đầu vào để lấy đầu vào được nhập từ người dùng. Chúng ta cũng đi qua `&mut gues` như là một tham số để `read_line` để chỉ ra rằng chuỗi nào lưu trữ đầu vào của người dùng. Công việc đầy đủ của `read_line` là nhận lấy bất kỳ kiểu dữ liệu tiêu chuẩn nào của người dùng và nối chúng thành một chuỗi (mà không hề ghi đè nội dung), vì vậy trước khi bỏ qua chuỗi đó như là một tham số. Chuỗi tham số này cần để trở nên khả biến vì vậy phương thức có thể thay đổi nội dung chuỗi.
 
-The `&` indicates that this argument is a *reference*, which gives you a way to
-let multiple parts of your code access one piece of data without needing to
-copy that data into memory multiple times. References are a complex feature,
-and one of Rust’s major advantages is how safe and easy it is to use
-references. You don’t need to know a lot of those details to finish this
-program. For now, all you need to know is that like variables, references are
-immutable by default. Hence, you need to write `&mut guess` rather than
-`&guess` to make it mutable. (Chapter 4 will explain references more
-thoroughly.)
+Ký hiệu `&` chỉ ra rằng tham số này là một *tham chiếu*, thứ mà chỉ ra cho bạn cách để nhiều đoạn code của bạn cùng truy cập vào một dùng dữ liệu mà không cần sao chiếu dữ liệu đó vào bộ nhớ nhiều lần. Tham chiếu là một tính năng phức tạo, nhưng và nó là một trong những điểm điểm mạnh của Rust, vô cùng an toàn và dễ dàng để sử dụng tham chiếu trong Rust. Bạn không cần phải biết quá nhiều chi tiết để hoàn thiện chương trình. Bây giờ, tất cả những gì bạn cần phải biết là nó giống với biến, tham chiếu là bất biến trong mặc định. Vì vậy, bạn cần phải ghi `&mut guess` thay vì `&guess` để làm nó khả biến. (Chương 4 sẽ giải thích tham chiếu rõ ràng hơn)
 
-### Handling Potential Failure with the `Result` Type
-
-We’re still working on this line of code. We’re now discussing a third line of
-text, but note that it’s still part of a single logical line of code. The next
-part is this method:
+Chúng ta vẫn sẽ làm việc trong dòng code này. Giờ đây, ta bàn tiếp về dòng code thứ 3 trong đoạn đó, nhưng ghi chú rằng nó vẫn là một phần của dòng code logic. Phần tiếp theo là phương thức này:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:expect}}
 ```
 
-We could have written this code as:
+Chúng ta có thể ghi dòng code như sau:
 
 ```rust,ignore
 io::stdin().read_line(&mut guess).expect("Failed to read line");
 ```
 
-However, one long line is difficult to read, so it’s best to divide it. It’s
-often wise to introduce a newline and other whitespace to help break up long
-lines when you call a method with the `.method_name()` syntax. Now let’s
-discuss what this line does.
+Mặc dù vậy, một dòng quá dài thì vô cùng khó để đọc, vì vậy cách tốt nhất là chia nó ra. Thông thường, sẽ khôn ngoan hơn nếu khai báo một dòng code và một khoảng trắng để giúp chia một dòng dài khi bạn gọi một phương thức với cú pháp `.method_name()`. Bây giờ chúng ta sẽ thảo luận dòng code này làm gì.
 
-As mentioned earlier, `read_line` puts whatever the user enters into the string
-we pass to it, but it also returns a `Result` value. [`Result`][result]<!--
-ignore --> is an [*enumeration*][enums]<!-- ignore -->, often called an *enum*,
-which is a type that can be in one of multiple possible states. We call each
-possible state a *variant*.
+Như đã đề cập trước đó, `read_line` đưa vào bất kỳ dữ liệu đầu vào nào được người dùng nhập vào, nhưng cũng đồng thời trả về giá trị `Result`. [`Result`][result]<!--ignore --> là một [*enumeration*][enums]<!-- ignore -->, thường xuyên gọi là *enum* thứ mà kiểu dữ liệu có thể ở một trong nhiều trạng thái có thể. Chúng ta gọi từng trạng thái đó là *các biến thể*.
 
-Chapter 6 will cover enums in more detail. The purpose of these `Result` types
-is to encode error-handling information.
+Chương 6 sẽ bao hàm enums chi tiết hơn. Mục đích của những kiểu dữ liệu `Result` là để mã hóa thông tin xử lý lỗi.
 
-`Result`'s variants are `Ok` and `Err`. The `Ok` variant indicates the
-operation was successful, and inside `Ok` is the successfully generated value.
-The `Err` variant means the operation failed, and `Err` contains information
-about how or why the operation failed.
+Các biến thể của `Result` là `Ok` và `Err`. Biến thể `Ok` chỉ ra rằng toán tử đã thành công và bên trong `Ok` là một giá trị được khởi tạo thành công. Biến thể `Err` có nghĩa rằng toán tử đã thất bại, và `Err` bao gồm những thông tin về việc tại sao hay bằng cách nào mà toán tử lại thất bại.
 
-Values of the `Result` type, like values of any type, have methods defined on
-them. An instance of `Result` has an [`expect` method][expect]<!-- ignore -->
-that you can call. If this instance of `Result` is an `Err` value, `expect`
-will cause the program to crash and display the message that you passed as an
-argument to `expect`. If the `read_line` method returns an `Err`, it would
-likely be the result of an error coming from the underlying operating system.
-If this instance of `Result` is an `Ok` value, `expect` will take the return
-value that `Ok` is holding and return just that value to you so you can use it.
-In this case, that value is the number of bytes in the user’s input.
+Giá trị của kiểu dữ liệu `Result` giống như nhiều giá trị và kiểu khác, là đều có những phương thức định nghĩa trên chúng. Một instance của `Result` có [`expect` method][expect]<!-- ignore --> mà bạn có thể gọi. Nếu instance này của `Result` là một giá trị `Err`, `expect` sẽ là nguyên nhân tại sao chương trình crash và hiển thị tin nhắn đó, được bạn bỏ qua như là một tham số của `expect`. Nếu phương thức `read_line` được trả về như `Err`, nó sẽ giống như kết quả của một lỗi đến từ hệ điều hành của bạn. Nếu như instance của `Result` này là một giá trị `Ok`, `expect` sẽ nhận giá trị trả về khi `Ok` đang nắm giữ giá trị và trả về đúng giá trị đó cho bạn để sử dụng. Trong trường hợp này giá trị đó là số của những byte trong đầu vào người dùng.
 
-If you don’t call `expect`, the program will compile, but you’ll get a warning:
+Nếu bạn không gọi `expect`, chương trình vẫn sẽ biên dịch nhưng bạn sẽ nhận được cảnh báo:
 
 ```console
 {{#include ../listings/ch02-guessing-game-tutorial/no-listing-02-without-expect/output.txt}}
 ```
 
-Rust warns that you haven’t used the `Result` value returned from `read_line`,
-indicating that the program hasn’t handled a possible error.
+Rust sẽ cảnh báo bạn vì bạn chưa sử dụng giá trị trả về `Result` từ `read_line`, nó chỉ ra tằng chương trình chưa được xử lý những lỗi có thể xảy ra. 
 
-The right way to suppress the warning is to actually write error handling, but
-in our case we just want to crash this program when a problem occurs, so we can
-use `expect`. You’ll learn about recovering from errors in [Chapter
-9][recover]<!-- ignore -->.
+Cách phù hợp để giảm cảnh báo thực ra là viết phần xử lý lỗi, nhưng trong trường hợp này chúng ta chỉ muốn crash chương trình khi vấn đề xuất hiện, vì vậy chúng ta sử dùng `expect`. Bạn sẽ học được cách xử lý lỗi trong [Chương 9][recover]<!-- ignore -->.
 
-### Printing Values with `println!` Placeholders
+### In ra giá trị với trình giữ chỗ `println!`
 
-Aside from the closing curly bracket, there’s only one more line to discuss in
-the code so far:
+Bên cạnh dấu ngoặc nhọn, chỉ còn duy nhất một dòng để bàn về đoạn code đến bây giờ:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:print_guess}}
 ```
 
-This line prints the string that now contains the user’s input. The `{}` set of
-curly brackets is a placeholder: think of `{}` as little crab pincers that hold
-a value in place. You can print more than one value using curly brackets: the
-first set of curly brackets holds the first value listed after the format
-string, the second set holds the second value, and so on. Printing multiple
-values in one call to `println!` would look like this:
+Dòng này in ra một chuỗi chứa đầu vào được nhập bởi người dùng. Dấu `{}` là một tập các dấu ngoặc nhọn là một trình giữ chỗ: Hãy liên tưởng `{}` giống như một chiếc càng cua nhỏ giữ một giá trị đúng chỗ. Bạn có thể in nhiều hơn một giá trị nếu dử dụng dấu ngoặc nhọn: dấu ngoặc nhọn đầu tiên của các dấu ngoặc nhọn giữ giá trị đầu tiên được liệt kê dưới định dạng chuỗi, và cứ thế tiếp tục. In ra nhiều giá trị trong một lần gọi `println!` sẽ trông như sau:
 
 ```rust
 let x = 5;
@@ -285,11 +179,11 @@ let y = 10;
 println!("x = {} and y = {}", x, y);
 ```
 
-This code would print `x = 5 and y = 10`.
+Dòng code này sẽ in ra: `x = 5 and y = 10`.
 
-### Testing the First Part
+### Kiểm thử phần đầu tiên
 
-Let’s test the first part of the guessing game. Run it using `cargo run`:
+Hãy cùng nhau kiểm thử phần đầu tiên của trò chơi đoán số. Khởi chạy chương trình sử dụng `cargo run`:
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-01/
@@ -308,34 +202,19 @@ Please input your guess.
 You guessed: 6
 ```
 
-At this point, the first part of the game is done: we’re getting input from the
-keyboard and then printing it.
+Tính đến thời điểm này, phần đầu tiên của trò chơi đã hoàn tất: chúng ta đã nhận đầu vào được nhập bởi bàn phím người dùng và in ra nó.
 
-## Generating a Secret Number
+## Khởi tạo ra một số bí mật
 
-Next, we need to generate a secret number that the user will try to guess. The
-secret number should be different every time so the game is fun to play more
-than once. We’ll use a random number between 1 and 100 so the game isn’t too
-difficult. Rust doesn’t yet include random number functionality in its standard
-library. However, the Rust team does provide a [`rand` crate][randcrate] with
-said functionality.
+Tiếp theo, chúng ta cần tạo ra một số bí mật để người dùng đoán. Số bí mật sẽ thay đổi sau mỗi lần để trò chơi thêm phần thú vị. Chúng ta sẽ sử dụng một số bí mật nằm giữa 1 và 100 để trò chơi không trở nên quá khó. Rust chưa bao gồm một hàm khởi tạo ngẫu nhiên số bí mật. Nhưng đội ngũ Rust đã cung cấp một thư viện [`rand` crate][randcrate] như chúng ta đã nói.
 
-### Using a Crate to Get More Functionality
+### Sử dụng Crate để lấy thêm chức năng
 
-Remember that a crate is a collection of Rust source code files. The project
-we’ve been building is a *binary crate*, which is an executable. The `rand`
-crate is a *library crate*, which contains code intended to be used in other
-programs and can't be executed on its own.
+Hãy nhớ rằng crate là một tập các file source code Rust. Một dự án mà chúng tôi đã từng xây dựng là một *binary crate*, thứ mà có thể thực thi. Crate `rand` là một *thư viện crate*, thứ mà bao gồm đoạn mã được dự định sẽ sử dụng trong chương trình khác và không thể tử thực thi bởi chính nó.
 
-Cargo’s coordination of external crates is where Cargo really shines. Before we
-can write code that uses `rand`, we need to modify the *Cargo.toml* file to
-include the `rand` crate as a dependency. Open that file now and add the
-following line to the bottom beneath the `[dependencies]` section header that
-Cargo created for you. Be sure to specify `rand` exactly as we have here, with
-this version number, or the code examples in this tutorial may not work.
+Sự phối hợp của Cargo trong những crate ngoại cảnh là điểm sáng của Cargo. Trước khi chúng ta có thể viết những đoạn code sử dụng `rand`, chúng ta cần chỉnh sửa file *Cargo.toml* để bao gồm `rand` như một dependency. Mở file đó và thêm vào những dòng sau ở bên dưới cùng chỗ `[dependencies]` trong mục header mà Cargo đã tạo cho bạn.
 
-<!-- When updating the version of `rand` used, also update the version of
-`rand` used in these files so they all match:
+<!-- Khi cập nhật phiên bản của `rand` được sử dụng, đồng thời cần cập nhật phiên bản của `rand` được sử dụns trong những file sau để chúng giống nhau:
 * ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 * ch14-03-cargo-workspaces.md
 -->
@@ -346,24 +225,11 @@ this version number, or the code examples in this tutorial may not work.
 {{#include ../listings/ch02-guessing-game-tutorial/listing-02-02/Cargo.toml:9:}}
 ```
 
-In the *Cargo.toml* file, everything that follows a header is part of that
-section that continues until another section starts. In `[dependencies]` you
-tell Cargo which external crates your project depends on and which versions of
-those crates you require. In this case, we specify the `rand` crate with the
-semantic version specifier `0.8.3`. Cargo understands [Semantic
-Versioning][semver]<!-- ignore --> (sometimes called *SemVer*), which is a
-standard for writing version numbers. The number `0.8.3` is actually shorthand
-for `^0.8.3`, which means any version that is at least `0.8.3` but below
-`0.9.0`.
+Trong file *Cargo.toml*, tất cả đều theo phần đầu, đó là mục tiếp theo cho đến khi mục khác bắt đầu. Trong `[dependencíe]` bạn chỉ ra với Cargo rằng những crates ngoại vi nào phụ thuộc trong dự án của bạn và phiên bản nào của những crate này mà bạn yêu cầu. Trong trường hợp này, chúng ta xác định rằng crate `rand` về mặt ngữ nghĩa được xác định là phiên bản `0.8.3`. Cargo hiểu [Semantic Versioning][semver]<!-- ignore --> (thi thoảng được gọi là *SemVer*), là tiêu chuẩn cho viết phiên bản số bao nhiêu. Số `0.8.3` thực ra là tốc ký cho `^0.8.3`. Điều này có ý nghĩa rằng phiên bản tối thiểu là `0.8.3` nhưng dưới `0.9.0`.
 
-Cargo considers these versions to have public APIs compatible with version
-`0.8.3`, and this specification ensures you’ll get the latest patch release
-that will still compile with the code in this chapter. Any version `0.9.0` or
-greater is not guaranteed to have the same API as what the following examples
-use.
+Cargo cho rằng những phiên bản này phải có những APIs công khai, tương thích với phiên bản `0.8.3` và sự chỉ rõ này đảm bảo rằng bạn sẽ nhận bản vá mới nhất được công bố, thứ mà vẫn có thể biên dịch với đoạn code ở trong chương này. Mọi phiên bản `0.9.0` trở lên không được cho phép có cùng API theo như những gì mà ví dụ sau sử dụng.
 
-Now, without changing any of the code, let’s build the project, as shown in
-Listing 2-2.
+Bây giờ, thay vì thay đổi bất kỳ phần code nào, hãy xây dựng dự án này, như đã thể hiện trong mục Listing 2-2.
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
@@ -391,33 +257,17 @@ $ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
 ```
 
-<span class="caption">Listing 2-2: The output from running `cargo build` after
-adding the rand crate as a dependency</span>
+<span class="caption">Listing 2-2: Đầu ra sau khi chạy `cargo build` sau khi thêm crate ngẫu nhiên như một dependency </span>
 
-You may see different version numbers (but they will all be compatible with the
-code, thanks to SemVer!), different lines (depending on the operating system),
-and the lines may be in a different order.
+Bạn có thể thấy sự khác biệt trong số của phiên bản (nhưng chúng sẽ đều tương thích với đoạn code, cảm ơn SemVer!), Những dòng khác nhau (phụ thuộc vào hệ điều hành) và những dòng này code thể ở những trật tự khác nhau.
 
-When we include an external dependency, Cargo fetches the latest versions of
-everything that dependency needs from the *registry*, which is a copy of data
-from [Crates.io][cratesio]. Crates.io is where people in the Rust ecosystem
-post their open source Rust projects for others to use.
+Khi chúng ta bao hàm những dependency ngoại vi, Cargo sẽ tìm về phiên bản cũ nhất của tất cả những gì mà dependency cần từ *registry*, đó là một bản sao của dữ liệu từ [Crates.io][cratesio]. Crate.io là nơi mà mọi người trong hệ sinh thái Rust có thể đăng những đoạn code Rust mã nguồn mở để mọi người khác có thể sử dụng. 
 
-After updating the registry, Cargo checks the `[dependencies]` section and
-downloads any crates listed that aren’t already downloaded. In this case,
-although we only listed `rand` as a dependency, Cargo also grabbed other crates
-that `rand` depends on to work. After downloading the crates, Rust compiles
-them and then compiles the project with the dependencies available.
+Sau khi cập nhật phần đăng ký, Cargo sẽ kiểm tra mục `[dependencies]` và tải về bất kỳ crates nào được liệt kệ nhưng chưa được tải xuống. Trong trường hợp này, mặc dù chúng ta mới liệt kê `rand` như là một dependency, Cargo đồng thời mang những crates khác mà `rand` cần để hoạt động. Sau khi tải xuống các crate, Rust sẽ biên dịch chúng và sau đó biên dịch dự án với những dependency khả dụng.
 
-If you immediately run `cargo build` again without making any changes, you
-won’t get any output aside from the `Finished` line. Cargo knows it has already
-downloaded and compiled the dependencies, and you haven’t changed anything
-about them in your *Cargo.toml* file. Cargo also knows that you haven’t changed
-anything about your code, so it doesn’t recompile that either. With nothing to
-do, it simply exits.
+Nếu bạn ngay lập tức khởi chạy `cargo build` lần nữa mà không thay đổi bất kỳ điều gì, bạn sẽ không nhận được bất kỳ đầu ra ngoài nào từ dòng `Finished`. Cargo biết đó đã sẵn sàng được tải xuống và biên dịch các dependency, và bạn sẽ không cần thay đổi bất kỳ thứ gì trong file *Cargo.toml* của bạn. Cargo đồng thời biết rằng bạn chưa hề thay đổi bất cứ điều gì trong đoạn code của bạn, vì vậy nó không hề biên dịch lại luôn. Với việc không có gì để làm, nó chỉ đơn giản là thoát ra.
 
-If you open up the *src/main.rs* file, make a trivial change, and then save it
-and build again, you’ll only see two lines of output:
+Nếu bạn mở file *src/main.rs*, thay đổi không đáng kể và sau đó lưu chúng và build lại từ đầu, bạn sẽ nhìn thấy hai dòng đầu ra như sau:
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
@@ -430,40 +280,17 @@ $ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 2.53 secs
 ```
 
-These lines show Cargo only updates the build with your tiny change to the
-*src/main.rs* file. Your dependencies haven’t changed, so Cargo knows it can
-reuse what it has already downloaded and compiled for those.
+Những dòng sau cho thấy rằng Cargo chỉ cập những bản build với sự thay đổi nhỏ nhất trong file *src/main/rs*. Những dependency của bạn không hề thay đổi, vì vậy Cargo biết rằng chúng có thể tái sử dụng những thứ gì đã được tải xuống và biên dịch những thứ đó.
 
-#### Ensuring Reproducible Builds with the *Cargo.lock* File
+#### Đảm bảo rằng có thể tái sử dụng những bản Build trong file *Cargo.lock*
 
-Cargo has a mechanism that ensures you can rebuild the same artifact every time
-you or anyone else builds your code: Cargo will use only the versions of the
-dependencies you specified until you indicate otherwise. For example, say that
-next week version 0.8.4 of the `rand` crate comes out, and that version
-contains an important bug fix, but it also contains a regression that will
-break your code. To handle this, Rust creates the *Cargo.lock* file the first
-time you run `cargo build`, so we now have this in the *guessing_game*
-directory.
+Cargo có một cơ chế để đảm bảo rằng bạn có thể build lại cùng một sản phẩm từng lần, dù bạn hay người khác build code đó: Cargo sẽ chỉ sử dụng những phiên bản của những dependency mà bạn chỉ định đến khi bạn biểu thị cái khác. Lấy ví dụ, phiên bản tiếp theo của 0.8.4 của `rand` crate được công bố, và phiên bản đó đã bao gồm những lỗi đã được sửa, những nó đồng thời bao gồm sự cấp lại, mà có thể phá hỏng code của bạn. Để xử lý điều này, rust tạo ra file *Cargo.lock*, lần đầu tiên bạn chạy `cargo.build`, giờ đây chúng ta có điều này trong thư mục *guesing_game*
 
-When you build a project for the first time, Cargo figures out all the
-versions of the dependencies that fit the criteria and then writes them to
-the *Cargo.lock* file. When you build your project in the future, Cargo will
-see that the *Cargo.lock* file exists and use the versions specified there
-rather than doing all the work of figuring out versions again. This lets you
-have a reproducible build automatically. In other words, your project will
-remain at `0.8.3` until you explicitly upgrade, thanks to the *Cargo.lock*
-file. Because the *Cargo.lock* file is important for reproducible builds, it's
-often checked into source control with the rest of the code in your project.
+Khi bạn build một project lần đầu, Cargo tìm ra tất cả những phiên bản của các dependency phù hợp với những tiêu chí và rồi ghi chúng vào trong file *Cargo.lock* tồn tại và sử dụng những phiên bản được chỉ định hơn là làm hết những công việc được tìm ra trong những phiên bản trước đó. Điều này cho bạn khả năng tái sử dụng các bản build một cách tự động. Mặt khác, dự án của bạn sẽ được duy trì ở `0.8.3` đến khi bạn chỉ định cập nhật, cảm ơn file *Cargo.lock*. Bởi vì file *Cargo.lock* vô cùng quan trọng cho những bản build có thể tái sử dụng, nó thường xuyên kiếm tra trong trình kiểm soát mã với phần còn lại của đoạn code trong dự án của bạn.
 
-#### Updating a Crate to Get a New Version
+#### Cập nhật Crate để nhận phiên bản mới hơn
 
-When you *do* want to update a crate, Cargo provides the command `update`,
-which will ignore the *Cargo.lock* file and figure out all the latest versions
-that fit your specifications in *Cargo.toml*. Cargo will then write those
-versions to the *Cargo.lock* file. Otherwise, by default, Cargo will only look
-for versions greater than `0.8.3` and less than `0.9.0`. If the `rand` crate
-has released the two new versions `0.8.4` and `0.9.0` you would see the
-following if you ran `cargo update`:
+Khi bạn muốn cập nhật một crate, Cargo cung cấp câu lệnh `update`, thứ mà bỏ qua file *Cargo.lock* và tìm ra tất cả những phiên bản mới nhất mà phù hợp với chỉ định của bạn trong file *Cargo.toml*. Cargo khi đó sẽ viết những phiên bản này vào trong file *Cargo.lock*. Mặt khác, mặc định, Cargo sẽ chỉ khóa những phiên bản lớn hơn `0.8.3` và nhỏ hơn `0.9.0`. Nếu crate `rand` đã được công bố hai phiên bản `0.8.4` và `0.9.0` thì bạn sẽ thấy những dòng sau đây nếu bạn chạy `cargo update`: 
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
@@ -477,31 +304,20 @@ $ cargo update
     Updating rand v0.8.3 -> v0.8.4
 ```
 
-Cargo ignores the `0.9.0` release. At this point, you would also notice a
-change in your *Cargo.lock* file noting that the version of the `rand` crate
-you are now using is `0.8.4`. To use `rand` version `0.9.0` or any version in
-the `0.9.x` series, you’d have to update the *Cargo.toml* file to look like
-this instead:
+Cargo sẽ bỏ qua phiên bản `0.9.0`. Ở thời điểm này, bạn để ý rằng không có thay đổi trong file *Cargo.lock* của bạn mà những phiên của crate `rand` của bạn giờ đây sử dụng `0.8.4`. Để sử dụng phiên bản `0.9.0` của `rand` hoặc bất kỳ phiên bản nào khác trong tập `0.9.x`, bạn cần cập nhật trong file *Cargo.toml* để khóa thay vì làm như sau:
 
 ```toml
 [dependencies]
 rand = "0.9.0"
 ```
 
-The next time you run `cargo build`, Cargo will update the registry of crates
-available and reevaluate your `rand` requirements according to the new version
-you have specified.
+Lần tiếp theo bạn chạy `cargo build`, Cargo sẽ cập nhật bản đăng ký của những crate khả dụng và đánh giá lại yêu cầu `rand` thay vì phiên bản mới mà bạn chỉ định.
 
-There’s a lot more to say about [Cargo][doccargo]<!-- ignore --> and [its
-ecosystem][doccratesio]<!-- ignore --> which we’ll discuss in Chapter 14, but
-for now, that’s all you need to know. Cargo makes it very easy to reuse
-libraries, so Rustaceans are able to write smaller projects that are assembled
-from a number of packages.
+Có nhiều điều để nói về [Cargo][doccargo]<!-- ignore --> và [its ecosystem][doccratesio]<!-- ignore --> thứ mà chúng ta sẽ bàn kỹ hơn trong Chương 14, nhưng không phải bây giờ, đó là tất cả những gì mà bạn cần phải biết. Cargo sẽ làm nó trở nên vô cùng đơn giản để tái sử dụng thư viện, vì vậy những lập trình viên Rust có khả năng viết những dự án nhỏ hơn, những dự án được tập hợp bởi một số lượng các package.
 
-### Generating a Random Number
+### Khởi tạo một số ngẫu nhiên
 
-Let’s start using `rand` to generate a number to guess. The next step is to
-update *src/main.rs*, as shown in Listing 2-3.
+Hãy bắt đầu sử dụng `rand` để khởi tạo một số để đoán. Bước tiếp theo là cập nhật *src/main.rs* được hiển thị trong Listing 2-3.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -509,38 +325,17 @@ update *src/main.rs*, as shown in Listing 2-3.
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-03/src/main.rs:all}}
 ```
 
-<span class="caption">Listing 2-3: Adding code to generate a random
-number</span>
+<span class="caption">Listing 2-3: Thêm phần code để khởi tạo ngẫu nhiên</span>
 
-First, we add the line `use rand::Rng`. The `Rng` trait defines methods that
-random number generators implement, and this trait must be in scope for us to
-use those methods. Chapter 10 will cover traits in detail.
+Đầu tiên, chúng ta thêm dòng `use rand::Rng`. `Rnd` định nghĩa phương thức mà trình khởi tạo số triển khai, và đặc điểm này cần phải trong phạm vi cho chúng ta có thể sử dụng những phương thức này. Chương 10 sẽ bao gồm những đặc điểm này về chi tiết.
 
-Next, we’re adding two lines in the middle. In the first line, we call the
-`rand::thread_rng` function that gives us the particular random number
-generator that we’re going to use: one that is local to the current thread of
-execution and seeded by the operating system. Then we call the `gen_range`
-method on the random number generator. This method is defined by the `Rng`
-trait that we brought into scope with the `use rand::Rng` statement. The
-`gen_range` method takes a range expression as an argument and generates a
-random number in the range. The kind of range expression we’re using here takes
-the form `start..=end` and is inclusive on the lower and upper bounds, so we
-need to specify `1..=100` to request a number between 1 and 100.
+Tiếp theo, chúng ta sẽ thêm hai dòng ở giữa. Trong dòng đầu tiên, chúng ta gọi hàm `rand::thread_rng` để cho chúng ta một trình khởi tạo số ngẫu nhiên mà sẽ được chúng ta sử dụng: một là từ local đến thread hiện tại của trình thực thi và được seed bởi hệ điều hành. Sau đó chúng. Sau đó chúng ta gọi phương thức `gen_rand` trên trình khởi tạo số ngẫu nhiên. Phương thức này được định nghĩa bởi `Rng` mà chúng đã đã mang vào trong phạm vi này trước đó với câu lệnh `use rand::Rng`. Phương thức `gen_rand` lấy hai khoảng của biểu thức như là tham số và khởi tạo ra một số trong phạm vi đó. Kiểu của phạm vi biểu thức này chúng ta sử dụng ở đây để nhận mẫu `start..=end` và nó bao gồm giới hạn thấp và cao, vì vậy chúng ta cần chỉ ra `1..=100` để yêu cầu một số giữa 1 và 100.
 
-> Note: You won’t just know which traits to use and which methods and functions
-> to call from a crate, so each crate has documentation with instructions for
-> using it. Another neat feature of Cargo is that running the `cargo doc
-> --open` command will build documentation provided by all of your dependencies
-> locally and open it in your browser. If you’re interested in other
-> functionality in the `rand` crate, for example, run `cargo doc --open` and
-> click `rand` in the sidebar on the left.
+> Ghi chú: bạn sẽ không thể biết đặc điểm nào được sử dụng và phương thức hay hàm nào được gọi trong crate, vì vậy mỗi crate có một tài liệu cho cách sử dụng. Với tính năng neat khác của Cargo được chạy bởi câu lệnh `cargo doc--open` sẽ build một tài liệu được cung cấp bởi tất cả các dependency locally và mở nó trong trình duyệt cua bạn. Nếu bạn cảm thấy thú vị với những tính năng này trong crate `rand` này, ví dụ, chạy `cargo doc --open` và bấm vào `rand` bên trái trên thành sidebar.
 
-The second new line prints the secret number. This is useful while we’re
-developing the program to be able to test it, but we’ll delete it from the
-final version. It’s not much of a game if the program prints the answer as soon
-as it starts!
+Dòng thứ hai in ra số bí mật. Nó sẽ vô cùng hữu ích khi mà chúng ta phát triển chương trình để có khả năng kiểm thử nó, nhưng chúng ta sẽ xóa nó ra khỏi phiên bản cuối cùng. Sẽ không có nhiều trò chơi nếu chương trình in ra kết quả ngay khi trò chơi bắt đầu.
 
-Try running the program a few times:
+Thử chạy chương trình vài lần:
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-03/
@@ -571,14 +366,11 @@ Please input your guess.
 You guessed: 5
 ```
 
-You should get different random numbers, and they should all be numbers between
-1 and 100. Great job!
+Bạn cần nhận được các số ngẫu nhiên khác nhau, và chúng sẽ đều nằm trong khoảng 1 và 100. Làm tốt lắm!
 
-## Comparing the Guess to the Secret Number
+## So sánh dự đoán với số bí mật
 
-Now that we have user input and a random number, we can compare them. That step
-is shown in Listing 2-4. Note that this code won’t compile quite yet, as we
-will explain.
+Bây giờ chúng ta đã có đầu vào của người dùng và một số bí mật, chúng ta có thể so sánh chúng. Đó là bước được hiển thị trong Listing 2-4. Ghi chú rằng đoạn code này chưa được biên dịch, như chúng ta sẽ giải thích.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -586,64 +378,25 @@ will explain.
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-04/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 2-4: Handling the possible return values of
-comparing two numbers</span>
+<span class="caption">Listing 2-4: Xử lý các khả năng của giá trị trả về khi so sánh hai số</span>
 
-First we add another `use` statement, bringing a type called
-`std::cmp::Ordering` into scope from the standard library. The `Ordering` type
-is another enum and has the variants `Less`, `Greater`, and `Equal`. These are
-the three outcomes that are possible when you compare two values.
+Đầu tiên chúng ta thêm câu lệnh `use`, mang kiểu gọi `std::cmp::Ordering` vào trong phạm vi từ thư viện tiêu chuẩn. Kiểu `Odering` là một kiểu enum khác và có giá trị `Less`, `Greater`, và `Equal`. Đây là ba đầu ra khả dụng khi bạn so sánh hai giá trị.
 
-Then we add five new lines at the bottom that use the `Ordering` type. The
-`cmp` method compares two values and can be called on anything that can be
-compared. It takes a reference to whatever you want to compare with: here it’s
-comparing the `guess` to the `secret_number`. Then it returns a variant of the
-`Ordering` enum we brought into scope with the `use` statement. We use a
-[`match`][match]<!-- ignore --> expression to decide what to do next based on
-which variant of `Ordering` was returned from the call to `cmp` with the values
-in `guess` and `secret_number`.
+Sau đó thêm năm dòng vào phần cuối sử dụng kiểu `Ordering`. Phương thức `cmp` so sánh hai giá trị và có thể được gọi trên bất kỳ thứ gì có thể so sánh được. Có cần tham chiếu tới bất kỳ thứ giá ban muốn để so sánh với: đây là cách so sánh `guess` với `secret_number`. Sau đó trả về giá trị của `Ordering` enum mà chúng ta mang vào trong phạm vi này với câu lệnh `use`. Chúng ta sử dụng biểu thức [`match`][match]<!-- ignore --> để khai báo những gì cần làm tiếp theo dựa trên những biến nào của `Ordering` được trả lại từ lời gọi đến hàm `cmp` với những giá trị trong `guess` và `secret_number`.
 
-A `match` expression is made up of *arms*. An arm consists of a *pattern* to
-match against, and the code that should be run if the value given to `match`
-fits that arm’s pattern. Rust takes the value given to `match` and looks
-through each arm’s pattern in turn. Patterns and the `match` construct are
-powerful Rust features that let you express a variety of situations your code
-might encounter and make sure that you handle them all. These features will be
-covered in detail in Chapter 6 and Chapter 18, respectively.
+Biểu thức `match` được tạo ra bởi *arms*. Một cánh tay bao gồm những *pattern* để khớp với, và đoạn code nên được chạy nếu giá trị được cho đến `match` phù hợp với mô hình cánh tay. Rust nhận những giá trị được cho đến `match` và nhìn qua từng mô hình cánh tay trong một lượt. Các mô hình và cấu trúc `match` là những tính năng Rust vô cùng mạnh mẽ cho phép bạn thể hiện một vài những tình huống trong code của bạn có thể gặp và đảm bảo rằng bạn có thể xử lý được hết chúng. Những tính năng này sẽ được bao hàm về chi tiết trong Chương 6 và Chương 18 tương ứng.
 
-Let’s walk through an example with the `match` expression we use here. Say that
-the user has guessed 50 and the randomly generated secret number this time is
-38. When the code compares 50 to 38, the `cmp` method will return
-`Ordering::Greater`, because 50 is greater than 38. The `match` expression gets
-the `Ordering::Greater` value and starts checking each arm’s pattern. It looks
-at the first arm’s pattern, `Ordering::Less`, and sees that the value
-`Ordering::Greater` does not match `Ordering::Less`, so it ignores the code in
-that arm and moves to the next arm. The next arm’s pattern is
-`Ordering::Greater`, which *does* match `Ordering::Greater`! The associated
-code in that arm will execute and print `Too big!` to the screen. The `match`
-expression ends after the first successful match, so it won’t look at the last
-arm in this scenario.
+Cùng nhau dạo qua một ví dụ với biểu thức `match` mà chúng ta sử dụng ở đây. Nói rằng người dùng đã đoán 50 lần và số được khởi tạo ngẫu nhiên lần này là 38. Khi mà code so sánh 50 và 38, phương thức `cmp` sẽ trả về giá trị `Orderring::Greater` và bắt đầu kiểm tra từng mô hình cánh tay. Nó nhìn đến mô hình cánh tay đầu tiên, `Ordering::Less` và nhìn thấy giá trị `Ordering::Greater` không khớp với `Ordering::Less`, vì vậy nó quả qua đoạn code trong cánh tay đó và chuyển tiếp đến canh tay tiếp theo. Mô hình cánh tay tiếp theo là `Ordering::Greater`, thứ mà khớp với `Ordering::Greater`! Sự liên quan trong đoạn code từ cánh tay đó sẽ thực thi và in ra `Too big!` lên màn hình. Biểu thức khớp sau khi lần khớp thành công đầu tiên, vì vậy nó sẽ không nhìn đến cánh tay cuối trong kịch bản.
 
-However, the code in Listing 2-4 won’t compile yet. Let’s try it:
+Mặc dù, đoạn code trong Listing 2-4 sẽ chưa được biên dịch. Hãy thử điều này
 
 ```console
 {{#include ../listings/ch02-guessing-game-tutorial/listing-02-04/output.txt}}
 ```
 
-The core of the error states that there are *mismatched types*. Rust has a
-strong, static type system. However, it also has type inference. When we wrote
-`let mut guess = String::new()`, Rust was able to infer that `guess` should be
-a `String` and didn’t make us write the type. The `secret_number`, on the other
-hand, is a number type. A few of Rust’s number types can have a value between 1
-and 100: `i32`, a 32-bit number; `u32`, an unsigned 32-bit number; `i64`, a
-64-bit number; as well as others. Unless otherwise specified, Rust defaults to
-an `i32`, which is the type of `secret_number` unless you add type information
-elsewhere that would cause Rust to infer a different numerical type. The reason
-for the error is that Rust cannot compare a string and a number type.
+Cốt lõi của trạng thái lỗi là nó có *kiểu không khớp*. Rust có hệ thống mạnh, tĩnh. Mặc dù thế, nó cũng có sự suy luận. Khi chúng ta viết `let mut guess = String::new()`, Rust có khả năng suy luận ra `guess` có thể là kiểu `String` và không làm chúng ta viết kiểu. Mặt khác, `secret_number` là kiểu số. Và một vài kiểu số của Rust có thể có giá trị từ 1 đến 100: `i32`, một số 32 bit; `u32`, một số không dấu 32 bit; `i64`, một số 64 bit, giống với các số khác. Trừ khi được chỉ định khác, Rust sẽ mặc định sử dụng `i32`, đó là kiểu dành cho số `secret_number` trừ khi bạn thêm thông tin về kiểu khác, điều đó khiển Rust suy luận một kiểu số khác. Lý do cho lỗi này là Rust không thể so sánh một chuỗi với một kiểu số.
 
-Ultimately, we want to convert the `String` the program reads as input into a
-real number type so we can compare it numerically to the secret number. We do so
-by adding this line to the `main` function body:
+Cuối cùng, chúng ta muốn chuyển đổi kiểu chuỗi để chương trình đọc đầu vào thành một số thực, chúng ta có thể so sánh về mặt số học với số bí mật. Chúng ta làm điều đó bằng cách thêm dòng này vào phần thân của hàm `main`.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -651,58 +404,21 @@ by adding this line to the `main` function body:
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/src/main.rs:here}}
 ```
 
-The line is:
+Dòng đó là:
 
 ```rust,ignore
 let guess: u32 = guess.trim().parse().expect("Please type a number!");
 ```
 
-We create a variable named `guess`. But wait, doesn’t the program already have
-a variable named `guess`? It does, but helpfully Rust allows us to *shadow* the
-previous value of `guess` with a new one. Shadowing lets us reuse the `guess`
-variable name rather than forcing us to create two unique variables, such as
-`guess_str` and `guess` for example. We’ll cover this in more detail in Chapter
-3, but for now know that this feature is often used when you want to convert a
-value from one type to another type.
+Chúng ta tạo ra một biến được đặt tên là `guess`. Nhưng đợi đã, không chương trình đã có biến tên là `guess` rồi hay sao? Đúng vậy, nhưng may thay, Rust cho phép chúng ta *shadow* giá trị trước đó của `guess` với một biến mới. Shadowing cho phép chúng ta tái sử dụng biến `guess` thay vì phải tạo ra biến mới, như là `guess_str` và `guess`. Chúng ta sẽ bao hàm chi tiết vấn đề này trong Chương 3, nhưng bây giờ chỉ cần biết rằng tính năng này thường xuyên được sử dụng khi bạn muốn chuyển đổi một giá trị sang giá trị khác.
 
-We bind this new variable to the expression `guess.trim().parse()`. The `guess`
-in the expression refers to the original `guess` variable that contained the
-input as a string. The `trim` method on a `String` instance will eliminate any
-whitespace at the beginning and end, which we must do to be able to compare the
-string to the `u32`, which can only contain numerical data. The user must press
-<span class="keystroke">enter</span> to satisfy `read_line` and input their
-guess, which adds a newline character to the string. For example, if the user
-types <span class="keystroke">5</span> and presses <span
-class="keystroke">enter</span>, `guess` looks like this: `5\n`. The `\n`
-represents “newline”. (On Windows, pressing <span
-class="keystroke">enter</span> results in a carriage return and a newline,
-`\r\n`). The `trim` method eliminates `\n` or `\r\n`, resulting in just `5`.
+Chúng ta gắn biến này vào biểu thức `guess.trim().parse()`. `guess` trong biểu thúc này cho thấy rằng biến `guess` nguyên bản chứa đầu vào như là một chuỗi. Phương thức `trim` lên `String` instance sẽ xóa bỏ bất kỳ khoảng trắng nào ở đầu và cuối chuỗi, chúng ta cần làm vậy để có khả năng so sánh chuỗi với `u32`, thứ mà chỉ bao gồm dữ liệu số. Người dùng sẽ nhập <span class="keystroke">enter</span> để thõa mãn `read_line` và nhập dự đoán của họ, thứ mà được thêm một dòng những ký tự mới thành chuỗi. Ví dụ, nếu người dùng nhập <span class="keystroke">5</span> và nhấn <span class="keystroke">enter</span>, `guess` sẽ giống như này `5\n`. `\n` biểu thị dòng mới (Trên windows, nhấn <span class="keystroke">enter</span> kết quả trong toa xe sẽ trả về và một dòng mới `\r\n`). Phương thức `trim` sẽ xóa bỏ `\n` và `\r\n`, kết quả sẽ chỉ là `5`.
 
-The [`parse` method on strings][parse]<!-- ignore --> converts a string to
-another type. Here, we use it to convert from a string to a number. We need to
-tell Rust the exact number type we want by using `let guess: u32`. The colon
-(`:`) after `guess` tells Rust we’ll annotate the variable’s type. Rust has a
-few built-in number types; the `u32` seen here is an unsigned, 32-bit integer.
-It’s a good default choice for a small positive number. You’ll learn about
-other number types in Chapter 3. Additionally, the `u32` annotation in this
-example program and the comparison with `secret_number` means that Rust will
-infer that `secret_number` should be a `u32` as well. So now the comparison
-will be between two values of the same type!
+[`parse` method on strings][parse]<!-- ignore --> sẽ chuyển đổi một chuỗi thành kiểu dữ liệu khác. Ở đây, chúng ta sẽ sử dụng nó để chuyển đối nó từ một chuỗi thành số. Chúng ta cần nói với Rust chính xác kiểu dữ liệu mà chúng ta cần, sử dụng `let guess: u32`. Dấu hai chấm (`:`) sau `guess` nói với Rust rằng chúng ta sẽ chú thích biến ở đây. Rust có một vài kiểu số xây dựng trong; `u32` ở đây là một số không dấu, số nguyên 32 bit. Đây là một lựa chọn mặc định tốt dành cho số dương nhỏ. Bạn sẽ học được về kiểu số khác trong Chương 3. Trong điều kiện đó, chú thích `u32` trong chương trình ví dụng này và sự so sánh với `secret_number` có ý nghĩa là Rust sẽ suy luận rằng `secret_number` sẽ là `u32`. Giờ đây sự so sánh sẽ là giữa hai giá trị có cùng kiểu.
 
-The `parse` method will only work on characters that can logically be converted
-into numbers and so can easily cause errors. If, for example, the string
-contained `A👍%`, there would be no way to convert that to a number. Because it
-might fail, the `parse` method returns a `Result` type, much as the `read_line`
-method does (discussed earlier in [“Handling Potential Failure with the
-`Result` Type”](#handling-potential-failure-with-the-result-type)<!-- ignore
--->). We’ll treat this `Result` the same way by using the `expect` method
-again. If `parse` returns an `Err` `Result` variant because it couldn’t create
-a number from the string, the `expect` call will crash the game and print the
-message we give it. If `parse` can successfully convert the string to a number,
-it will return the `Ok` variant of `Result`, and `expect` will return the
-number that we want from the `Ok` value.
+Phương thức `parse` sẽ chỉ làm việc trên những ký tự có thể chuyển đổi hợp lý thành số và nó cũng dễ gây ra lỗi. Nếu, ví dụ là, chuỗi chứa `A👍%`, sẽ không thể nào chuyển đôi nó thành một số được. Vì nó sẽ thất bại, phương thức `parse` sẽ trả về kiểu `Result`, giống như phương thức `read_line` làm (đã được thảo luận trước đó trong [“Handling Potential Failure with the`Result` Type”](#handling-potential-failure-with-the-result-type)<!-- ignore-->). Chúng ta sẽ đối xử với `Result` cùng với cách mà chúng ta sử dụng phương thức `expect` lần nữa. Nếu `parse` trả về biến thể `Err` của `Result` vì không thể tạo một số từ một chuỗi, lời gọi `expect` sẽ phá hỏng trò chơi và in tin nhắn mà chúng ta đã đưa cho nó. Nếu `parse` có thể thành công chuyển đổi chuỗi thành số, nó sẽ trả về biến thể `Ok` của `Result`, và `expect` sẽ trả về số mà chúng ta muốn ở giá trị `Ok`.
 
-Let’s run the program now!
+Bây giờ hãy khởi chạy chương trình!
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/
@@ -723,18 +439,11 @@ You guessed: 76
 Too big!
 ```
 
-Nice! Even though spaces were added before the guess, the program still figured
-out that the user guessed 76. Run the program a few times to verify the
-different behavior with different kinds of input: guess the number correctly,
-guess a number that is too high, and guess a number that is too low.
+Tốt! Kể cả khi khoảng trắng được thêm vào trước dự đoán, chương trình vẫn tìm ra được dự đoán của người dùng là 76. Chạy chương trình vài lần để kiểu tra hành vi khác nhau với những kiểu đầu vào khác nhau: dự đoán số chính xác, dự đoán số quá cao, dự đoán số quá thấp.
 
-We have most of the game working now, but the user can make only one guess.
-Let’s change that by adding a loop!
+Chúng ta đã có gần hết trò chơi bây giờ, nhưng người chơi chỉ có thể đoán một lần. Hãy thay đổi điều đó bằng cách thêm vào môt vòng lặp!
 
-## Allowing Multiple Guesses with Looping
-
-The `loop` keyword creates an infinite loop. We’ll add a loop to give users
-more chances at guessing the number:
+Từ khóa `loop` tạo ra một vòng lặp vô hạn. Chúng ta sẽ thêm một vòng lặp để cho người dùng có nhiều cơ hội hơn để đoán số:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -742,17 +451,9 @@ more chances at guessing the number:
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-04-looping/src/main.rs:here}}
 ```
 
-As you can see, we’ve moved everything from the guess input prompt onward into
-a loop. Be sure to indent the lines inside the loop another four spaces each
-and run the program again. The program will now ask for another guess forever,
-which actually introduces a new problem. It doesn’t seem like the user can quit!
+Như bạn đã thấy, chúng ta đã chuyển tất cả từ đầu vào người dùng trở đi vào trong vòng lặp. Hãy chắc chắn rằng dòng mới được thụt vào trong với 4 khoảng trắng và chạy lại chương trình lần nữa. Chương trình sẽ hỏi dự đoán mãi mãi, đây là một vấn đề mới. Dường như là người chơi không thể thoát.
 
-The user could always interrupt the program by using the keyboard shortcut
-<span class="keystroke">ctrl-c</span>. But there’s another way to escape this
-insatiable monster, as mentioned in the `parse` discussion in [“Comparing the
-Guess to the Secret Number”](#comparing-the-guess-to-the-secret-number)<!--
-ignore -->: if the user enters a non-number answer, the program will crash. We
-can take advantage of that to allow the user to quit, as shown here:
+Người dùng có thể gián đoạn chương trình bất cứ lúc nào, sử dụng tổ hợp phím: <span class="keystroke">ctrl-c</span>. Nhưng có cách khác để thoát ra, như đã đề cập trước đó ở phần thảo luận `parse` trong [“Comparing the Guess to the Secret Number”](#comparing-the-guess-to-the-secret-number)<!--ignore -->: Nếu người chơi nhấn một phím không phải số, chương trình sẽ hỏng. Chúng ta cần tận dụng lợi thế đó để cho phép người chơi thoát, như dưới đây:
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/no-listing-04-looping/
@@ -788,13 +489,11 @@ thread 'main' panicked at 'Please type a number!: ParseIntError { kind: InvalidD
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 
-Typing `quit` will quit the game, but as you’ll notice so will entering any
-other non-number input. This is suboptimal to say the least; we want the game
-to also stop when the correct number is guessed.
+Gõ `quit` sẽ thoát trò chơi, nhưng bạn cần chú ý rằng người dùng có thể nhập một ký tự không phải số. Đây là cách không hề tối ưu, ít nhất, chúng ta muốn trò chơi dừng lại khi người chơi dự đoán đúng số.
 
-### Quitting After a Correct Guess
+### Thoát sau khi dự đoán đúng
 
-Let’s program the game to quit when the user wins by adding a `break` statement:
+Hãy lập trình một trò chơi khi người chơi thắng bằng cách thêm câu lệnh `break`:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -802,16 +501,11 @@ Let’s program the game to quit when the user wins by adding a `break` statemen
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-05-quitting/src/main.rs:here}}
 ```
 
-Adding the `break` line after `You win!` makes the program exit the loop when
-the user guesses the secret number correctly. Exiting the loop also means
-exiting the program, because the loop is the last part of `main`.
+Thêm dòng `break` sau `You win!` làm cho chương trình thoát ra khỏi vòng lặp khi mà người chơi dự đoán đúng. Thoát khỏi vòng lặp đồng nghĩa với việc thoát khỏi chương trình, bởi vì vòng lặp là phần cuối cùng của `main`.
 
-### Handling Invalid Input
+### Xử lý đầu vào không hợp lệ
 
-To further refine the game’s behavior, rather than crashing the program when
-the user inputs a non-number, let’s make the game ignore a non-number so the
-user can continue guessing. We can do that by altering the line where `guess`
-is converted from a `String` to a `u32`, as shown in Listing 2-5.
+Để lọc nhiều hơn những hành vi của trò chơi, hơn là chỉ dừng chương trình khi người chơi nhập một ký tự không phải số, hãy làm cho trò chơi bỏ qua ký tự đó để người chơi có thể tiếp tục dự đoán. Chúng là có thể làm được điều đó bằng cách thay đổi dòng sau, nơi mà `guess` được chuyển đổi từ `String` thành `u32`. Được thể hiện trong Listing 2-5;
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -819,32 +513,15 @@ is converted from a `String` to a `u32`, as shown in Listing 2-5.
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-05/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 2-5: Ignoring a non-number guess and asking for
-another guess instead of crashing the program</span>
+<span class="caption">Listing 2-5: Bỏ qua một ký tự không phải số và yêu cầu một dự đoán khác thay vì dừng chương trình</span>
 
-We switch from an `expect` call to a `match` expression to move from crashing
-on an error to handling the error. Remember that `parse` returns a `Result`
-type and `Result` is an enum that has the variants `Ok` and `Err`. We’re using
-a `match` expression here, as we did with the `Ordering` result of the `cmp`
-method.
+Chúng ta chuyển từ lời gọi `expect` thành biểu thức `match` để từ dừng chương trình thành một lỗi có thể xử lý được. Nhớ rằng `parse` sẽ trả về một kiểu `Result` là một enum có biến thể `Ok` và `Err`. Chúng ta đang sử dụng biểu thức `match` ở đây, như cách chúng ta đã làm với kết quả `Ordering` của phương thức `cmp`.
 
-If `parse` is able to successfully turn the string into a number, it will
-return an `Ok` value that contains the resulting number. That `Ok` value will
-match the first arm’s pattern, and the `match` expression will just return the
-`num` value that `parse` produced and put inside the `Ok` value. That number
-will end up right where we want it in the new `guess` variable we’re creating.
+Nếu `parse` cho phép chuyển thành công từ chuỗi thành số, nó sẽ trả về giá `Ok` chứa kết quả số. Giá trị `Ok` đó sẽ khớp với mô hình cánh tay đầu tiên, và biểu thức `match` sẽ chỉ trả về giá trị `num` mà thủ tục `parse` và trả về bên trong giá trị `Ok`. Số này sẽ kết thúc ở nơi ta muốn nó ở trong giá trị `guess` mà chúng ta tạo ra.
 
-If `parse` is *not* able to turn the string into a number, it will return an
-`Err` value that contains more information about the error. The `Err` value
-does not match the `Ok(num)` pattern in the first `match` arm, but it does
-match the `Err(_)` pattern in the second arm. The underscore, `_`, is a
-catchall value; in this example, we’re saying we want to match all `Err`
-values, no matter what information they have inside them. So the program will
-execute the second arm’s code, `continue`, which tells the program to go to the
-next iteration of the `loop` and ask for another guess. So, effectively, the
-program ignores all errors that `parse` might encounter!
+Nếu `parse` không có khả năng để chuyển một chuỗi thành số, nó sẽ trả về giá trị `Err` hàm chứa nhiều thông tin hơn về lỗi. Giá trị `Err` không khợp với mẫu `Err(_)` trong cánh tay `match` đầu tiên. Dấu gạch dưới `_` là một giá trị catchall; Trong ví dụ này, chúng ta nói rằng chúng ta muốn khớp tất cả giá trị `Err`, không quan trọng thông tin nào mà họ có. Vì thế chương trình sẽ thực thi đoạn mã trong cánh tay thứ hai, `continue` nói với chương trình đi tới lần lặp tiếp theo của `loop` và tiếp tục hỏi dự đoán khác. Vì thế, vô cùng hiệu quả, chương trình sẽ bỏ qua tất cả lỗi mà `parse` có thể gặp!
 
-Now everything in the program should work as expected. Let’s try it:
+Giờ đây mọi tính năng trong chương trình cần hoạt động như kì vọng. Hãy chạy thử:
 
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-05/
@@ -878,10 +555,7 @@ You guessed: 61
 You win!
 ```
 
-Awesome! With one tiny final tweak, we will finish the guessing game. Recall
-that the program is still printing the secret number. That worked well for
-testing, but it ruins the game. Let’s delete the `println!` that outputs the
-secret number. Listing 2-6 shows the final code.
+Tuyệt vời! Với một chút chỉnh sửa, chúng ta sẽ kết thúc trò chơi đoán số. Gọi lại chương trình vẫn sẽ in ra số bí mật. Nó hoạt động tốt trong lúc kiểm thử, nhưng nó sẽ phá hỏng trò chơi, Hãy cùng xóa `println!` mà in ra số bí mật. Listing 2-6 sẽ hiển thị đoạn code chính thức.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -889,19 +563,13 @@ secret number. Listing 2-6 shows the final code.
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-06/src/main.rs}}
 ```
 
-<span class="caption">Listing 2-6: Complete guessing game code</span>
+<span class="caption">Listing 2-6: Hoàn thiện đoạn mã của trò chơi đoán số</span>
 
-## Summary
+## Tổng kết
 
-At this point, you’ve successfully built the guessing game. Congratulations!
+Ở thời điểm này, bạn đã thành công xây dựng trò chơi đoán số. Chúc mừng!
 
-This project was a hands-on way to introduce you to many new Rust concepts:
-`let`, `match`, functions, the use of external crates, and more. In the next
-few chapters, you’ll learn about these concepts in more detail. Chapter 3
-covers concepts that most programming languages have, such as variables, data
-types, and functions, and shows how to use them in Rust. Chapter 4 explores
-ownership, a feature that makes Rust different from other languages. Chapter 5
-discusses structs and method syntax, and Chapter 6 explains how enums work.
+Dự án này là cách bắt tay vào để giới thiệu cho bạn những ý tưởng mới trong Rust: các hàm `let`, `match`, cách dùng các crate ngoại vi, và nhiều hơn nữa. Trong vài chương tiếp theo, bạn sẽ học được về những ý tưởng này chi tiết hơn. Chương 3 sẽ bao hàm các ý tưởng mà hầu hết các ngôn ngữ lập trình có, ví dụ như biến, kiểu dữ liệu và các hàm, và cho bạn thấy cách để dùng chúng trong Rust. Trong chương 4, chúng ta sẽ khám phá quyền sở hữu, một tính năng khiến Rust trở nên khác biệt so với các ngôn ngữ khác. Chương 5 chúng ta sẽ thảo luận sẽ các cấu trúc và các cú pháp phương thức. Và chương 6 sẽ giải thích enum hoạt động như nào.
 
 [prelude]: ../std/prelude/index.html
 [variables-and-mutability]: ch03-01-variables-and-mutability.html#variables-and-mutability

@@ -1,7 +1,7 @@
-# Lời giới thiệu
+# Introduction
 
-> Lưu ý: Ấn bản của quyển sách này tương tự như quyển [The Rust Programming
-> Language][nsprust] có sẵn định dạng bản in và ebook từ [No Starch
+> Note: This edition of the book is the same as [The Rust Programming
+> Language][nsprust] available in print and ebook format from [No Starch
 > Press][nsp].
 
 [nsprust]: https://nostarch.com/rust
@@ -161,18 +161,18 @@ ví dụ ngẫu nhiên, nó có thể sẽ không biên dịch! Đảm bảo r�
 xem liệu ví dụ bạn đang cố chạy có bị lỗi hay không. Ferris cũng sẽ giúp bạn phân biện code
 không hoạt động:
 
-| Ferris                                                                                                           | Ý nghĩa                                          |
+| Ferris                                                                                                           | Meaning                                          |
 |------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| <img src="img/ferris/does_not_compile.svg" class="ferris-explain" alt="Ferris with a question mark"/>            | Code này không biên dịch!                        |
-| <img src="img/ferris/panics.svg" class="ferris-explain" alt="Ferris throwing up their hands"/>                   | Code này panics!                                 |
-| <img src="img/ferris/not_desired_behavior.svg" class="ferris-explain" alt="Ferris with one claw up, shrugging"/> | Code này không tạo ra hành vi mong muốn.         |
+| <img src="img/ferris/does_not_compile.svg" class="ferris-explain" alt="Ferris with a question mark"/>            | This code does not compile!                      |
+| <img src="img/ferris/panics.svg" class="ferris-explain" alt="Ferris throwing up their hands"/>                   | This code panics!                                |
+| <img src="img/ferris/not_desired_behavior.svg" class="ferris-explain" alt="Ferris with one claw up, shrugging"/> | This code does not produce the desired behavior. |
 
 Trong hầu hết các tình huống, chúng tôi sẽ dẫn bạn đến phiên bản chính xác
 của bất kỳ đoạn code nào không biên dịch được.
 
-## Mã nguồn
+## Source Code
 
-Bạn có thể tìm thấy các file nguồn mà cuốn sách này được tạo nên trên
+Bạn có thể tìm thấy các file nguồn mà cuốn sách này được tạo nên trên 
 [GitHub][book].
 
 [book]: https://github.com/rust-lang/book/tree/main/src

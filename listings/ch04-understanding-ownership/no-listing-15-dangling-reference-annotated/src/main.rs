@@ -3,11 +3,11 @@ fn main() {
 }
 
 // ANCHOR: here
-fn dangle() -> &String { // dangle returns a reference to a String
+fn dangle() -> &String { // trả về một tham chiếu đến một String
 
-    let s = String::from("hello"); // s is a new String
+    let s = String::from("hello"); // s là một String mới
 
-    &s // we return a reference to the String, s
-} // Here, s goes out of scope, and is dropped. Its memory goes away.
-  // Danger!
+    &s // chúng ta trả về một tham chiếu đến  String, s
+} // Tại đây, s đi ra khỏi scope, và bị dropped. Bộ nhớ của nó đã bị mất đi.
+  // Nguy hiểm!
 // ANCHOR_END: here
