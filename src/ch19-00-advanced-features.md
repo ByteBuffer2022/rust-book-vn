@@ -1,22 +1,10 @@
-# Advanced Features
+# Các tính năng nâng cao
 
-By now, you’ve learned the most commonly used parts of the Rust programming
-language. Before we do one more project in Chapter 20, we’ll look at a few
-aspects of the language you might run into every once in a while. You can use
-this chapter as a reference for when you encounter any unknowns when using
-Rust. The features you’ll learn to use in this chapter are useful in very
-specific situations. Although you might not reach for them often, we want to
-make sure you have a grasp of all the features Rust has to offer.
+Đến thời điểm hiện tại, ta đã đi qua phần lớn các nội dung trong lập trình Rust. Trước khi đến với chương 20, hãy tiếp cận một vài khía cạnh mới của ngôn ngữ này mà chắc chắn bạn sẽ gặp phải trong quá trình lập trình Rust. Chương này giới thiệu các khái niệm khó và nâng cao khi sử dụng Rust, bạn có thể dùng nó như tài liệu tham khảo khi bắt gặp các vấn đề phức tạp. Mặc dù có thể sẽ không thường xuyên gặp phải chúng, nhưng hãy đảm bảo rằng bạn luôn có đủ kiến thức cần thiết để giải quyết vấn đề.
 
-In this chapter, we’ll cover:
+Chương này sẽ nói đến các vấn đề như sau:
 
-* Unsafe Rust: how to opt out of some of Rust’s guarantees and take
-  responsibility for manually upholding those guarantees
-* Advanced traits: associated types, default type parameters, fully qualified
-  syntax, supertraits, and the newtype pattern in relation to traits
-* Advanced types: more about the newtype pattern, type aliases, the never type,
-  and dynamically sized types
-* Advanced functions and closures: function pointers and returning closures
-* Macros: ways to define code that defines more code at compile time
-
-It’s a panoply of Rust features with something for everyone! Let’s dive in!
+* Unsafe Rust: làm sao để đưa Rust ra khỏi *vùng an toàn*
+* Advanced traits: các khái niệm associated types, default type parameters, fully qualified syntax, supertraits trong quá trình sử dụng traits
+* Advanced types: newtype pattern, type aliases, never type, và dynamically sized types
+* Advanced functions và closures: con trỏ hàm và cách trả về một closures
