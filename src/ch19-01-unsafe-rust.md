@@ -8,11 +8,6 @@ Một lí do khác khiến cơ chế unsafe được tạo ra là Rust muốn ti
 
 ### Sức mạnh của Unsafe
 
-To switch to unsafe Rust, use the `unsafe` keyword and then start a new block
-that holds the unsafe code. You can take five actions in unsafe Rust, called
-*unsafe superpowers*, that you can’t in safe Rust. Those superpowers include
-the ability to:
-
 Để sử dụng unsafe Rust, dùng keyword `unsafe` và tạo một block chứa các unsafe code mà bạn muốn. Có 5 điều mà unsafe Rust có thể làm mà bạn sẽ không thể có được ở Rust thông thường:
 
 * Dereference một raw pointer (các khái niệm Dereference và raw pointer sẽ được giải thích sau)
@@ -29,19 +24,10 @@ Con người thì luôn mắc sai lầm, tuy nhiên việc giới hạn ở 5 t�
 
 Để tách bạch phần unsafe code, ta nên bao bên ngoài chúng một safe API để có thể ngăn ngừa việc mất kiểm soát chương trình nếu đoạn unsafe đó xảy ra lỗi.
 
-Bây giờ hãy đi lần lượt 5 tính năng trên
+Bây giờ hãy xem xét lần lượt 5 tính năng trên
 ### Dereferencing một Raw Pointer
 
-In Chapter 4, in the [“Dangling References”][dangling-references]<!-- ignore
---> section, we mentioned that the compiler ensures references are always
-valid. Unsafe Rust has two new types called *raw pointers* that are similar to
-references. As with references, raw pointers can be immutable or mutable and
-are written as `*const T` and `*mut T`, respectively. The asterisk isn’t the
-dereference operator; it’s part of the type name. In the context of raw
-pointers, *immutable* means that the pointer can’t be directly assigned to
-after being dereferenced.
-
-Phần [“Dangling References”][dangling-references]<!-- ignore --> trong chương 4, đề cập đến việc compiler luôn luôn kiểm tra tham chiếu có hợp lệ hay không. Unsafe Rust cung cấp kiểu tham chiếu mới có tên là *raw pointers*, tương tự như tham chiếu trong safe Rust. Raw pointers có thể thay đổi được (mutable) hoặc không (immutable), cú pháp tương ứng ở đây là `*mut T` và `*const T`. Dấu `*` ở đây không phải là toán tử dereference mà chỉ đơn giản là cú pháp bắt buộc của raw pointer. Chú ý rằng, *immutable* ở đây nghĩa là con trỏ không thể được truy cập sau khi đã dereferenced.
+Phần [“Dangling References”][dangling-references]<!-- ignore --> trong chương 4, đề cập đến việc compiler luôn luôn kiểm tra tham chiếu có hợp lệ hay không. Unsafe Rust cung cấp kiểu tham chiếu mới có tên là *raw pointers*, tương tự như tham chiếu trong safe Rust. Raw pointers có thể thay đổi được (mutable) hoặc không (immutable), cú pháp tương ứng ở đây là `*mut T` và `*const T`. Dấu `*` không phải là toán tử dereference mà chỉ đơn giản là cú pháp bắt buộc của raw pointer. Chú ý rằng, *immutable* nghĩa là con trỏ không thể được truy cập sau khi đã dereferenced.
 
 Different from references and smart pointers, raw pointers:
 
@@ -50,6 +36,7 @@ Different from references and smart pointers, raw pointers:
 * Aren’t guaranteed to point to valid memory
 * Are allowed to be null
 * Don’t implement any automatic cleanup
+
 
 By opting out of having Rust enforce these guarantees, you can give up
 guaranteed safety in exchange for greater performance or the ability to
