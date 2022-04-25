@@ -1,22 +1,22 @@
-# The Rust Programming Language
+# Ngôn ngữ lập trình Rust
 
-*by Steve Klabnik and Carol Nichols, with contributions from the Rust Community*
+*Steve Klabnik và Carol Nichols, cùng với sự đóng góp của cộng đồng Rust*
 
-This version of the text assumes you’re using Rust 1.59 (released 2022-02-24)
-or later. See the [“Installation” section of Chapter 1][install]<!-- ignore -->
-to install or update Rust.
+Phiên bản của tài liệu sử dụng với Rust 1.59 (ngày ra mắt 2022-02-24)
+trở lên. Xem [phần “Installation” của Chương 1][install]<!-- ignore -->
+để cài đặt hoặc cập nhật Rust.
 
-The HTML format is available online at
+Tài liệu định dạng HTML trực tuyến có sẵn tại
 [https://doc.rust-lang.org/stable/book/](https://doc.rust-lang.org/stable/book/)
-and offline with installations of Rust made with `rustup`; run `rustup docs
---book` to open.
+và ngoại tuyến với các bản cài đặt của Rust được thực hiện bởi `rustup`; chạy câu lệnh `rustup docs
+--book` để mở.
 
-Several community [translations] are also available.
+Những [bản dịch] với một số ngôn ngữ có sẵn.
 
-This text is available in [paperback and ebook format from No Starch
+Tài liệu này có sẵn ở [paperback and ebook format from No Starch
 Press][nsprust].
 
 [install]: ch01-01-installation.html
 [editions]: appendix-05-editions.html
 [nsprust]: https://nostarch.com/rust
-[translations]: appendix-06-translation.html
+[bản dịch]: appendix-06-translation.html
