@@ -79,11 +79,11 @@ là các thư mục và tệp phù hợp hơn với cây module.
 > Đối với một module có tên là `hosting` là một module con của` front_of_house`,
 > trình biên dịch sẽ tìm kiếm code của module trong:
 >
-> * *src/front_of_house/hosting.rs* (những gì chúng tôi đã đề cậ)
+> * *src/front_of_house/hosting.rs* (những gì chúng tôi đã đề cập)
 > * *src/front_of_house/hosting/mod.rs* (đường dẫn cũ hơn, vẫn được hỗ trợ)
 >
-> Nếu bạn sử dụng cả hai cho cùng một module, bạn sẽ gặp lỗi trình biên dịch. Sử dụng
-> cho phép các kiểu khác nhau cho các module khác nhau trong cùng một dự án, nhưng
+> Nếu bạn sử dụng cả hai cho cùng một module, bạn sẽ gặp lỗi trình biên dịch.Sử dụng
+> cho phép các kiểu khác nhau cho các module khác nhau trong cùng một dự án,nhưng
 > có thể gây nhầm lẫn cho những người đang điều hướng dự án của bạn.
 >
 > Nhược điểm chính của kiểu sử dụng file có tên *mod.rs* là
