@@ -9,7 +9,7 @@
 
 Chào mừng bạn đến với *The Rust Programming Language*, một cuốn sách giới thiệu về Rust.
 Ngôn ngữ lập trình Rust giúp bạn viết phần mềm nhanh hơn, đáng tin cậy hơn.
-High-level ergonomics and low-level control thường mẫu thuân nhau trong thiết kế ngôn
+High-level ergonomics and low-level control thường mâu thuẫn nhau trong thiết kế ngôn
 ngữ lập trình; Rust thách thức xung đột đó. Thông qua việc cân bằng giữa năng lực kỹ thuật
 mạnh mẽ và kinh nghiệm tuyệt vời của nhà phát triển, Rust cho bạn tùy chọn để kiểm soát
 các chi tiết cấp thấp (chẳng hạn như sử dụng bộ nhớ) mà không gặp phải mọi rắc rối
@@ -33,10 +33,10 @@ gian tập trung vào logic của chương trình hơn là tìm kiếm các bug.
 Rust cũng mang các công cụ dành cho nhà phát triển vào thế giới lập trình hệ thống:
 
 * Cargo, công cụ bao gồm việc xây dựng và quản lý dependency, giúp việc thêm, biên dịch và
-  quản lý các dependency trở nên dễ dàng và nhất quán trên toàn bộ hệ sinh thái Rust.
+ quản lý các dependency trở nên dễ dàng và nhất quán trên toàn bộ hệ sinh thái Rust.
 * Rustfmt đảm bảo coding style nhất quán giữa các developer.
 * Máy chủ Ngôn ngữ Rust hỗ trợ tích hợp Môi trường Phát triển Tích hợp (Integrated Development
-  Environment, IDE) cho việc hoàn thiện code và thông báo lỗi nội tuyến.
+ Environment, IDE) cho việc hoàn thiện code và thông báo lỗi nội tuyến.
 
 Bằng cách sử dụng những công cụ này và các công cụ khác trong hệ sinh thái Rust, các developer
 có thể làm việc hiệu quả trong khi viết code cấp hệ thống.
@@ -147,7 +147,7 @@ khảo hơn. Phụ lục A bao gồm các từ khóa của Rust, Phụ lục B b
 Phụ lục C bao gồm các derivable traits được cung cấp bởi thư viện chuẩn, Phụ lục D bao gồm một số công
 cụ phát triển hữu ích và Phụ lục E giải thích các phiên bản Rust.
 
-Mọi phương pháp đọc cuốn sách này đều đúng: nếu bạn muốn bỏ qua chương nào đó, hãy làm điều đó .
+Mọi phương pháp đọc cuốn sách này đều đúng: nếu bạn muốn bỏ qua chương nào đó, hãy làm điều đó.
 Bạn có thể phải quay lại các chương trước đó nếu bạn gặp bất kỳ sự khó hiểu nào.
 Nhưng hãy làm bất cứ điều gì có ích cho bạn.
 
@@ -158,7 +158,7 @@ hiển thị: chúng sẽ hướng dẫn bạn cách làm việc với code.
 Do đó, chúng tôi sẽ cung cấp nhiều ví dụ minh họa không biên dịch cùng với thông báo lỗi mà
 trình biên dịch sẽ hiển thị cho bạn trong mỗi tình huống. Biết rằng nếu bạn nhập và chạy một 
 ví dụ ngẫu nhiên, nó có thể sẽ không biên dịch! Đảm bảo rằng bạn đọc đoạn text xung quanh để
-xem liệu ví dụ bạn đang cố chạy có bị lỗi hay không. Ferris cũng sẽ giúp bạn phân biện code
+xem liệu ví dụ bạn đang cố chạy có bị lỗi hay không. Ferris cũng sẽ giúp bạn phân biệt code
 không hoạt động:
 
 | Ferris                                                                                                           | Meaning                                          |
