@@ -72,7 +72,7 @@ lỗi:
 
 Lỗi chỉ ra rằng Rust mong đợi `bool` nhưng lại nhận được số nguyên. Không giống
 như các ngôn ngữ khác như Ruby và JavaScript, Rust sẽ không tự động chuyển đổi
-các kiểu dữ liệu không phải Boolean sang Boolean. Bạn phải rõ rằng và luôn luôn
+các kiểu dữ liệu không phải Boolean sang Boolean. Bạn phải rõ ràng và luôn luôn
 cung cấp Boolean cho câu điều kiện `if`. Ví dụ, nếu bạn muốn đoạn code `if` chỉ
 chạy khi một số khác `0`, chúng ta có thể thay đổi biểu thức `if` như sau:
 
@@ -282,7 +282,7 @@ một cấu trúc cho nó gọi là vòng lặp `while`. Trong Listing 3-3, chú
 <span class="caption">Listing 3-3: Sử dụng vòng lặp `while` để chạy code
 trong khi điều kiện đúng</span>
 
-Cấu trúc này loại bỏ nhiều lồng ghép cần thiết neus bạn sử dụng
+Cấu trúc này loại bỏ nhiều lồng ghép cần thiết nếu bạn sử dụng
 `loop`, `if`, `else` và `break` và nó rõ ràng hơn nhiều. Trong khi
 một điều kiện đúng, code sẽ hoạt động; nếu không nó sẽ thoát vòng lặp.
 

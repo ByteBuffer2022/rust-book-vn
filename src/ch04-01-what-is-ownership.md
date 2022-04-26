@@ -30,7 +30,7 @@ Khi bạn hiểu ownership, bạn sẽ có một nền tảng vững chắc đ�
 > dịch hoặc kích thước có thể thay đổi phải được lưu trữ trên heap.
 >
 > Heap ít được tổ chức hơn: khi bạn đặt dữ liệu trên heap, bạn gửi yêu cầu một
-> khoảng trống nhất định trong bộ nhớ. Bộ cấp phát bộ nhớ tìm thấy một chỗ trống  
+> khoảng trống nhất định trong bộ nhớ. Bộ cấp phát bộ nhớ tìm thấy một chỗ trống 
 > trên heap đủ lớn, đánh dấu nó là đang được sử dụng, và trả về một *con trỏ*, đó
 > là địa chỉ cuả vị trí đó. Quá trình này được gọi là *allocating on the heap*
 > (cấp phát trên heap) và đôi khi được viết tắt là *allocating* (việc đẩy các giá trị 
@@ -45,7 +45,7 @@ Khi bạn hiểu ownership, bạn sẽ có một nền tảng vững chắc đ�
 > bao giờ phải tìm kiếm một nơi để lưu dữ liệu mới; vị trí đó luôn ở trên cùng 
 > của stack. Tương tự, việc phân bổ không gian trên heap đòi hỏi nhiều công việc 
 > hơn, bởi vì bộ cấp phát trước tiên phải tìm một không gian đủ lớn để chứa dữ liệu
-> sau đó thực hiện ghi sổ  (bookkeeping) để chuẩn bị cho đợt cấp phát tiếp theo.
+> sau đó thực hiện ghi sổ (bookkeeping) để chuẩn bị cho đợt cấp phát tiếp theo.
 >
 > Truy cập dữ liệu trong heap chậm hơn so với truy cập dữ liệu trên stack vì
 > bạn phải đi theo một con trỏ để đến đó. Các bộ xử lý hiện đại nhanh hơn nếu chúng 
@@ -59,7 +59,7 @@ Khi bạn hiểu ownership, bạn sẽ có một nền tảng vững chắc đ�
 > Việc phân bổ một lượng lớn không gian trên heap cũng có thể mất thời gian.
 >
 > Khi code của bạn gọi một hàm, các giá trị đã được truyền vào hàm
-> (có thể bao gồm cả con trỏ đến dữ liệu trên heap) và các biến cục bộ của hàm  
+> (có thể bao gồm cả con trỏ đến dữ liệu trên heap) và các biến cục bộ của hàm 
 > được đẩy lên stack. Khi hàm kết thúc, những giá trị đó bị lấy ra khỏi stack.
 >
 > Theo dõi những phần code nào đang sử dụng dữ liệu nào trên heap,
@@ -112,17 +112,17 @@ Tại thời điểm này, mối quan hệ giữa phạm vi và thời điểm c
 
 ### Kiểu `String`
 
-Để minh họa các quy tắc về  ownership,chúng ta cần một kiểu dữ liệu phức tạp hơn những kiểu mà chúng ta đã đề cập trong phần [“Data Types”][data-types]<!-- ignore --> ở chương 3. Các loại được đề cập trước đây đều có kích thước đã biết, có thể được lưu trữ trên stack và bị đẩy ra khỏi stack khi phạm vi của chúng kết thúc, và có thể được sao chép nhanh chóng và đơn để tạo ra một cái mới trong trường hợp độc lập nếu một phần khác của code cần sử dụng cùng một giá trị trong một phạm vi khác.Nhưng chúng ta muốn xem xét dữ liệu được lưu trữ trên heap và khám phá cách Rust biết khi nào cần dọn dẹp dữ liệu đó, và kiểu `String` là một ví dụ tuyệt vời.
+Để minh họa các quy tắc về ownership, chúng ta cần một kiểu dữ liệu phức tạp hơn những kiểu mà chúng ta đã đề cập trong phần [“Data Types”][data-types]<!-- ignore --> ở chương 3. Các loại được đề cập trước đây đều có kích thước đã biết, có thể được lưu trữ trên stack và bị đẩy ra khỏi stack khi phạm vi của chúng kết thúc, và có thể được sao chép nhanh chóng và đơn để tạo ra một cái mới trong trường hợp độc lập nếu một phần khác của code cần sử dụng cùng một giá trị trong một phạm vi khác. Nhưng chúng ta muốn xem xét dữ liệu được lưu trữ trên heap và khám phá cách Rust biết khi nào cần dọn dẹp dữ liệu đó, và kiểu `String` là một ví dụ tuyệt vời.
 
 Chúng ta sẽ tập trung vào các phần của `String` liên quan đến ownership. Các khía cạnh này cũng áp dụng cho các kiểu dữ liệu phức tạp khác, cho dù chúng được cung cấp bởi thư viện chuẩn hay do bạn tạo. Chúng ta sẽ thảo luận về `String` sâu hơn ở [Chapter 8][ch8]<!-- ignore -->.
 
-Chúng ta đã nhìn thấy những chuỗi kí tự (string literals) có giá trị được *gán cứng* (hardcoded) trong chương trình. Các ký tự kiểu chuỗi rất tiện lợi, nhưng chúng không phù hợp với mọi tình huống mà chúng ta có thể muốn sử dụng văn bản. Một lý do là chúng không thay đổi. Một điều khác là không phải mọi giá trị chuỗi đều có thể được biết khi chúng ta viết mã của mình: ví dụ: nếu chúng ta muốn lấy dữ liệu đầu vào của người dùng và lưu trữ nó thì sao? Trong tình huống này, Rust có một kiểu chuỗi thứ hai, `String`. Kiểu dữ liệu này được phân bổ trên heap, như thế nó có thể lưu trữ một khối lượng văn bản không biết trước ở thời điểm biên dịch. Bạn có thể tạo một `String` từ một string literal bằng cách sử dụng hàm `from`, như sau:
+Chúng ta đã nhìn thấy những chuỗi kí tự (string literals) có giá trị được *gán cứng* (hardcoded) trong chương trình. Các ký tự kiểu chuỗi rất tiện lợi, nhưng chúng không phù hợp với mọi tình huống mà chúng ta có thể muốn sử dụng văn bản. Một lý do là chúng không thay đổi. Một điều khác là không phải mọi giá trị chuỗi đều có thể được biết khi chúng ta viết mã của mình, ví dụ: nếu chúng ta muốn lấy dữ liệu đầu vào của người dùng và lưu trữ nó thì sao? Trong tình huống này, Rust có một kiểu chuỗi thứ hai, `String`. Kiểu dữ liệu này được phân bổ trên heap, như thế nó có thể lưu trữ một khối lượng văn bản không biết trước ở thời điểm biên dịch. Bạn có thể tạo một `String` từ một string literal bằng cách sử dụng hàm `from`, như sau:
 
 ```rust
 let s = String::from("hello");
 ```
 
-Dấu hai chấm `::` là một toán tử cho phép chúng ta gọi hàm (namespace) `from` với kiểu `String` thay vì sử dụng một số loại tên như `string_from`. Chúng ta sẽ thảo luận về cú pháp này nhiều hơn trong phần [“Method Syntax”][method-syntax]<!-- ignore --> chương 5 and when we talkvà khi chúng ta nói về namespacing với module ở phần [“Paths for Referring to an Item in the Module Tree”][paths-module-tree]<!-- ignore --> trong chương 7.
+Dấu hai chấm `::` là một toán tử cho phép chúng ta gọi hàm (namespace) `from` với kiểu `String` thay vì sử dụng một số loại tên như `string_from`. Chúng ta sẽ thảo luận về cú pháp này nhiều hơn trong phần [“Method Syntax”][method-syntax]<!-- ignore --> chương 5 và khi chúng ta nói về namespacing với module ở phần [“Paths for Referring to an Item in the Module Tree”][paths-module-tree]<!-- ignore --> trong chương 7.
 
 Kiểu chuỗi này cũng có thể biến đổi giá trị (mutated):
 
@@ -130,7 +130,7 @@ Kiểu chuỗi này cũng có thể biến đổi giá trị (mutated):
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-01-can-mutate-string/src/main.rs:here}}
 ```
 
-Vậy, sự khác biệt ở đây là gì? Tại sao  `String` có thể biến đổi trong khi chuỗi kí tự (string literals)
+Vậy, sự khác biệt ở đây là gì? Tại sao `String` có thể biến đổi trong khi chuỗi kí tự (string literals)
 thì không? Sự khác biệt là cách hai loại này tương tác với bộ nhớ.
 
 ### Memory and Allocation (Bộ nhớ và cấp phát)
@@ -153,10 +153,10 @@ Rust đi theo một con đường khác: bộ nhớ sẽ tự động được t
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-02-string-scope/src/main.rs:here}}
 ```
 
-Có một điểm tự nhiên mà chúng ta có thể trả lại vùng nhớ `String` của chúng ta cho bộ cấp phát: khi `s` đi ra khỏi scope. Khi một biến vượt ra ngoài scope, Rust gọi một hàm đặc biệt cho chúng ta. Hàm này được gọi là [`drop`][drop]<!-- ignore -->,  và nó là nơi mà tác giả của `String` có thể đặt code để trả lại bộ nhớ. Rust gọi `drop` tự động tại nơi dấu đóng ngoặc nhọn.
+Có một điểm tự nhiên mà chúng ta có thể trả lại vùng nhớ `String` của chúng ta cho bộ cấp phát: khi `s` đi ra khỏi scope. Khi một biến vượt ra ngoài scope, Rust gọi một hàm đặc biệt cho chúng ta. Hàm này được gọi là [`drop`][drop]<!-- ignore -->, và nó là nơi mà tác giả của `String` có thể đặt code để trả lại bộ nhớ. Rust gọi `drop` tự động tại nơi dấu đóng ngoặc nhọn.
 
 > Note: Lưu ý: Trong C ++, kiểu phân bổ tài nguyên này ở cuối vòng đời của một item đôi khi được gọi là *Resource Acquisition Is Initialization (RAII)*.
-> Hàm `drop`  trong Rust sẽ quen thuộc hơn với bạn nếu bạn từng dùng mô hình RAII.
+> Hàm `drop` trong Rust sẽ quen thuộc hơn với bạn nếu bạn từng dùng mô hình RAII.
 
 Mô hình này có tác động sâu sắc đến cách viết code của Rust. Nó có vẻ đơn giản ngay bây giờ, nhưng hành vi của code có thể không mong muốn trong các tình huống phức tạp hơn khi chúng ta muốn có nhiều biến sử dụng dữ liệu chúng ta đã phân bổ trên heap. Bây giờ chúng ta hãy khám phá một số tình huống đó.
 
@@ -170,7 +170,7 @@ Nhiều biến có thể tương tác với cùng một dữ liệu theo những
 
 <span class="caption">Listing 4-2: Gán giá trị nguyên của biến `x` vào `y`</span>
 
-Chúng ta có thể đoán được đoạn code này đang thể hiện gì: “gán giá trị `5` vào `x`; sau đó tạo một bản sao của giá trị của  `x` và gán nó bằng `y`.” Bây giờ chúng ta có hai biến, `x` và `y`, cả 2 đều bằng `5`. Đây thực sự là những gì đang xảy ra, bởi vì số nguyên là các giá trị đơn giản có giá trị cố định, đã biết, và hai giá trị `5` này được đẩy vào stack.
+Chúng ta có thể đoán được đoạn code này đang thể hiện gì: “gán giá trị `5` vào `x`; sau đó tạo một bản sao của giá trị của `x` và gán nó bằng `y`.” Bây giờ chúng ta có hai biến, `x` và `y`, cả 2 đều bằng `5`. Đây thực sự là những gì đang xảy ra, bởi vì số nguyên là các giá trị đơn giản có giá trị cố định, đã biết, và hai giá trị `5` này được đẩy vào stack.
 
 Giờ hãy cùng nhìn vào phiên bản `String`:
 
@@ -200,7 +200,7 @@ Biểu diễn trên Hình 4-2 *không* giống như Hình 4-3, đó là bộ nh�
 
 <span class="caption">Hình 4-3: Một khả năng khác cho những gì `s2 = s1` có thể làm nếu Rust cũng sao chép dữ liệu heap</span>
 
-Trước đó, chúng tôi đã nói rằng khi một biến vượt ra ngoài scope, Rust tự động gọi hàm `drop` và dọn dẹp bộ nhớ heap cho biến đó. Nhưng Hình hiển thị cả hai con trỏ dữ liệu trỏ đến cùng một vị trí. Đây là một vấn đề: khi `s2` và `s1` vượt ra ngoài scope, cả hai sẽ cố gắng giải phóng cùng một bộ nhớ. Điều này được gọi là lỗi *double free* và là một trong những lỗi an toàn bộ nhớ mà chúng tôi đã đề cập trước đây. Giải phóng bộ nhớ hai lần có thể dẫn đến hỏng bộ nhớ, có thể dẫn đến lỗ hổng bảo mật.
+Trước đó, chúng tôi đã nói rằng khi một biến vượt ra ngoài scope, Rust tự động gọi hàm `drop` và dọn dẹp bộ nhớ heap cho biến đó. Nhưng Hình 4-2 hiển thị cả hai con trỏ dữ liệu trỏ đến cùng một vị trí. Đây là một vấn đề: khi `s2` và `s1` vượt ra ngoài scope, cả hai sẽ cố gắng giải phóng cùng một bộ nhớ. Điều này được gọi là lỗi *double free* và là một trong những lỗi an toàn bộ nhớ mà chúng tôi đã đề cập trước đây. Giải phóng bộ nhớ hai lần có thể dẫn đến hỏng bộ nhớ, có thể dẫn đến lỗ hổng bảo mật.
 
 Để đảm bảo an toàn cho bộ nhớ, sau dòng `let s2 = s1`, Rust coi `s1` không còn giá trị nữa. Do đó, Rust không cần giải phóng bất cứ thứ gì khi khi `s1` đi ra khỏi scope. Kiểm tra những gì sẽ xảy ra khi bạn cố gắng sử dụng `s1` sau khi `s2` được tạo ra; nó sẽ không hoạt động:
 
@@ -236,7 +236,7 @@ Nếu chúng tôi muốn sao chép sâu dữ liệu heap của `String`, không 
 
 Đoạn code hoạt động tốt và rõ ràng tạo ra hành vi được hiển thị trong Hình 4-3, nơi dữ liệu heap *được* sao chép.
 
-Khi bạn thây một lệnh gọi `clone`, bạn biết rằng đoạn code nào đó đang được thực thi và code đó có thể khá tốn tài nguyên. Đó là một chỉ báo trực quan cho thấy điều gì đó khác thường đang diễn ra.
+Khi bạn thấy một lệnh gọi `clone`, bạn biết rằng đoạn code nào đó đang được thực thi và code đó có thể khá tốn tài nguyên. Đó là một chỉ báo trực quan cho thấy điều gì đó khác thường đang diễn ra.
 
 #### Dữ liệu chỉ trên Stack (Stack-Only Data): Copy
 
@@ -248,7 +248,7 @@ Có một vấn đề khác mà chúng ta chưa nói đến. Đoạn code này s
 
 Nhưng mã này có vẻ mâu thuẫn với những gì chúng ta vừa học được: chúng ta không gọi lệnh `clone`, nhưng `x` vẫn còn hiệu lực và chưa được move vào `y`.
 
-Lý do là các loại như số nguyên có kích thước đã biết tại thời điểm biên dịch được lưu trữ hoàn toàn trên stack, vì vậy các bản sao của các giá trị thực tế được tạo ra nhanh chóng. Điều đó có nghĩa là không có lý do gì chúng tôi muốn ngăn chặn `x` không còn hợp lệ sau khi chúng tôi tạo biến `y`. INói cách khác, không có sự khác biệt giữa sao chép sâu và sao chép cạn ở đây, vì vậy việc gọi `clone` sẽ không làm gì khác so với cách sao chép cạn thông thường và chúng ta có thể bỏ nó đi.
+Lý do là các loại như số nguyên có kích thước đã biết tại thời điểm biên dịch được lưu trữ hoàn toàn trên stack, vì vậy các bản sao của các giá trị thực tế được tạo ra nhanh chóng. Điều đó có nghĩa là không có lý do gì chúng tôi muốn ngăn chặn `x` không còn hợp lệ sau khi chúng tôi tạo biến `y`. Nói cách khác, không có sự khác biệt giữa sao chép sâu và sao chép cạn ở đây, vì vậy việc gọi `clone` sẽ không làm gì khác so với cách sao chép cạn thông thường và chúng ta có thể bỏ nó đi.
 
 Rust có một chú thích (annotation) đặc biệt gọi là `Copy` trait chúng ta có thể đặt nó trên những kiểu được lưu trữ trên stack như integer (chúng ta sẽ nói thêm về trait trong Chương 10). Nếu một kiểu thực hiện `Copy` trait, một biến vẫn hợp lệ sau khi gán cho một biến khác. Rust không cho phép chúng ta chú thích một kiểu với `Copy` nếu kiểu của nó, hoặc bất kì phần nào của nó, đã thực thi `Drop` trait. Nếu kiểu cần một cái gì đó đặc biệt để xảy ra khi giá trị vượt ra ngoài scope và chúng ta thêm `Copy` annotation vào kiểu đó, chúng ta sẽ gặp lỗi biên dịch. Để tìm hiểu về cách thêm `Copy` annotation vào kiểu của bạn để triển khai trait, hãy xem [“Derivable Traits”][derivable-traits]<!-- ignore -->
 trong Phụ lục C.
