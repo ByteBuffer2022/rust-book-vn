@@ -1,111 +1,107 @@
-## Defining an Enum
+## Định nghĩa một Enum
 
-Enums are a way of defining custom data types in a different way than you do
-with structs. Let’s look at a situation we might want to express in code and
-see why enums are useful and more appropriate than structs in this case. Say we
-need to work with IP addresses. Currently, two major standards are used for IP
-addresses: version four and version six. Because these are the only
-possibilities for an IP address that our program will come across, we can
-*enumerate* all possible variants, which is where enumeration gets its name.
+*Enums* là định nghĩa một kiểu dữ liệu tuỳ chỉnh khác với *structs*. 
+Hãy xem xét một tình huống chúng ta phải diễn đạt trong code và xem tại sao enums lại 
+hữu ích và phù hợp hơn struct trong trường hợp này.
+Giả sử chúng ta làm việc với các địa chỉ IP. Hiện tại, 2 tiêu chuẩn chính được sử
+dụng cho địa chỉ IP là: Ipv4 và Ipv6. Bởi vì đây là khả năng duy nhất cho 1 địa chỉ IP mà 
+chương trình của chúng ta sẽ bắt gặp, chúng ta có thể sử dụng
+*enumerate* để liệt kê hết các biến có thể có, which is where enumeration gets its name.
 
-Any IP address can be either a version four or a version six address, but not
-both at the same time. That property of IP addresses makes the enum data
-structure appropriate, because an enum value can only be one of its variants.
-Both version four and version six addresses are still fundamentally IP
-addresses, so they should be treated as the same type when the code is handling
-situations that apply to any kind of IP address.
+Bất kì địa chỉ IP nào cũng có thể là Ipv4 hoặc Ipv6, nhưng không phải cả 2 tại 1 thời điểm.
+Thuộc tính trên làm cho cấu trúc của *enum* thích hợp để sử dụng cho trường hợp này,
+bởi vì một *enum* chỉ có thể lấy 1 giá trị trong các loại của nó.
+Cả Ipv4 và Ipv6 về cơ bản vẫn là một địa chỉ IP, vì vậy nên chúng được coi là 1 loại giá trị khi đoạn code
+áp dụng cho bất kì loại địa chỉ IP nào.
 
-We can express this concept in code by defining an `IpAddrKind` enumeration and
-listing the possible kinds an IP address can be, `V4` and `V6`. These are the
-variants of the enum:
+Chúng ta có thể thực hành khái niệm trên trong code bằng cách khai báo 1 *enum" `IpAddrKind` và
+liệt kê các loại địa chỉ IP có thể có: `V4` và `V6`. Bên dưới là các loại của *enum*
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-01-defining-enums/src/main.rs:def}}
 ```
 
-`IpAddrKind` is now a custom data type that we can use elsewhere in our code.
+`IpAddrKind` là một kiểu dữ liệu tuỳ chỉnh mà ta có thể sử dụng ở những nơi khác nhau trong code của mình.
 
 ### Enum Values
 
-We can create instances of each of the two variants of `IpAddrKind` like this:
+Chúng ta có thể tạo ra từng biến cho 2 loại `IpAddrKind` giống như thế này:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-01-defining-enums/src/main.rs:instance}}
 ```
 
-Note that the variants of the enum are namespaced under its identifier, and we
-use a double colon to separate the two. This is useful because now both values
-`IpAddrKind::V4` and `IpAddrKind::V6` are of the same type: `IpAddrKind`. We
-can then, for instance, define a function that takes any `IpAddrKind`:
+Lưu ý rằng các loại của *enum* có thể đặt tên dưới định dang của nó, và chúng ta
+sử dụng 2 dấu 2 chấm (::) để phân tách. Điều này rất có ích vì cả 2 giá trị
+`IpAddrKind::V4` và `IpAddrKind::V6` đều có kiểu giá trị: `IpAddrKind`. Chúng ta có thể định một hàm xử dụng 
+bất kì `IpAddrKind` nào:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-01-defining-enums/src/main.rs:fn}}
 ```
 
-And we can call this function with either variant:
+Và chúng ta có thể gọi hàm này với 1 trong 2 loại *enum*
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-01-defining-enums/src/main.rs:fn_call}}
 ```
 
-Using enums has even more advantages. Thinking more about our IP address type,
-at the moment we don’t have a way to store the actual IP address *data*; we
-only know what *kind* it is. Given that you just learned about structs in
-Chapter 5, you might be tempted to tackle this problem with structs as shown in
+Sử dụng *enum* thậm chí còn nhiều điểm mạnh hơn. 
+Chúng tôi suy nghĩ thêm về địa IP, hiện tại chúng tôi không có cách nào để lưu trữ dữ 
+liệu thực tế của địa chỉ IP;
+chúng tôi chỉ biết chúng là kiểu dữ liệu nào. 
+Bạn mới học về cấu struct ở chương 5, bạn có thể giải quyết  vấn đề này với truct như trong 
 Listing 6-1.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-01/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-1: Storing the data and `IpAddrKind` variant of
+<span class="caption">Listing 6-1: Lưu trữ dữ liệu `IpAddrKind` bằng cách sử dụng *struct*
 an IP address using a `struct`</span>
 
-Here, we’ve defined a struct `IpAddr` that has two fields: a `kind` field that
-is of type `IpAddrKind` (the enum we defined previously) and an `address` field
-of type `String`. We have two instances of this struct. The first is `home`,
-and it has the value `IpAddrKind::V4` as its `kind` with associated address
-data of `127.0.0.1`. The second instance is `loopback`. It has the other
-variant of `IpAddrKind` as its `kind` value, `V6`, and has address `::1`
-associated with it. We’ve used a struct to bundle the `kind` and `address`
-values together, so now the variant is associated with the value.
+Ở đây, chúng tôi dã định nghĩa một struct `IpAddr` có 2 trường: trường `kind` có kiểu dữ liệu là 
+`IpAddrKind` (*enum* chúng ta đã định nghĩa trước đó) và một trường là `address` có kiểu dữ liệu `String`. 
+Chúng ta có 2 trường hợp của struct này. Đầu tiên là `home`,
+và nó có giá trị `IpAddrKind::V4` như là `kind` với địa chỉ của dữ liệu là `127.0.0.1`. 
+Trường hợp thứ 2 là `loopback`. Nó là một trường hợp khác của `IpAddrKind` 
+giá trị `kind` là `V6`, và có địa chỉ `::1` liên kết với nó. 
+Chúng ta sử dụng 1 struct để nhóm giá trị `kind` và `address`
+với nhau, vì vậy hiện giờ biến thể được thể liên kết với nhau.
 
-However, representing the same concept using just an enum is more concise:
-rather than an enum inside a struct, we can put data directly into each enum
-variant. This new definition of the `IpAddr` enum says that both `V4` and `V6`
-variants will have associated `String` values:
+Tuy nhiên, đại diện cho cùng 1 khái niệm dùng một *enum* là ngắn gọn hơn: hơn là 1 *enum* bên trong 1 struct
+, chúng ta có thể đưa dữ liệu trực tiếp vào từng trường hợp của *enum*. 
+Định nghĩa mới này của *enum* `IpAddr` cho biết rằng cả 2 giá trị `V4` and `V6`
+sẽ có các giá trị `String`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-02-enum-with-data/src/main.rs:here}}
 ```
 
-We attach data to each variant of the enum directly, so there is no need for an
-extra struct. Here it’s also easier to see another detail of how enums work:
-the name of each enum variant that we define also becomes a function that
-constructs an instance of the enum. That is, `IpAddr::V4()` is a function call
-that takes a `String` argument and returns an instance of the `IpAddr` type. We
-automatically get this constructor function defined as a result of defining the
-enum.
+Chúng ta gán giá trị trực tiếp vào cho mỗi trường hợp *enum*, 
+vì vậy nên không cần thêm cấu trúc.
+Tại đây, bạn cũng có thể dễ dàng xem một chi tiết khác về cách hoạt động của *enum*:
+tên của mỗi trường hợp *enum* mà chúng ta định nghĩa đã trở thành một hàm tạo của *enum*. 
+Đó là, `IpAddr::V4()` là một hàm sử dụng 1 `String` là tham số và trả về một instance của kiểu `IpAddr`. 
+Chúng tự động định nghĩa hàm khởi tạo này như là kết quả của định nghĩa một *enum*.
 
-There’s another advantage to using an enum rather than a struct: each variant
-can have different types and amounts of associated data. Version four type IP
-addresses will always have four numeric components that will have values
-between 0 and 255. If we wanted to store `V4` addresses as four `u8` values but
-still express `V6` addresses as one `String` value, we wouldn’t be able to with
-a struct. Enums handle this case with ease:
+Có một lợi thế khác khi sử dụng enum thay vì cấu trúc: mỗi trường hợp trong *enum* có thể có
+các loại dữ liệu khác nhau. Địa chỉ IP của `V4` sẽ luôn có bốn thành phần số sẽ có giá trị từ 0 đến 255.
+Nếu chúng tôi muốn lưu trữ địa chỉ `V4` dưới dạng bốn giá trị u8 nhưng 
+vẫn diễn đạt được địa chỉ `V6` là một giá trị `String`, điều này không thể với struct.
+Enums xử lý trường hợp này một cách dễ dàng:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-03-variants-with-different-data/src/main.rs:here}}
 ```
 
-We’ve shown several different ways to define data structures to store version
-four and version six IP addresses. However, as it turns out, wanting to store
-IP addresses and encode which kind they are is so common that [the standard
-library has a definition we can use!][IpAddr]<!-- ignore --> Let’s look at how
-the standard library defines `IpAddr`: it has the exact enum and variants that
-we’ve defined and used, but it embeds the address data inside the variants in
-the form of two different structs, which are defined differently for each
-variant:
+Chúng tôi đã chỉ ra một số cách khác nhau để xác định cấu trúc dữ liệu để lưu trữ địa chỉ IP `V4` và `V6`.
+Tuy nhiên, hóa ra, muốn lưu trữ địa chỉ IP và mã hóa loại nào chúng rất phổ biến nên Rust 
+[định nghĩa một thư viện chuẩn mà chúng ta có thể sử dụng!][IpAddr]<!-- ignore -->
+Hãy xem cách thư viện chuẩn định nghĩa `IpAddr`: nó có *enum* chính xác 
+và các trường hợp mà chúng ta định nghĩa và sử dụng,
+nhưng nó nhúng dữ liệu địa chỉ bên trong các trường hợp *enum* dưới dạng hai cấu trúc khác nhau,
+được định nghĩa khác nhau cho từng trường hợp:
 
 ```rust
 struct Ipv4Addr {
@@ -122,104 +118,93 @@ enum IpAddr {
 }
 ```
 
-This code illustrates that you can put any kind of data inside an enum variant:
-strings, numeric types, or structs, for example. You can even include another
-enum! Also, standard library types are often not much more complicated than
-what you might come up with.
+Đoạn mã này minh họa rằng bạn có thể đặt bất kỳ loại dữ liệu nào bên trong một trường hợp của *enum*:
+strings, numeric, hay struct... ví dụ. Thậm chí có thể chứa cả một *enum* khác!
+Ngoài ra, các loại thư viện chuẩn thường không phức tạp hơn nhiều so với những gì mà bạn có thể nghĩ ra.
 
-Note that even though the standard library contains a definition for `IpAddr`,
-we can still create and use our own definition without conflict because we
-haven’t brought the standard library’s definition into our scope. We’ll talk
-more about bringing types into scope in Chapter 7.
+Lưu ý rằng mặc dù thư viện chuẩn có chứa định nghĩa cho `IpAddr`,
+chúng ta vẫn có thể tạo và sử dụng định nghĩa riêng của chúng ta mà không bị xung đột
+bởi vì chúng ta không đưa thư viện chuẩn vào trong phạm vi sử dụng của chúng ta.
+Chúng ta sẽ nói nhiều hơn về việc đưa các loại vào trong phạm vi sử dụng ở Chương 7.
 
-Let’s look at another example of an enum in Listing 6-2: this one has a wide
-variety of types embedded in its variants.
+Hã xem một ví dụ khác về *enum* trong Listing 6-2: cái này có nhiều loại dữ liệu được định nghĩa trong 
+các trường hợp *enum*:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-02/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-2: A `Message` enum whose variants each store
-different amounts and types of values</span>
+<span class="caption">Listing 6-2: Một *enum* `Message` mà mỗi trường hợp của nó khác nhau về số lượng
+và kiểu dữ liệu</span>
 
-This enum has four variants with different types:
+*Enum* này có 4 trường hợp với 4 loại khác nhau:
 
-* `Quit` has no data associated with it at all.
-* `Move` has named fields like a struct does.
-* `Write` includes a single `String`.
-* `ChangeColor` includes three `i32` values.
+* `Quit` không có chứa dữ liệu nào cả.
+* `Move` giống như một struct.
+* `Write` bao gồm 1 `String`.
+* `ChangeColor` chứa 3 giá trị `i32`.
 
-Defining an enum with variants such as the ones in Listing 6-2 is similar to
-defining different kinds of struct definitions, except the enum doesn’t use the
-`struct` keyword and all the variants are grouped together under the `Message`
-type. The following structs could hold the same data that the preceding enum
-variants hold:
+Định nghĩa 1 *enum* với các trường hợp như trong Listing 6-2 tương tự như việc xác định các loại định nghĩa
+struct khác nhau, trừ trường hợp *enum* không sử dụng từ khoá `struct` 
+và tất cả các trường hợp trong nhóm lại với nhau bên dưới kiểu `Message`.
+Các struct có thể chứa cùng một dữ liệu mà các trường hợp của *enum* trước đó giữ:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-04-structs-similar-to-message-enum/src/main.rs:here}}
 ```
 
-But if we used the different structs, which each have their own type, we
-couldn’t as easily define a function to take any of these kinds of messages as
-we could with the `Message` enum defined in Listing 6-2, which is a single type.
+Nhưng nếu chúng ta sử dụng các struct khác nhau, mỗi struct có kiểu riêng của chúng,
+chúng ta không thể dễ dàng định nghĩa một hàm để nhận bất kì một thông báo nào như 
+chúng ta có thể làm với *enum* `Message` được định nghĩa ở Listing 6-2, 
+một kiểu duy nhất.
 
-There is one more similarity between enums and structs: just as we’re able to
-define methods on structs using `impl`, we’re also able to define methods on
-enums. Here’s a method named `call` that we could define on our `Message` enum:
+Có một điểm tương đồng nữa giữa *enum* và *struct*:: chúng đều định nghĩa các phương thức sử dụng `impl`. 
+Đây là một phương thức `call`, chúng ta có thể định nghĩa trong *enum* `Message`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-05-methods-on-enums/src/main.rs:here}}
 ```
 
-The body of the method would use `self` to get the value that we called the
-method on. In this example, we’ve created a variable `m` that has the value
-`Message::Write(String::from("hello"))`, and that is what `self` will be in the
-body of the `call` method when `m.call()` runs.
+Phần thân của phương thức sẽ sử dụng `self` để lấy giá trị mà chúng ta đã gọi phương thức trên.
+Trong ví dụ này, chúng tôi đã tạo một biến m có giá trị là `Message::Write(String::from("hello"))`, 
+và đó là những gì `self` sẽ ở trong phần thân hàm `call` khi `m.call()` chạy.
 
-Let’s look at another enum in the standard library that is very common and
-useful: `Option`.
+Chúng ta hãy xem xét một enum khác trong thư viện chuẩn rất phổ biến và hữu ích: `Option`.
 
-### The `Option` Enum and Its Advantages Over Null Values
+### `Option` Enum và  ưu điểm của nó so với giá trị Null
 
-This section explores a case study of `Option`, which is another enum defined
-by the standard library. The `Option` type encodes the very common scenario in
-which a value could be something or it could be nothing. For example, if you
-request the first of a list containing items, you would get a value. If you
-request the first item of an empty list, you would get nothing. Expressing this
-concept in terms of the type system means the compiler can check whether you’ve
-handled all the cases you should be handling; this functionality can prevent
-bugs that are extremely common in other programming languages.
+Trong phần này chúng ta sẽ khám phá 1 trường hợp điển hình của *Enum* là `Option`,
+là một enum khác được định nghĩa bởi thư viện tiêu chuẩn. 
+`Option` là 1 loại mã hóa rất phổ biến trong đó giá trị có thể là một cái gì đó hoặc nó có thể không là gì cả. 
+Ví dụ, nếu bạn yêu cầu phần tử đầu tiên của một danh sách chứa những mục, bạn sẽ nhận một giá trị.
+Nếu bạn yêu cầu phần tử đầu tiên của một danh sách rỗng, bạn không nhận được gì.
+Diễn đạt khái niệm này theo kiểu hệ thống có nghĩa là trình biên dịch có thể kiểm tra xem bạn đã xử lý tất cả các trường hợp cần xử lý chưa;
+chức năng này có thể ngăn chặn các lỗi rất phổ biến trong các ngôn ngữ lập trình khác.
 
-Programming language design is often thought of in terms of which features you
-include, but the features you exclude are important too. Rust doesn’t have the
-null feature that many other languages have. *Null* is a value that means there
-is no value there. In languages with null, variables can always be in one of
-two states: null or not-null.
+Thiết kế ngôn ngữ lập trình thường được xem xét về các tính năng bạn bao gồm những tính năng nào,
+nhưng các tính năng bạn loại trừ cũng quan trọng. Rust không có giá trị rỗng mà nhiều ngôn ngữ khác có. 
+*Null* là một giá trị có nghĩa là không có giá trị nào ở đó.
+Trong các ngôn ngữ có null, các biến luôn có thể ở một trong hai trạng thái: null hoặc not-null.
 
-In his 2009 presentation “Null References: The Billion Dollar Mistake,” Tony
-Hoare, the inventor of null, has this to say:
+Trong bài thuyết trình năm 2009 của anh ấy “Null References: The Billion Dollar Mistake,” Tony Hoare, người phát minh ra null, có điều này để nói:
 
-> I call it my billion-dollar mistake. At that time, I was designing the first
-> comprehensive type system for references in an object-oriented language. My
-> goal was to ensure that all use of references should be absolutely safe, with
-> checking performed automatically by the compiler. But I couldn’t resist the
-> temptation to put in a null reference, simply because it was so easy to
-> implement. This has led to innumerable errors, vulnerabilities, and system
-> crashes, which have probably caused a billion dollars of pain and damage in
-> the last forty years.
+> Tôi gọi đó là sai lầm hàng tỷ đô la của mình. At that time, Vào thời điểm đó, tôi đang thiết kế hệ thống đầu tiên
+> cho các tham chiếu bằng ngôn ngữ hướng đối tượng. Mục tiêu của tôi là đảm bảo rằng tất cả việc sử dụng
+> các tham chiếu phải an toàn tuyệt đối, với việc kiểm tra được thực hiện tự động bởi trình biên dịch.
+> Nhưng tôi không thể cưỡng lại sự cám dỗ để đưa vào một tham chiếu rỗng,
+> đơn giản vì nó rất dễ thực hiện. Điều này đã dẫn đến vô số lỗi, lỗ hổng bảo mật và sự cố hệ thống
+> mà có lẽ đã gây ra đau đớn và thiệt hại hàng tỷ đô la trong bốn mươi năm qua.
 
-The problem with null values is that if you try to use a null value as a
-not-null value, you’ll get an error of some kind. Because this null or not-null
-property is pervasive, it’s extremely easy to make this kind of error.
+Vấn đề với giá trị null là nếu bạn cố gắng sử dụng giá trị null làm giá trị không null,
+bạn sẽ gặp một lỗi nào đó. Bởi vì thuộc tính null hoặc not-null này là phổ biến,
+rất dễ mắc phải loại lỗi này.
 
-However, the concept that null is trying to express is still a useful one: a
-null is a value that is currently invalid or absent for some reason.
+Tuy nhiên, khái niệm null đang cố gắng diễn đạt vẫn hữu ích: 
+null là một giá trị hiện không hợp lệ hoặc vắng mặt vì lý do nào đó.
 
-The problem isn’t really with the concept but with the particular
-implementation. As such, Rust does not have nulls, but it does have an enum
-that can encode the concept of a value being present or absent. This enum is
-`Option<T>`, and it is [defined by the standard library][option]<!-- ignore -->
-as follows:
+Vấn đề không thực sự nằm ở khái niệm mà là ở cách triển khai cụ thể.
+Như vậy, Rust không có null, nhưng nó có một *enum* có thể mã hóa khái niệm giá trị hiện diện hoặc vắng mặt. 
+Enum này là `Option<T>`, và nó là [defined by the standard library][option]<!-- ignore --> như sau:
 
 ```rust
 enum Option<T> {
@@ -228,54 +213,48 @@ enum Option<T> {
 }
 ```
 
-The `Option<T>` enum is so useful that it’s even included in the prelude; you
-don’t need to bring it into scope explicitly. Its variants are also included in
-the prelude: you can use `Some` and `None` directly without the `Option::`
-prefix. The `Option<T>` enum is still just a regular enum, and `Some(T)` and
-`None` are still variants of type `Option<T>`.
+`Option<T>` enum hữu ích đến mức chứa phần báo trước; bạn không cần phải đưa nó vào phạm vi một cách rõ ràng.
+Các biến thể của nó cũng được bao gồm trong phần mở đầu: bạn có thể sử dụng `Some` và `None` trực tiếp 
+mà không có tiền tố `Option::`. `Option<T>` enum vẫn là 1 enum bình thường, và `Some(T)` và
+`None` cũng là các biến thể trong kiểu `Option<T>`.
 
-The `<T>` syntax is a feature of Rust we haven’t talked about yet. It’s a
-generic type parameter, and we’ll cover generics in more detail in Chapter 10.
-For now, all you need to know is that `<T>` means the `Some` variant of the
-`Option` enum can hold one piece of data of any type, and that each concrete
-type that gets used in place of `T` makes the overall `Option<T>` type a
-different type. Here are some examples of using `Option` values to hold number
-types and string types:
+Cú pháp `<T>` là một tính năng của Rust mà chúng tôi chưa nói đến. Nó là 1 kiểu generic,
+và chúng tôi sẽ trình bày chi tiết hơn trong Chương 10.
+Hiện tại, tất cả những gì bạn cần biết là `<T>` nghĩa là `Some` là biến thể 
+`Option` enum có thể chứa bất kì loại dữ liệu nào, và mỗi loại dữ liệu cụ thể được sử dụng thay cho `T`
+làm cho loại `Option<T>` trở thành một loại khác.
+Dưới đây là một số ví dụ về việc sử dụng giá trị `Option` để lưu các loại số và loại chuỗi:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-06-option-examples/src/main.rs:here}}
 ```
 
-The type of `some_number` is `Option<i32>`. The type of `some_string` is
-`Option<&str>`, which is a different type. Rust can infer these types because
-we’ve specified a value inside the `Some` variant. For `absent_number`, Rust
-requires us to annotate the overall `Option` type: the compiler can’t infer the
-type that the corresponding `Some` variant will hold by looking only at a
-`None` value. Here, we tell Rust that we mean for `absent_number` to be of type
-`Option<i32>`.
+Kiểu `some_number` là `Option<i32>`. Kiểu `some_string` là
+`Option<&str>`, đó là một loại kiểu khác . Rust có thể suy ra các loại này bởi vì chúng tôi đã chỉ định một giá trị bên trong biến thể `Some`.
+Đối với `absent_number`, Rust yêu cầu chúng tôi chú thích loại `Option`: trình biên dịch không thể suy ra loại mà tương ứng
+`Some` đang lưu trữ là giá trị `None`. Ở đây, chúng tôi nói với Rust rằng ý của chúng tôi là để `absent_number` có kiểu `Option<i32>`.
 
-When we have a `Some` value, we know that a value is present and the value is
-held within the `Some`. When we have a `None` value, in some sense, it means
-the same thing as null: we don’t have a valid value. So why is having
-`Option<T>` any better than having null?
+khi `Some` có một giá trị nào đó, chúng tôi biết rằng một giá trị hiện diện và giá trị được giữ trong
+`Some`. Khi chúng tôi cố 1 giá trị `None`, theo một nghĩa nào đó, nó có nghĩa giống như là null:
+chúng tôi không có giá trị hợp lệ. Vậy tại sao có `Option<T>` lại tốt hơn là null?
 
-In short, because `Option<T>` and `T` (where `T` can be any type) are different
-types, the compiler won’t let us use an `Option<T>` value as if it were
-definitely a valid value. For example, this code won’t compile because it’s
-trying to add an `i8` to an `Option<i8>`:
+Nói ngắn gọn, bởi vì `Option<T>` và `T` (`T` có thể là bất kì một kiểu nào) là những loại khác nhau
+, trình biên dịch sẽ không cho phép chúng tôi sử dụng một giá trị `Option<T>` nếu như nó
+không phải một giá trị hợp lệ. Ví dụ: mã này sẽ không biên dịch vì nó đang cố gắng sử dụng 
+phép cộng một `i8` với một `Option<i8>`:
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-07-cant-use-option-directly/src/main.rs:here}}
 ```
 
-If we run this code, we get an error message like this:
+Nếu chúng tôi chạy mã này, chúng tôi nhận được thông báo lỗi như sau:
 
 ```console
 {{#include ../listings/ch06-enums-and-pattern-matching/no-listing-07-cant-use-option-directly/output.txt}}
 ```
 
-Intense! In effect, this error message means that Rust doesn’t understand how
-to add an `i8` and an `Option<i8>`, because they’re different types. When we
+Mãnh liệt! Thực tế, thông báo lỗi này có nghĩa là Rust không hiểu làm cách nào 
+cộng một `i8` với một `Option<i8>`, bởi vì chúng là những loại khác nhau. When we
 have a value of a type like `i8` in Rust, the compiler will ensure that we
 always have a valid value. We can proceed confidently without having to check
 for null before using that value. Only when we have an `Option<i8>` (or
