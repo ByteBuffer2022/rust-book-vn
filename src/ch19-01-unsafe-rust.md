@@ -27,84 +27,48 @@ Con người thì luôn mắc sai lầm, tuy nhiên việc giới hạn ở 5 t�
 Bây giờ hãy xem xét lần lượt 5 tính năng trên
 ### Dereferencing một Raw Pointer
 
-Phần [“Dangling References”][dangling-references]<!-- ignore --> trong chương 4, đề cập đến việc compiler luôn luôn kiểm tra tham chiếu có hợp lệ hay không. Unsafe Rust cung cấp kiểu tham chiếu mới có tên là *raw pointers*, tương tự như tham chiếu trong safe Rust. Raw pointers có thể thay đổi được (mutable) hoặc không (immutable), cú pháp tương ứng ở đây là `*mut T` và `*const T`. Dấu `*` không phải là toán tử dereference mà chỉ đơn giản là cú pháp bắt buộc của raw pointer. Chú ý rằng, *immutable* nghĩa là con trỏ không thể được truy cập sau khi đã dereferenced.
+Phần [“Dangling References”][dangling-references]<!-- ignore --> trong chương 4, đề cập đến việc compiler luôn luôn kiểm tra tham chiếu có hợp lệ hay không. Unsafe Rust cung cấp kiểu tham chiếu mới có tên là *raw pointers*, tương tự như tham chiếu trong safe Rust. Raw pointers có thể thay đổi được (mutable) hoặc không (immutable), cú pháp tương ứng ở đây là `*mut T` và `*const T`. Dấu `*` không phải là toán tử dereference mà chỉ đơn giản là cú pháp bắt buộc của raw pointer. Chú ý rằng, *immutable* nghĩa là con trỏ đó sẽ không thể  trực tiếp thay đổi giá trị của biến mà nó trỏ tới.
 
-Different from references and smart pointers, raw pointers:
+Sự khác biệt của raw pointers với tham chiếu (references) và smart pointers:
 
-* Are allowed to ignore the borrowing rules by having both immutable and
-  mutable pointers or multiple mutable pointers to the same location
-* Aren’t guaranteed to point to valid memory
-* Are allowed to be null
-* Don’t implement any automatic cleanup
+* Cho phép có nhiều mutable pointers cùng trỏ vào một vùng nhớ
+* Không kiểm tra tham chiếu có hợp lệ hay không
+* Cho phép sử dụng con trỏ null
+* Không tự động giải phóng vùng nhớ
 
+Với việc bỏ qua các rules về tham chiếu, con trỏ mà safe Rust cung cấp, ta có thể nâng cao được hiệu năng hoạt động của chương trình cũng như việc tương tác với phần cứng máy tính.
 
-By opting out of having Rust enforce these guarantees, you can give up
-guaranteed safety in exchange for greater performance or the ability to
-interface with another language or hardware where Rust’s guarantees don’t apply.
-
-Listing 19-1 shows how to create an immutable and a mutable raw pointer from
-references.
+Listing 19-1 cho ta thấy cách tạo một immutable và mutable raw pointer.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-01/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-1: Creating raw pointers from references</span>
+<span class="caption">Listing 19-1: Cách tạo một immutable và mutable raw pointer.</span>
 
-Notice that we don’t include the `unsafe` keyword in this code. We can create
-raw pointers in safe code; we just can’t dereference raw pointers outside an
-unsafe block, as you’ll see in a bit.
+Raw pointer khá giống với con trỏ trong C/C++, sẽ rất đơn giản cho những ai đã có nền tảng về lập trình hệ thống, lập trình nhúng... sử dụng C/C++. Ở đây ta không cần sử dụng từ khóa unsafe khi khởi tạo raw pointers vì đây là một hành động chưa gây hại cho hệ thống, unsafe chỉ cần thiết khi ta truy cập vào giá trị mà con trỏ đó trỏ đến (dereference).
 
-We’ve created raw pointers by using `as` to cast an immutable and a mutable
-reference into their corresponding raw pointer types. Because we created them
-directly from references guaranteed to be valid, we know these particular raw
-pointers are valid, but we can’t make that assumption about just any raw
-pointer.
-
-Next, we’ll create a raw pointer whose validity we can’t be so certain of.
-Listing 19-2 shows how to create a raw pointer to an arbitrary location in
-memory. Trying to use arbitrary memory is undefined: there might be data at
-that address or there might not, the compiler might optimize the code so there
-is no memory access, or the program might error with a segmentation fault.
-Usually, there is no good reason to write code like this, but it is possible.
+Tiếp theo, ta sẽ tạo một raw pointer mà không biết được nó có hợp lệ hay không. Listing 19-2 là một ví dụ: tạo một raw pointer để trỏ đến một địa chỉ ô nhớ bất kì trong memory. Compiler sẽ không biết được tại địa chỉ này có dữ liệu hay không, vì vậy ta có thể sẽ gặp lỗi segmentation fault (khá giống trong C/C++). Mặc dù không nên viết code như vậy, nó vẫn được chấp nhận trong unsafe Rust.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-02/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-2: Creating a raw pointer to an arbitrary
-memory address</span>
+<span class="caption">Listing 19-2: Tạo raw pointer để trỏ đến vùng nhớ bất kì</span>
 
-Recall that we can create raw pointers in safe code, but we can’t *dereference*
-raw pointers and read the data being pointed to. In Listing 19-3, we use the
-dereference operator `*` on a raw pointer that requires an `unsafe` block.
+Nhớ rằng ta có thể tạo một raw pointer trong safe code, nhưng không thể truy cập vào giá trị mà nó trỏ đến (dereference). Ở Listing 19-3 là một ví dụ sử dụng toán tử dereference `*` trong unsafe code.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-03/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-3: Dereferencing raw pointers within an
-`unsafe` block</span>
+<span class="caption">Listing 19-3: Truy cập vào giá trị mà raw pointer trỏ đến (dereference) trong unsafe block</span>
 
-Creating a pointer does no harm; it’s only when we try to access the value that
-it points at that we might end up dealing with an invalid value.
+Khởi tạo một con trỏ sẽ không gây hại cho hệ thống; nó chỉ nguy hiểm khi ta cố gắng truy cập vào vùng nhớ không hợp lệ mà nó trỏ đến
 
-Note also that in Listing 19-1 and 19-3, we created `*const i32` and `*mut i32`
-raw pointers that both pointed to the same memory location, where `num` is
-stored. If we instead tried to create an immutable and a mutable reference to
-`num`, the code would not have compiled because Rust’s ownership rules don’t
-allow a mutable reference at the same time as any immutable references. With
-raw pointers, we can create a mutable pointer and an immutable pointer to the
-same location and change data through the mutable pointer, potentially creating
-a data race. Be careful!
+Chú ý rằng ở Listing 19-1 và 19-3, ta sử dụng immutable và mutable raw pointers để trỏ đến cùng một vùng nhớ của biến `num`. Nếu sử dụng immutable và mutable reference thay vì raw pointer, khi compile sẽ xảy ra lỗi vì liên quan đến quyền sở hữu trong Rust (Rust's ownership). Tuy nhiên với raw pointer, ta hoàn toàn có thể làm được điều này, chỉ có điều việc này có thể sẽ tiềm tàng lỗi liên quan đến data race. Hãy cần trọng khi sử dụng!
 
-With all of these dangers, why would you ever use raw pointers? One major use
-case is when interfacing with C code, as you’ll see in the next section,
-[“Calling an Unsafe Function or
-Method.”](#calling-an-unsafe-function-or-method)<!-- ignore --> Another case is
-when building up safe abstractions that the borrow checker doesn’t understand.
-We’ll introduce unsafe functions and then look at an example of a safe
-abstraction that uses unsafe code.
+Với những nguy hiểm tiềm tàng như vậy, tại sao raw pointer vẫn được sinh ra? Câu trả lời sẽ có trong phần tiếp theo, [“Calling an Unsafe Function or Method.”](#calling-an-unsafe-function-or-method)<!-- ignore -->. 
 
 ### Calling an Unsafe Function or Method
 
