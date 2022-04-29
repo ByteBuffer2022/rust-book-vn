@@ -72,144 +72,77 @@ Với những nguy hiểm tiềm tàng như vậy, tại sao raw pointer vẫn �
 
 ### Calling an Unsafe Function or Method
 
-The second type of operation that requires an unsafe block is calls to unsafe
-functions. Unsafe functions and methods look exactly like regular functions and
-methods, but they have an extra `unsafe` before the rest of the definition. The
-`unsafe` keyword in this context indicates the function has requirements we
-need to uphold when we call this function, because Rust can’t guarantee we’ve
-met these requirements. By calling an unsafe function within an `unsafe` block,
-we’re saying that we’ve read this function’s documentation and take
-responsibility for upholding the function’s contracts.
+Tạo một unsafe function hay unsafe method cũng giống như tạo function hay method thông thường, chỉ khác ở từ khóa unsafe ở phía trước.
 
-Here is an unsafe function named `dangerous` that doesn’t do anything in its
-body:
+Đây là một ví dụ về việc tạo unsafe function có tên `dangerous`
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-01-unsafe-fn/src/main.rs:here}}
 ```
 
-We must call the `dangerous` function within a separate `unsafe` block. If we
-try to call `dangerous` without the `unsafe` block, we’ll get an error:
+Phải gọi hàm `dangerous` này trong một unsafe block riêng biệt. Nếu không khi compile chương trình sẽ báo lỗi.
 
 ```console
 {{#include ../listings/ch19-advanced-features/output-only-01-missing-unsafe/output.txt}}
 ```
 
-By inserting the `unsafe` block around our call to `dangerous`, we’re asserting
-to Rust that we’ve read the function’s documentation, we understand how to use
-it properly, and we’ve verified that we’re fulfilling the contract of the
-function.
-
-Bodies of unsafe functions are effectively `unsafe` blocks, so to perform other
-unsafe operations within an unsafe function, we don’t need to add another
-`unsafe` block.
+Phần thân của unsafe function hoạt động giống như `unsafe` blocks, vì vậy ta không cần phải dùng từ khóa `unsafe` cho thân hàm nữa.
 
 #### Creating a Safe Abstraction over Unsafe Code
 
-Just because a function contains unsafe code doesn’t mean we need to mark the
-entire function as unsafe. In fact, wrapping unsafe code in a safe function is
-a common abstraction. As an example, let’s study a function from the standard
-library, `split_at_mut`, that requires some unsafe code and explore how we
-might implement it. This safe method is defined on mutable slices: it takes one
-slice and makes it two by splitting the slice at the index given as an
-argument. Listing 19-4 shows how to use `split_at_mut`.
+Hàm có chưa một đoạn unsafe code không đồng nghĩa với việc cả hàm đó là unsafe. Trong thực tế, bọc unsafe code bởi một safe function là một việc làm rất phổ biến. Xét ví dụ sau, safe method `split_at_mut` sẽ bao bên ngoài của unsafe code. Chức năng của hàm này là chia một mutable slice thành hai phần và trả về 2 slices đó.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-04/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-4: Using the safe `split_at_mut`
-function</span>
+<span class="caption">Listing 19-4: Sử dụng safe function `split_at_mut`</span>
 
-We can’t implement this function using only safe Rust. An attempt might look
-something like Listing 19-5, which won’t compile. For simplicity, we’ll
-implement `split_at_mut` as a function rather than a method and only for slices
-of `i32` values rather than for a generic type `T`.
+Nếu bạn chỉ viết hàm này ở safe code, chương trình sẽ báo lỗi vào không thể biên dịch (listing 19-5). Để đơn giản, ta sẽ dùng function thay vì method và dùng slice kiểu `i32` thay cho generic type `T`.
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-05/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-5: An attempted implementation of
-`split_at_mut` using only safe Rust</span>
+<span class="caption">Listing 19-5: Viết hàm `split_at_mut` sử dụng safe Rust</span>
 
-This function first gets the total length of the slice. Then it asserts that
-the index given as a parameter is within the slice by checking whether it’s
-less than or equal to the length. The assertion means that if we pass an index
-that is greater than the length to split the slice at, the function will panic
-before it attempts to use that index.
+Hàm này đầu tiên sẽ lấy được tổng số phần tử của slice. Sau đó sẽ kiểm tra xem phần tử có index truyền vào có thuộc slice đó không qua việc so sánh với length. Nếu không chương trình sẽ panic.
 
-Then we return two mutable slices in a tuple: one from the start of the
-original slice to the `mid` index and another from `mid` to the end of the
-slice.
+Sau đó hàm sẽ return 2 mutable slices ở trong một tuple: slice thứ nhất sẽ bắt đầu từ phần tử 0 đến phần tử `mid` của slice gốc và slice thứ 2 sẽ là phần còn lại.
 
-When we try to compile the code in Listing 19-5, we’ll get an error.
+Nếu compile chương trình ở Listing 19-5, ta sẽ gặp lỗi như sau:
 
 ```console
 {{#include ../listings/ch19-advanced-features/listing-19-05/output.txt}}
 ```
 
-Rust’s borrow checker can’t understand that we’re borrowing different parts of
-the slice; it only knows that we’re borrowing from the same slice twice.
-Borrowing different parts of a slice is fundamentally okay because the two
-slices aren’t overlapping, but Rust isn’t smart enough to know this. When we
-know code is okay, but Rust doesn’t, it’s time to reach for unsafe code.
+Rust's borrow checker (dùng để kiểm tra quyền sở hữu của các biến) không thể biết được ta đang mượn 2 slice tách biệt; nó chỉ biết rằng ta đang mượn từ cùng một slice gốc. Do đó để tránh rủi ro, Rust sẽ coi đây là một lỗi và không cho chương trình được biên dịch, lúc này ta phải cần đến unsafe code.
 
-Listing 19-6 shows how to use an `unsafe` block, a raw pointer, and some calls
-to unsafe functions to make the implementation of `split_at_mut` work.
+Listing 19-6 cho ta thấy cách sử dụng `unsafe` block, raw pointer, unsafe function để viết hàm `split_at_mut`.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-06/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-6: Using unsafe code in the implementation of
-the `split_at_mut` function</span>
+<span class="caption">Listing 19-6: Sử dụng unsafe code để viết hàm `split_at_mut`</span>
 
-Recall from [“The Slice Type”][the-slice-type]<!-- ignore --> section in
-Chapter 4 that slices are a pointer to some data and the length of the slice.
-We use the `len` method to get the length of a slice and the `as_mut_ptr`
-method to access the raw pointer of a slice. In this case, because we have a
-mutable slice to `i32` values, `as_mut_ptr` returns a raw pointer with the type
-`*mut i32`, which we’ve stored in the variable `ptr`.
+Slice thực chất là con trỏ trỏ tới một vùng nhớ có kích thước xác định (xem thêm [“The Slice Type”][the-slice-type]<!-- ignore -->). Dùng method `len` để lấy ra kích thước của slice và method `as_mut_ptr` để tạo ra raw pointer của slice đó.
 
-We keep the assertion that the `mid` index is within the slice. Then we get to
-the unsafe code: the `slice::from_raw_parts_mut` function takes a raw pointer
-and a length, and it creates a slice. We use this function to create a slice
-that starts from `ptr` and is `mid` items long. Then we call the `add`
-method on `ptr` with `mid` as an argument to get a raw pointer that starts at
-`mid`, and we create a slice using that pointer and the remaining number of
-items after `mid` as the length.
+Sau đó là phần unsafe code, hàm `slice::from_raw_parts_mut` sẽ tạo ra một slice mới dựa trên raw pointer truyền vào và kích thước mong muốn. Method `add` với tham số `mid` có nhiệm vụ đưa con trỏ trỏ tới vị trí `mid` của slice gốc.
 
-The function `slice::from_raw_parts_mut` is unsafe because it takes a raw
-pointer and must trust that this pointer is valid. The `add` method on raw
-pointers is also unsafe, because it must trust that the offset location is also
-a valid pointer. Therefore, we had to put an `unsafe` block around our calls to
-`slice::from_raw_parts_mut` and `add` so we could call them. By looking at
-the code and by adding the assertion that `mid` must be less than or equal to
-`len`, we can tell that all the raw pointers used within the `unsafe` block
-will be valid pointers to data within the slice. This is an acceptable and
-appropriate use of `unsafe`.
+Hàm `slice::from_raw_parts_mut` là một unsafe function bởi nó sử dụng raw pointer và không biết được con trỏ đó có hợp lệ hay không. Method `add` cũng vậy, vì nó hoàn toàn không biết index được truyền vào có nằm trong slice hay không. Do đó, ta phải đưa những đoạn code này vào trong unsafe block.
 
-Note that we don’t need to mark the resulting `split_at_mut` function as
-`unsafe`, and we can call this function from safe Rust. We’ve created a safe
-abstraction to the unsafe code with an implementation of the function that uses
-`unsafe` code in a safe way, because it creates only valid pointers from the
-data this function has access to.
+Chú ý rằng ta không cần phải đánh dấu hàm `split_at_mut` là unsafe bởi nó chỉ return các con trỏ hoàn toàn hợp lệ. Nhớ rằng việc tạo con trỏ không hề nguy hiểm, nó chỉ nguy hiểm khi truy cập đến giá trị của con trỏ đó mà thôi.
 
-In contrast, the use of `slice::from_raw_parts_mut` in Listing 19-7 would
-likely crash when the slice is used. This code takes an arbitrary memory
-location and creates a slice 10,000 items long.
+Ngược lại, việc dùng hàm `slice:from_raw_parts_mut` ở Listing 19-7 có thể xảy ra lỗi khi chạy chương trình. Đoạn code này sẽ truy cập vào một vùng nhớ bất kì và tạo một slice có 10000 phần tử.
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-07/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-7: Creating a slice from an arbitrary memory
-location</span>
+<span class="caption">Listing 19-7: Tạo slice từ một vùng nhớ bất kì</span>
 
-We don’t own the memory at this arbitrary location, and there is no guarantee
-that the slice this code creates contains valid `i32` values. Attempting to use
-`values` as though it’s a valid slice results in undefined behavior.
+Ta không chắc rằng mình có quyền sở hữu vùng nhớ đó, nên không thể chắc chắn rằng vùng nhớ đó chỉ chứa các giá trị `i32`. Cố gắng sử dụng các giá trị đó làm một hành động không được phép (undefined behavior).
 
 #### Using `extern` Functions to Call External Code
 
