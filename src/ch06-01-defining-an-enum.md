@@ -254,42 +254,32 @@ Nếu chúng tôi chạy mã này, chúng tôi nhận được thông báo lỗi
 ```
 
 Mãnh liệt! Thực tế, thông báo lỗi này có nghĩa là Rust không hiểu làm cách nào 
-cộng một `i8` với một `Option<i8>`, bởi vì chúng là những loại khác nhau. When we
-have a value of a type like `i8` in Rust, the compiler will ensure that we
-always have a valid value. We can proceed confidently without having to check
-for null before using that value. Only when we have an `Option<i8>` (or
-whatever type of value we’re working with) do we have to worry about possibly
-not having a value, and the compiler will make sure we handle that case before
-using the value.
+cộng một `i8` với một `Option<i8>`, bởi vì chúng là những loại khác nhau. 
+Khi chúng ta có một giá trị kiểu `i8` trong Rust, trình biên dịch sẽ chắc chắn 
+chúng ta có một giá trị hợp lệ. Chúng ta có thể tiến hành một cách tự tin mà không cần phải kiểm tra null trước khi sử dụng giá trị đó
+. Chỉ khi chúng ta có một `Option<i8>` (hoặc bất kỳ loại giá trị nào mà chúng ta đang làm việc) 
+chúng ta phải lo lắng về việc có thể không có giá trị, và trình biên dịch sẽ đảm bảo rằng chúng tôi xử lý trường hợp đó trước khi sử dụng giá trị đó.
 
-In other words, you have to convert an `Option<T>` to a `T` before you can
-perform `T` operations with it. Generally, this helps catch one of the most
-common issues with null: assuming that something isn’t null when it actually
-is.
+Nói cách khác, bạn phải chuyển một kiểu `Option<T>` thành một kiểu `T` trước khi bạn thực hiện bất kì
+thao tác nào với nó. Nói chung, điều này giúp khắc phục một trong những vấn đề phổ biến nhất với null: 
+giả sử rằng một cái gì đó không phải là null khi nó thực sự là như vậy.
 
-Eliminating the risk of incorrectly assuming a not-null value helps you to be
-more confident in your code. In order to have a value that can possibly be
-null, you must explicitly opt in by making the type of that value `Option<T>`.
-Then, when you use that value, you are required to explicitly handle the case
-when the value is null. Everywhere that a value has a type that isn’t an
-`Option<T>`, you *can* safely assume that the value isn’t null. This was a
-deliberate design decision for Rust to limit null’s pervasiveness and increase
-the safety of Rust code.
+Loại bỏ rủi ro giả định không chính xác giá trị không phải là null giúp bạn tin hơn vào mã của mình.
+Để có một giá trị có thể là null, bạn phải chọn một cách rõ ràng bằng cách đặt loại giá trị đó là `Option<T>`.
+Sau đó, khi bạn sử dụng giá trị đó, bạn được yêu cầu xử lý rõ ràng trường hợp khi giá trị là null. 
+Ở mọi nơi mà một giá trị có một loại không phải là `Option<T>`, bạn có thể an toàn giả định rằng giá trị không phải là null. 
+Đây là một quyết định thiết kế có chủ ý của Rust để hạn chế lỗi phổ biến của null và tăng độ an toàn của mã Rust.
 
-So, how do you get the `T` value out of a `Some` variant when you have a value
-of type `Option<T>` so you can use that value? The `Option<T>` enum has a large
-number of methods that are useful in a variety of situations; you can check
-them out in [its documentation][docs]<!-- ignore -->. Becoming familiar with
-the methods on `Option<T>` will be extremely useful in your journey with Rust.
+Vì vậy, làm thế nào để bạn có được giá trị `T` từ một kiểu `Some` khi bạn có một giá trị thuộc loại 
+`Option<T>` để bạn có thể sử dụng giá trị đó? `Option<T>` enum có một số lượng lớn các phương pháp hữu ích 
+ trong nhiều tình huống khác nhau; bạn có thể kiểm tra chúng tại [its documentation][docs]<!-- ignore -->. 
+ Làm quen với các phương pháp trên `Option<T>` sẽ cực kỳ hữu ích trong hành trình của bạn với Rust.
 
-In general, in order to use an `Option<T>` value, you want to have code that
-will handle each variant. You want some code that will run only when you have a
-`Some(T)` value, and this code is allowed to use the inner `T`. You want some
-other code to run if you have a `None` value, and that code doesn’t have a `T`
-value available. The `match` expression is a control flow construct that does
-just this when used with enums: it will run different code depending on which
-variant of the enum it has, and that code can use the data inside the matching
-value.
+Nói chung, để sử dụng một giá trị `Option<T>`, bạn muốn có mã sẽ xử lý từng biến thể. 
+Bạn muốn một số mã sẽ chỉ chạy khi bạn có một giá trị `Some(T)`, 
+và mã này được phép sử dụng bên trong `T`. Bạn muốn một số mã khác chạy nếu bạn có
+một giá trị `None`, và mã đó không có sẵn giá trị `T`. Biểu thức `match` là một cấu trúc luồng điều khiển thực hiện điều này khi được sử dụng với enums: 
+nó sẽ chạy mã khác nhau tùy thuộc vào biến thể của enum mà nó có, và mã đó có thể sử dụng dữ liệu bên trong giá trị phù hợp.
 
 [IpAddr]: ../std/net/enum.IpAddr.html
 [option]: ../std/option/enum.Option.html
