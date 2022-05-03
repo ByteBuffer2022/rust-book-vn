@@ -1,36 +1,36 @@
 <a id="the-match-control-flow-operator"></a>
 ## The `match` Control Flow Construct
 
-Rust has an extremely powerful control flow construct called `match` that allows
-you to compare a value against a series of patterns and then execute code based
-on which pattern matches. Patterns can be made up of literal values, variable
-names, wildcards, and many other things; Chapter 18 covers all the different
-kinds of patterns and what they do. The power of `match` comes from the
-expressiveness of the patterns and the fact that the compiler confirms that all
-possible cases are handled.
+Rust có một cấu trúc luồng điều khiển cực kỳ mạnh mẽ được gọi là `match` cho 
+phép bạn so sánh một giá trị với một loạt các mẫu và sau đó thực thi mã dựa 
+trên mẫu nào phù hợp. Các mẫu có thể được tạo thành từ các giá trị chữ, 
+tên biến, ký tự đại diện và nhiều thứ khác; Chương 18 bao gồm tất cả các 
+loại mẫu khác nhau và những gì chúng làm. Sức mạnh của `match` đxuất phát 
+từ sự biểu đạt của các mẫu và thực tế là trình biên dịch xác nhận rằng tất 
+cả các trường hợp có thể xảy ra đều được xử lý.
 
-Think of a `match` expression as being like a coin-sorting machine: coins slide
-down a track with variously sized holes along it, and each coin falls through
-the first hole it encounters that it fits into. In the same way, values go
-through each pattern in a `match`, and at the first pattern the value “fits,”
-the value falls into the associated code block to be used during execution.
-Speaking of coins, let’s use them as an example using `match`! We can write a
-function that takes an unknown United States coin and, in a similar way as the
-counting machine, determines which coin it is and return its value in cents, as
-shown here in Listing 6-3.
+Hãy nghĩ về một biểu thức `match` như là giống như một cỗ máy phân loại tiền xu:
+đồng xu trượt xuống một đường ray với các lỗ có kích thước khác nhau dọc theo nó,
+và mỗi đồng xu rơi qua lỗ đầu tiên mà nó gặp phải mà nó vừa vào.
+Theo cách tương tự, các giá trị đi qua từng mẫu trong một `match`,
+và ở mẫu đầu tiên, giá trị "phù hợp",
+giá trị rơi vào khối mã liên kết sẽ được sử dụng trong quá trình thực thi
+Nói về tiền xu, hãy sử dụng chúng làm ví dụ bằng cách sử dụng `match`!
+Chúng ta có thể viết một hàm lấy một đồng xu Hoa Kỳ không xác định và,
+theo cách tương tự như máy đếm, xác định đó là đồng xu nào và trả về 
+giá trị của nó bằng xu, như được hiển thị ở đây trong Listing 6-3.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-03/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-3: An enum and a `match` expression that has
-the variants of the enum as its patterns</span>
+<span class="caption">Listing 6-3: Một enum và một biểu thức so khớp có các biến thể của enum là các mẫu của nó
+</span>
 
-Let’s break down the `match` in the `value_in_cents` function. First, we list
-the `match` keyword followed by an expression, which in this case is the value
-`coin`. This seems very similar to an expression used with `if`, but there’s a
-big difference: with `if`, the expression needs to return a Boolean value, but
-here, it can return any type. The type of `coin` in this example is the `Coin`
+Hãy chia nhỏ `match` trong hàm `value_in_cents`. Đầu tiên, chúng ta liệt kê  từ khoá `match` 
+là một biểu thức, trong trường hợp này là `coin`. Điều này có vẻ rất giống với một biểu thức 
+được sử dụng với `if`, nhưng có một sự khác biệt lớn: với `if`,
+biểu thức cần trả về giá trị Boolean, nhưng ở đây, nó có thể trả về bất kỳ loại nào. The type of `coin` in this example is the `Coin`
 enum that we defined on the first line.
 
 Next are the `match` arms. An arm has two parts: a pattern and some code. The
