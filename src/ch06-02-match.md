@@ -66,63 +66,48 @@ bằng cách thay đổi trường hợp `Quarter` có chứa 1 giá trị  `UsS
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-04/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-4: A `Coin` enum in which the `Quarter` variant
-also holds a `UsState` value</span>
+<span class="caption">Listing 6-4: Một enum `Coin` trong đó trường hợp `Quarter` chứa 1 giá trị `UsState`</span>
 
-Let’s imagine that a friend is trying to collect all 50 state quarters. While
-we sort our loose change by coin type, we’ll also call out the name of the
-state associated with each quarter so if it’s one our friend doesn’t have, they
-can add it to their collection.
+Hãy tưởng tượng rằng một người bạn đang cố gắng thu thập tất cả 50 đồng 25 xu của các tiểu bang. Trong khi chúng ta phân loại tiền lẻ của mình theo loại tiền xu, 
+chúng tôi cũng sẽ gọi ra tên của tiểu bang được liên kết với mỗi đồng 25 xu vì vậy nếu đó là một trong những người bạn của chúng tôi không có, 
+họ có thể thêm nó vào bộ sưu tập của họ.
 
-In the match expression for this code, we add a variable called `state` to the
-pattern that matches values of the variant `Coin::Quarter`. When a
-`Coin::Quarter` matches, the `state` variable will bind to the value of that
-quarter’s state. Then we can use `state` in the code for that arm, like so:
+Trong biểu thức match cho code này, chúng tôi thêm một biến được gọi là `state` vào mẫu phù hợp với các giá trị của trường hợp `Coin::Quarter`. Khi một 
+`Coin::Quarter` khớp, biến `state` sẽ liên kết với giá trị của trạng thái của đồng 25 xu đó. Sau đó, chúng ta có thể sử dụng `state` trong code cho nhánh này, giống như bên dưới:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-09-variable-in-pattern/src/main.rs:here}}
 ```
 
-If we were to call `value_in_cents(Coin::Quarter(UsState::Alaska))`, `coin`
-would be `Coin::Quarter(UsState::Alaska)`. When we compare that value with each
-of the match arms, none of them match until we reach `Coin::Quarter(state)`. At
-that point, the binding for `state` will be the value `UsState::Alaska`. We can
-then use that binding in the `println!` expression, thus getting the inner
-state value out of the `Coin` enum variant for `Quarter`.
+Nếu chúng ta gọi `value_in_cents(Coin::Quarter(UsState::Alaska))`, `coin` sẽ là `Coin::Quarter(UsState::Alaska)`. 
+Khi chúng tôi so sánh giá trị đó với từng nhánh, không ai trong số chúng phù hợp cho đến khi chúng tôi đạt được `Coin::Quarter(state)`.Tại thời điểm đó, ràng buộc đối với `state` sẽ là giá trị `UsState::Alaska`. Chúng tôi có thể sử dụng ràng buộc đó trong câu lệnh `println!`, do đó nhận được giá trị trạng thái bên trong của giá trị `Coin` cho `Quarter`.
 
-### Matching with `Option<T>`
+### Matching với `Option<T>`
 
-In the previous section, we wanted to get the inner `T` value out of the `Some`
-case when using `Option<T>`; we can also handle `Option<T>` using `match` as we
-did with the `Coin` enum! Instead of comparing coins, we’ll compare the
-variants of `Option<T>`, but the way that the `match` expression works remains
-the same.
+Trong phần trước, chúng ta muốn có được bên trong giá trị `T` của `Some`trường hợp khi sử dụng `Option<T>`; 
+chúng ta cũng có thể xử lý `Option<T>` sử dung `match` như là chúng ta đã làm với `Coin`! Thay vì so sánh tiền xu, chúng tôi sẽ so sánh các trường hợp của
+ `Option<T>`, nhưng cách thức hoạt động của biểu thức `match` vẫn giống nhau.
 
-Let’s say we want to write a function that takes an `Option<i32>` and, if
-there’s a value inside, adds 1 to that value. If there isn’t a value inside,
-the function should return the `None` value and not attempt to perform any
-operations.
+Giả sử chúng tôi muốn viết một hàm sử dụng `Option<i32>`, nếu có một giá trị bên trong, hãy thêm 1 vào giá trị đó. 
+Nếu không có giá trị bên trong, hàm sẽ trả về giá trị `None` và không cố gắng thực hiện bất kỳ hoạt động nào.
 
-This function is very easy to write, thanks to `match`, and will look like
-Listing 6-5.
+Hàm này rất dễ viết, nhờ `match`, và sẽ trông như Listing 6-5.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-5: A function that uses a `match` expression on
-an `Option<i32>`</span>
+<span class="caption">Listing 6-5: Một hàm sử dụng biểu thức `match`h trên `Option<i32>`</span>
 
-Let’s examine the first execution of `plus_one` in more detail. When we call
-`plus_one(five)`, the variable `x` in the body of `plus_one` will have the
-value `Some(5)`. We then compare that against each match arm.
+Chúng ta hãy kiểm tra việc thực hiện đầu tiên của `plus_one` chi tiết hơn. Khi chúng ta gọi
+`plus_one(five)`, biến `x` trong thân hàm `plus_one` sẽ có giá trị
+ `Some(5)`. Sau đó, chúng tôi so sánh điều đó với từng nhánh `match`.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:first_arm}}
 ```
 
-The `Some(5)` value doesn’t match the pattern `None`, so we continue to the
-next arm.
+Giá trị `Some(5)` không khớp với mẫu `None`,vì vậy chúng ta tiếp tục đến nhánh tiếp theo.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:second_arm}}
