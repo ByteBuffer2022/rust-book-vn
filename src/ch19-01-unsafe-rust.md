@@ -144,19 +144,11 @@ Ngược lại, việc dùng hàm `slice:from_raw_parts_mut` ở Listing 19-7 c�
 
 Ta không chắc rằng mình có quyền sở hữu vùng nhớ đó, nên không thể chắc chắn rằng vùng nhớ đó chỉ chứa các giá trị `i32`. Cố gắng sử dụng các giá trị đó làm một hành động không được phép (undefined behavior).
 
-#### Using `extern` Functions to Call External Code
+#### Sử dụng `extern` để gọi tới External Code
 
-Sometimes, your Rust code might need to interact with code written in another
-language. For this, Rust has a keyword, `extern`, that facilitates the creation
-and use of a *Foreign Function Interface (FFI)*. An FFI is a way for a
-programming language to define functions and enable a different (foreign)
-programming language to call those functions.
+Trong một vài trường hợp, ta muốn sử dụng Rust để tương tác với một ngôn ngữ lập trình khác. Trong trường hợp này, Rust cung cấp từ khóa `extern`, giúp ta có thể dễ dàng hơn trong việc sử dụng *Foreign Function Interface (FFI)*. FFI là cách để một ngôn ngữ lập trình có thể định nghĩa các hàm để ngôn ngữ khác có thể gọi tới.
 
-Listing 19-8 demonstrates how to set up an integration with the `abs` function
-from the C standard library. Functions declared within `extern` blocks are
-always unsafe to call from Rust code. The reason is that other languages don’t
-enforce Rust’s rules and guarantees, and Rust can’t check them, so
-responsibility falls on the programmer to ensure safety.
+Listing 19-8 giải thích cách thực hiện với hàm `abs` từ thư viện của ngôn ngữ C. Hàm này được định nghĩa ở trong `extern` blocks và được coi như là unsafe code trong Rust. Lý do là vì các ngôn ngữ khác không có cơ chế về bảo vệ và quản lí vùng nhớ như Rust, do đó Rust không thể kiểm soát chúng một cách thông thường được.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -164,30 +156,13 @@ responsibility falls on the programmer to ensure safety.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-08/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-8: Declaring and calling an `extern` function
-defined in another language</span>
+<span class="caption">Listing 19-8: Khai báo và gọi một `extern` function được định nghĩa bởi ngôn ngữ khác</span>
 
-Within the `extern "C"` block, we list the names and signatures of external
-functions from another language we want to call. The `"C"` part defines which
-*application binary interface (ABI)* the external function uses: the ABI
-defines how to call the function at the assembly level. The `"C"` ABI is the
-most common and follows the C programming language’s ABI.
-
-> #### Calling Rust Functions from Other Languages
+> #### Gọi Rust Functions từ ngôn ngữ khác
 >
-> We can also use `extern` to create an interface that allows other languages
-> to call Rust functions. Instead of an `extern` block, we add the `extern`
-> keyword and specify the ABI to use just before the `fn` keyword. We also need
-> to add a `#[no_mangle]` annotation to tell the Rust compiler not to mangle
-> the name of this function. *Mangling* is when a compiler changes the name
-> we’ve given a function to a different name that contains more information for
-> other parts of the compilation process to consume but is less human readable.
-> Every programming language compiler mangles names slightly differently, so
-> for a Rust function to be nameable by other languages, we must disable the
-> Rust compiler’s name mangling.
+> Ta hoàn toàn có thể sử dụng `extern` để tạo một interface cho phép các ngôn ngữ lập trình khác gọi đến hàm của Rust. Thay vì một `extern` block, ta sẽ sử dụng từ khóa `extern` kèm theo ABI (application binary interface) cụ thể ngay phía trước từ khóa `fn`. Annotation `#[no_mangle]` sẽ được sử dụng để chỉ dẫn cho compiler không biến đổi (mangle) tên hàm. *Mangling* xảy ra khi compiler thay đổi tên của hàm phục vụ cho quá trình biên dịch nhưng sẽ khó nhìn hơn cho lập trình viên. Mỗi ngôn ngữ sẽ có cách biến đổi tên của riêng mình, vì vậy ta phải disable cách biến đổi tên của Rust (Rust compiler's name mangling).
 >
-> In the following example, we make the `call_from_c` function accessible from
-> C code, after it’s compiled to a shared library and linked from C:
+> Ở ví dụ sau đây, hàm `call_from_c` sẽ được gọi từ code C, sau khi đã được biên dịch và liên kết các thư viện cần thiết.
 >
 > ```rust
 > #[no_mangle]
@@ -196,17 +171,13 @@ most common and follows the C programming language’s ABI.
 > }
 > ```
 >
-> This usage of `extern` does not require `unsafe`.
+> Trường hợp này không bắt buộc dùng từ khóa `unsafe`.
 
-### Accessing or Modifying a Mutable Static Variable
+### Truy cập hoặc thay đổi một Mutable Static Variable
 
-Until now, we’ve not talked about *global variables*, which Rust does support
-but can be problematic with Rust’s ownership rules. If two threads are
-accessing the same mutable global variable, it can cause a data race.
+Rust không định nghĩa kiểu biến *global*, lí do là bởi quyền sở hữu (ownership rules). Nếu 2 threads cùng truy cập một biến global, có thể sẽ dẫn đến hiện tượng data race.
 
-In Rust, global variables are called *static* variables. Listing 19-9 shows an
-example declaration and use of a static variable with a string slice as a
-value.
+Trong Rust, biến global được gọi là biến *static*. Listing 19-9 là một ví dụ về cách sử dụng biến static.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -214,27 +185,13 @@ value.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-09/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-9: Defining and using an immutable static
-variable</span>
+<span class="caption">Listing 19-9: Định nghĩa và sử dụng một immutable static variable</span>
 
-Static variables are similar to constants, which we discussed in the
-[“Differences Between Variables and
-Constants”][differences-between-variables-and-constants]<!-- ignore -->
-section in Chapter 3. The names of static variables are in
-`SCREAMING_SNAKE_CASE` by convention. Static variables can only store
-references with the `'static` lifetime, which means the Rust compiler can
-figure out the lifetime and we aren’t required to annotate it explicitly.
-Accessing an immutable static variable is safe.
+Biến static có nhiều điểm tương đồng với hằng số (constants), điều đã được nhắc đến trong phần [“Differences Between Variables and Constants”][differences-between-variables-and-constants]<!-- ignore --> ở chương 3. Biến static chỉ được tham chiếu với lifetime là `static`, nghĩa là Rust có thể biết được lifetime của biến đó ngay từ đầu và ta không có cách nào thay đổi. Truy cập vào một immutable static variable là một hành động an toàn. 
 
-Constants and immutable static variables might seem similar, but a subtle
-difference is that values in a static variable have a fixed address in memory.
-Using the value will always access the same data. Constants, on the other hand,
-are allowed to duplicate their data whenever they’re used.
+Constants và immutable static variable có nhiều điểm tưởng đồng, nhưng chúng khác nhau ở chỗ giá trị của biến static có địa chỉ cố định. Sử dụng giá trị này, ta sẽ luôn truy cập đến một vùng nhớ duy nhất. Đối với contants, dữ liệu sẽ được sao chép tới một vùng nhớ khác mỗi khi ta truy cập vào hằng số đó.
 
-Another difference between constants and static variables is that static
-variables can be mutable. Accessing and modifying mutable static variables is
-*unsafe*. Listing 19-10 shows how to declare, access, and modify a mutable
-static variable named `COUNTER`.
+Một điểm khác biệt nữa giữa contants và static variable là biến static có thể thay đổi được. Tuy nhiên việc truy cập và thay đổi một mutable static variable là một hành động *unsafe*. Listing 19-10 chỉ ra cách khai báo, truy cập và thay đổi một mutable static variable có tên là `COUNTER`.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -242,66 +199,31 @@ static variable named `COUNTER`.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-10/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-10: Reading from or writing to a mutable
-static variable is unsafe</span>
+<span class="caption">Listing 19-10: Đọc và ghi một mutable static variable là một hành động unsafe</span>
 
-As with regular variables, we specify mutability using the `mut` keyword. Any
-code that reads or writes from `COUNTER` must be within an `unsafe` block. This
-code compiles and prints `COUNTER: 3` as we would expect because it’s single
-threaded. Having multiple threads access `COUNTER` would likely result in data
-races.
+Sử dụng từ khóa `mut` để khai báo một mutable static variable. Các đoạn code liên quan đến việc đọc à ghi biến `COUNTER` đều phải được đặt trong `unsafe` block. Đoạn code trên sẽ in ra màn hình `COUNTER: 3` như kì vọng bởi đây là chương trình single threaded. Đa luồng với chương trình trên có thể sẽ dẫn tới hiện tượng data races.
 
-With mutable data that is globally accessible, it’s difficult to ensure there
-are no data races, which is why Rust considers mutable static variables to be
-unsafe. Where possible, it’s preferable to use the concurrency techniques and
-thread-safe smart pointers we discussed in Chapter 16 so the compiler checks
-that data accessed from different threads is done safely.
+Với việc thay đổi dữ liệu với quyền truy cập toàn cục, rất khó để đảm bảo rằng không có data race xảy ra, đó là lý do Rust phải đưa chúng vào trong unsafe. Nếu có thể, hay sử dụng các kĩ thuật về đa luồng và lập trình song song được nhắc đến trong chương 16 để giúp cho chương trình an toàn hơn.
 
-### Implementing an Unsafe Trait
+### Implementing một Unsafe Trait
 
-Another use case for `unsafe` is implementing an unsafe trait. A trait is
-unsafe when at least one of its methods has some invariant that the compiler
-can’t verify. We can declare that a trait is `unsafe` by adding the `unsafe`
-keyword before `trait` and marking the implementation of the trait as `unsafe`
-too, as shown in Listing 19-11.
+Một trường hợp khác phải dùng `unsafe` là khi implement một unsafe trait. Trait được gọi là unsafe khi ít nhất một method trong nó khiến compiler không thể chắc chắn rằng method đó an toàn. Ta có thể khai báo một `unsafe` trait bằng cách thêm từ khóa `unsafe` trước trait đó đồng thời đánh dấu `unsafe` cho trait khi implement. Ví dụ:
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-11/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-11: Defining and implementing an unsafe
-trait</span>
+<span class="caption">Listing 19-11: Định nghĩa và implement một unsafe trait</span>
 
-By using `unsafe impl`, we’re promising that we’ll uphold the invariants that
-the compiler can’t verify.
+Ta sẽ giao kèo với compiler rằng sẽ chịu trách nhiệm cho các unsafe method bằng cách sử dụng `unsafe impl`.
 
-As an example, recall the `Sync` and `Send` marker traits we discussed in the
-[“Extensible Concurrency with the `Sync` and `Send`
-Traits”][extensible-concurrency-with-the-sync-and-send-traits]<!-- ignore -->
-section in Chapter 16: the compiler implements these traits automatically if
-our types are composed entirely of `Send` and `Sync` types. If we implement a
-type that contains a type that is not `Send` or `Sync`, such as raw pointers,
-and we want to mark that type as `Send` or `Sync`, we must use `unsafe`. Rust
-can’t verify that our type upholds the guarantees that it can be safely sent
-across threads or accessed from multiple threads; therefore, we need to do
-those checks manually and indicate as such with `unsafe`.
+### Truy cập vào các trường trong một Union
 
-### Accessing Fields of a Union
+Một `union` tương tự như một `struct`, nhưng chỉ có một trường dữ liệu được sử dụng trong một instance ở một thời điểm. Truy cập vào các trường trong union là một hành động unsafe. Bạn có thể đọc thêm tại đây [the Rust Reference][reference].
 
-The final action that works only with `unsafe` is accessing fields of a
-*union*. A `union` is similar to a `struct`, but only one declared field is
-used in a particular instance at one time. Unions are primarily used to
-interface with unions in C code. Accessing union fields is unsafe because Rust
-can’t guarantee the type of the data currently being stored in the union
-instance. You can learn more about unions in [the Rust Reference][reference].
+### Khi nào thì sử dụng Unsafe Code
 
-### When to Use Unsafe Code
-
-Using `unsafe` to take one of the five actions (superpowers) just discussed
-isn’t wrong or even frowned upon. But it is trickier to get `unsafe` code
-correct because the compiler can’t help uphold memory safety. When you have a
-reason to use `unsafe` code, you can do so, and having the explicit `unsafe`
-annotation makes it easier to track down the source of problems when they occur.
+Sử dụng `unsafe` khi muốn có một trong 5 hành động (superpowers) đã nhắc đến ở phía trên. Hãy sử dụng chỉ khi thực sự cần thiết, bởi bạn chứ không phải compiler sẽ là người phải chịu trách nhiệm nếu cho các lỗi phát sinh sau này.
 
 [dangling-references]:
 ch04-02-references-and-borrowing.html#dangling-references
