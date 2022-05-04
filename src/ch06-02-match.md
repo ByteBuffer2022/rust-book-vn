@@ -30,46 +30,37 @@ giá trị của nó bằng xu, như được hiển thị ở đây trong Listi
 Hãy chia nhỏ `match` trong hàm `value_in_cents`. Đầu tiên, chúng ta liệt kê  từ khoá `match` 
 là một biểu thức, trong trường hợp này là `coin`. Điều này có vẻ rất giống với một biểu thức 
 được sử dụng với `if`, nhưng có một sự khác biệt lớn: với `if`,
-biểu thức cần trả về giá trị Boolean, nhưng ở đây, nó có thể trả về bất kỳ loại nào. The type of `coin` in this example is the `Coin`
-enum that we defined on the first line.
+biểu thức cần trả về giá trị Boolean, nhưng ở đây, nó có thể trả về bất kỳ loại nào. Kiểu của `coin` trong ví dụ này là một enum `Coin`
+mà chúng ta đã định nghĩa ở dòng đầu tiên.
 
-Next are the `match` arms. An arm has two parts: a pattern and some code. The
-first arm here has a pattern that is the value `Coin::Penny` and then the `=>`
-operator that separates the pattern and the code to run. The code in this case
-is just the value `1`. Each arm is separated from the next with a comma.
+Tiếp theo là các nhánh `match`. Một nhánh gồm 2 phần: mẫu và code. Nhánh đầu tiên ở đây có một mẫu là giá trị `Coin::Penny` và sau đó toán tử `=>`
+phân tách mẫu và code để chạy. Code trong trường hợp này nhận giá trị là `1`. Mỗi nhánh được ngăn cách với nhánh tiếp theo bằng dấu phẩy.
 
-When the `match` expression executes, it compares the resulting value against
-the pattern of each arm, in order. If a pattern matches the value, the code
-associated with that pattern is executed. If that pattern doesn’t match the
-value, execution continues to the next arm, much as in a coin-sorting machine.
-We can have as many arms as we need: in Listing 6-3, our `match` has four arms.
+Khi biểu thức `match` thực thi, nó so sánh giá trị kết quả với mẫu của mỗi nhánh, theo thứ tự. 
+Nếu một mẫu khớp với giá trị, code với mẫu đó sẽ được thực thi. 
+Nếu mẫu đó không khớp với giá trị, thì việc thực thi sẽ tiếp tục cho nhánh tiếp theo,
+giống như trong một máy phân loại tiền xu.
+Chúng ta có thể có nhiều nhánh như chúng ta cần: trong Listing 6-3, `match` của chúng ta có 4 nhánh.
 
-The code associated with each arm is an expression, and the resulting value of
-the expression in the matching arm is the value that gets returned for the
-entire `match` expression.
+Code được liên kết với mỗi nhánh là một biểu thức, và giá trị kết quả của biểu thức trong nhánh phù hợp là giá trị được trả về cho toàn bộ biểu thức `match`.
 
-We don’t typically use curly brackets if the match arm code is short, as it is
-in Listing 6-3 where each arm just returns a value. If you want to run multiple
-lines of code in a match arm, you must use curly brackets. For example, the
-following code prints “Lucky penny!” every time the method is called with a
-`Coin::Penny`, but still returns the last value of the block, `1`:
+Chúng ta thường không sử dụng dấu ngoặc nhọn nếu mã nhánh đối sánh ngắn, như là trong  Listing 6-3 
+trong đó mỗi nhánh chỉ trả về một giá trị. Nếu bạn muốn chạy nhiều dòng mã trong một nhánh, bạn phải sử dụng dấu ngoặc nhọn. 
+Ví dụ, mã sau in “Lucky penny!” mỗi khi phương thức được gọi tới một `Coin::Penny`, nhưng vẫn trả về giá trị cuối cùng của block, `1`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-08-match-arm-multiple-lines/src/main.rs:here}}
 ```
 
-### Patterns that Bind to Values
+### Các mẫu ràng buộc với giá trị
 
-Another useful feature of match arms is that they can bind to the parts of the
-values that match the pattern. This is how we can extract values out of enum
-variants.
+Một tính năng hữu ích khác của các nhánh match là chúng có thể liên kết với các phần của giá trị khớp với mẫu. 
+Đây là cách chúng tôi có thể trích xuất các giá trị từ các trường hợp của enum.
 
-As an example, let’s change one of our enum variants to hold data inside it.
-From 1999 through 2008, the United States minted quarters with different
-designs for each of the 50 states on one side. No other coins got state
-designs, so only quarters have this extra value. We can add this information to
-our `enum` by changing the `Quarter` variant to include a `UsState` value stored
-inside it, which we’ve done here in Listing 6-4.
+Như ví dụ dưới, hãy thay đổi một trong các biến thể enum của chúng tôi để giữ dữ liệu bên trong nó.
+Từ năm 1999 đến năm 2008, Hoa Kỳ đúc đồng 25 xu với các thiết kế khác nhau cho mỗi bên trong số 50 tiểu bang.
+Không có đồng xu nào khác có thiết kế trạng thái, vì vậy chỉ các đồng 25 xu có giá trị bổ sung này. Chúng ta có thể thêm thông tin này vào `enum` 
+bằng cách thay đổi trường hợp `Quarter` có chứa 1 giá trị  `UsState` được lưu trữ bên trong nó, mà chúng ta đã làm ở đây trong Listing 6-4.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-04/src/main.rs:here}}
