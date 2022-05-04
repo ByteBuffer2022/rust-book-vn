@@ -1,137 +1,113 @@
 <a id="the-match-control-flow-operator"></a>
 ## The `match` Control Flow Construct
 
-Rust has an extremely powerful control flow construct called `match` that allows
-you to compare a value against a series of patterns and then execute code based
-on which pattern matches. Patterns can be made up of literal values, variable
-names, wildcards, and many other things; Chapter 18 covers all the different
-kinds of patterns and what they do. The power of `match` comes from the
-expressiveness of the patterns and the fact that the compiler confirms that all
-possible cases are handled.
+Rust có một cấu trúc luồng điều khiển cực kỳ mạnh mẽ được gọi là `match` cho 
+phép bạn so sánh một giá trị với một loạt các mẫu và sau đó thực thi mã dựa 
+trên mẫu nào phù hợp. Các mẫu có thể được tạo thành từ các giá trị chữ, 
+tên biến, ký tự đại diện và nhiều thứ khác; Chương 18 bao gồm tất cả các 
+loại mẫu khác nhau và những gì chúng làm. Sức mạnh của `match` đxuất phát 
+từ sự biểu đạt của các mẫu và thực tế là trình biên dịch xác nhận rằng tất 
+cả các trường hợp có thể xảy ra đều được xử lý.
 
-Think of a `match` expression as being like a coin-sorting machine: coins slide
-down a track with variously sized holes along it, and each coin falls through
-the first hole it encounters that it fits into. In the same way, values go
-through each pattern in a `match`, and at the first pattern the value “fits,”
-the value falls into the associated code block to be used during execution.
-Speaking of coins, let’s use them as an example using `match`! We can write a
-function that takes an unknown United States coin and, in a similar way as the
-counting machine, determines which coin it is and return its value in cents, as
-shown here in Listing 6-3.
+Hãy nghĩ về một biểu thức `match` như là giống như một cỗ máy phân loại tiền xu:
+đồng xu trượt xuống một đường ray với các lỗ có kích thước khác nhau dọc theo nó,
+và mỗi đồng xu rơi qua lỗ đầu tiên mà nó gặp phải mà nó vừa vào.
+Theo cách tương tự, các giá trị đi qua từng mẫu trong một `match`,
+và ở mẫu đầu tiên, giá trị "phù hợp",
+giá trị rơi vào khối mã liên kết sẽ được sử dụng trong quá trình thực thi
+Nói về tiền xu, hãy sử dụng chúng làm ví dụ bằng cách sử dụng `match`!
+Chúng ta có thể viết một hàm lấy một đồng xu Hoa Kỳ không xác định và,
+theo cách tương tự như máy đếm, xác định đó là đồng xu nào và trả về 
+giá trị của nó bằng xu, như được hiển thị ở đây trong Listing 6-3.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-03/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-3: An enum and a `match` expression that has
-the variants of the enum as its patterns</span>
+<span class="caption">Listing 6-3: Một enum và một biểu thức so khớp có các biến thể của enum là các mẫu của nó
+</span>
 
-Let’s break down the `match` in the `value_in_cents` function. First, we list
-the `match` keyword followed by an expression, which in this case is the value
-`coin`. This seems very similar to an expression used with `if`, but there’s a
-big difference: with `if`, the expression needs to return a Boolean value, but
-here, it can return any type. The type of `coin` in this example is the `Coin`
-enum that we defined on the first line.
+Hãy chia nhỏ `match` trong hàm `value_in_cents`. Đầu tiên, chúng ta liệt kê  từ khoá `match` 
+là một biểu thức, trong trường hợp này là `coin`. Điều này có vẻ rất giống với một biểu thức 
+được sử dụng với `if`, nhưng có một sự khác biệt lớn: với `if`,
+biểu thức cần trả về giá trị Boolean, nhưng ở đây, nó có thể trả về bất kỳ loại nào. Kiểu của `coin` trong ví dụ này là một enum `Coin`
+mà chúng ta đã định nghĩa ở dòng đầu tiên.
 
-Next are the `match` arms. An arm has two parts: a pattern and some code. The
-first arm here has a pattern that is the value `Coin::Penny` and then the `=>`
-operator that separates the pattern and the code to run. The code in this case
-is just the value `1`. Each arm is separated from the next with a comma.
+Tiếp theo là các nhánh `match`. Một nhánh gồm 2 phần: mẫu và code. Nhánh đầu tiên ở đây có một mẫu là giá trị `Coin::Penny` và sau đó toán tử `=>`
+phân tách mẫu và code để chạy. Code trong trường hợp này nhận giá trị là `1`. Mỗi nhánh được ngăn cách với nhánh tiếp theo bằng dấu phẩy.
 
-When the `match` expression executes, it compares the resulting value against
-the pattern of each arm, in order. If a pattern matches the value, the code
-associated with that pattern is executed. If that pattern doesn’t match the
-value, execution continues to the next arm, much as in a coin-sorting machine.
-We can have as many arms as we need: in Listing 6-3, our `match` has four arms.
+Khi biểu thức `match` thực thi, nó so sánh giá trị kết quả với mẫu của mỗi nhánh, theo thứ tự. 
+Nếu một mẫu khớp với giá trị, code với mẫu đó sẽ được thực thi. 
+Nếu mẫu đó không khớp với giá trị, thì việc thực thi sẽ tiếp tục cho nhánh tiếp theo,
+giống như trong một máy phân loại tiền xu.
+Chúng ta có thể có nhiều nhánh như chúng ta cần: trong Listing 6-3, `match` của chúng ta có 4 nhánh.
 
-The code associated with each arm is an expression, and the resulting value of
-the expression in the matching arm is the value that gets returned for the
-entire `match` expression.
+Code được liên kết với mỗi nhánh là một biểu thức, và giá trị kết quả của biểu thức trong nhánh phù hợp là giá trị được trả về cho toàn bộ biểu thức `match`.
 
-We don’t typically use curly brackets if the match arm code is short, as it is
-in Listing 6-3 where each arm just returns a value. If you want to run multiple
-lines of code in a match arm, you must use curly brackets. For example, the
-following code prints “Lucky penny!” every time the method is called with a
-`Coin::Penny`, but still returns the last value of the block, `1`:
+Chúng ta thường không sử dụng dấu ngoặc nhọn nếu mã nhánh đối sánh ngắn, như là trong  Listing 6-3 
+trong đó mỗi nhánh chỉ trả về một giá trị. Nếu bạn muốn chạy nhiều dòng mã trong một nhánh, bạn phải sử dụng dấu ngoặc nhọn. 
+Ví dụ, mã sau in “Lucky penny!” mỗi khi phương thức được gọi tới một `Coin::Penny`, nhưng vẫn trả về giá trị cuối cùng của block, `1`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-08-match-arm-multiple-lines/src/main.rs:here}}
 ```
 
-### Patterns that Bind to Values
+### Các mẫu ràng buộc với giá trị
 
-Another useful feature of match arms is that they can bind to the parts of the
-values that match the pattern. This is how we can extract values out of enum
-variants.
+Một tính năng hữu ích khác của các nhánh match là chúng có thể liên kết với các phần của giá trị khớp với mẫu. 
+Đây là cách chúng tôi có thể trích xuất các giá trị từ các trường hợp của enum.
 
-As an example, let’s change one of our enum variants to hold data inside it.
-From 1999 through 2008, the United States minted quarters with different
-designs for each of the 50 states on one side. No other coins got state
-designs, so only quarters have this extra value. We can add this information to
-our `enum` by changing the `Quarter` variant to include a `UsState` value stored
-inside it, which we’ve done here in Listing 6-4.
+Như ví dụ dưới, hãy thay đổi một trong các biến thể enum của chúng tôi để giữ dữ liệu bên trong nó.
+Từ năm 1999 đến năm 2008, Hoa Kỳ đúc đồng 25 xu với các thiết kế khác nhau cho mỗi bên trong số 50 tiểu bang.
+Không có đồng xu nào khác có thiết kế trạng thái, vì vậy chỉ các đồng 25 xu có giá trị bổ sung này. Chúng ta có thể thêm thông tin này vào `enum` 
+bằng cách thay đổi trường hợp `Quarter` có chứa 1 giá trị  `UsState` được lưu trữ bên trong nó, mà chúng ta đã làm ở đây trong Listing 6-4.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-04/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-4: A `Coin` enum in which the `Quarter` variant
-also holds a `UsState` value</span>
+<span class="caption">Listing 6-4: Một enum `Coin` trong đó trường hợp `Quarter` chứa 1 giá trị `UsState`</span>
 
-Let’s imagine that a friend is trying to collect all 50 state quarters. While
-we sort our loose change by coin type, we’ll also call out the name of the
-state associated with each quarter so if it’s one our friend doesn’t have, they
-can add it to their collection.
+Hãy tưởng tượng rằng một người bạn đang cố gắng thu thập tất cả 50 đồng 25 xu của các tiểu bang. Trong khi chúng ta phân loại tiền lẻ của mình theo loại tiền xu, 
+chúng tôi cũng sẽ gọi ra tên của tiểu bang được liên kết với mỗi đồng 25 xu vì vậy nếu đó là một trong những người bạn của chúng tôi không có, 
+họ có thể thêm nó vào bộ sưu tập của họ.
 
-In the match expression for this code, we add a variable called `state` to the
-pattern that matches values of the variant `Coin::Quarter`. When a
-`Coin::Quarter` matches, the `state` variable will bind to the value of that
-quarter’s state. Then we can use `state` in the code for that arm, like so:
+Trong biểu thức match cho code này, chúng tôi thêm một biến được gọi là `state` vào mẫu phù hợp với các giá trị của trường hợp `Coin::Quarter`. Khi một 
+`Coin::Quarter` khớp, biến `state` sẽ liên kết với giá trị của trạng thái của đồng 25 xu đó. Sau đó, chúng ta có thể sử dụng `state` trong code cho nhánh này, giống như bên dưới:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-09-variable-in-pattern/src/main.rs:here}}
 ```
 
-If we were to call `value_in_cents(Coin::Quarter(UsState::Alaska))`, `coin`
-would be `Coin::Quarter(UsState::Alaska)`. When we compare that value with each
-of the match arms, none of them match until we reach `Coin::Quarter(state)`. At
-that point, the binding for `state` will be the value `UsState::Alaska`. We can
-then use that binding in the `println!` expression, thus getting the inner
-state value out of the `Coin` enum variant for `Quarter`.
+Nếu chúng ta gọi `value_in_cents(Coin::Quarter(UsState::Alaska))`, `coin` sẽ là `Coin::Quarter(UsState::Alaska)`. 
+Khi chúng tôi so sánh giá trị đó với từng nhánh, không ai trong số chúng phù hợp cho đến khi chúng tôi đạt được `Coin::Quarter(state)`.Tại thời điểm đó, ràng buộc đối với `state` sẽ là giá trị `UsState::Alaska`. Chúng tôi có thể sử dụng ràng buộc đó trong câu lệnh `println!`, do đó nhận được giá trị trạng thái bên trong của giá trị `Coin` cho `Quarter`.
 
-### Matching with `Option<T>`
+### Matching với `Option<T>`
 
-In the previous section, we wanted to get the inner `T` value out of the `Some`
-case when using `Option<T>`; we can also handle `Option<T>` using `match` as we
-did with the `Coin` enum! Instead of comparing coins, we’ll compare the
-variants of `Option<T>`, but the way that the `match` expression works remains
-the same.
+Trong phần trước, chúng ta muốn có được bên trong giá trị `T` của `Some`trường hợp khi sử dụng `Option<T>`; 
+chúng ta cũng có thể xử lý `Option<T>` sử dung `match` như là chúng ta đã làm với `Coin`! Thay vì so sánh tiền xu, chúng tôi sẽ so sánh các trường hợp của
+ `Option<T>`, nhưng cách thức hoạt động của biểu thức `match` vẫn giống nhau.
 
-Let’s say we want to write a function that takes an `Option<i32>` and, if
-there’s a value inside, adds 1 to that value. If there isn’t a value inside,
-the function should return the `None` value and not attempt to perform any
-operations.
+Giả sử chúng tôi muốn viết một hàm sử dụng `Option<i32>`, nếu có một giá trị bên trong, hãy thêm 1 vào giá trị đó. 
+Nếu không có giá trị bên trong, hàm sẽ trả về giá trị `None` và không cố gắng thực hiện bất kỳ hoạt động nào.
 
-This function is very easy to write, thanks to `match`, and will look like
-Listing 6-5.
+Hàm này rất dễ viết, nhờ `match`, và sẽ trông như Listing 6-5.
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 6-5: A function that uses a `match` expression on
-an `Option<i32>`</span>
+<span class="caption">Listing 6-5: Một hàm sử dụng biểu thức `match`h trên `Option<i32>`</span>
 
-Let’s examine the first execution of `plus_one` in more detail. When we call
-`plus_one(five)`, the variable `x` in the body of `plus_one` will have the
-value `Some(5)`. We then compare that against each match arm.
+Chúng ta hãy kiểm tra việc thực hiện đầu tiên của `plus_one` chi tiết hơn. Khi chúng ta gọi
+`plus_one(five)`, biến `x` trong thân hàm `plus_one` sẽ có giá trị
+ `Some(5)`. Sau đó, chúng tôi so sánh điều đó với từng nhánh `match`.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:first_arm}}
 ```
 
-The `Some(5)` value doesn’t match the pattern `None`, so we continue to the
-next arm.
+Giá trị `Some(5)` không khớp với mẫu `None`,vì vậy chúng ta tiếp tục đến nhánh tiếp theo.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:second_arm}}
