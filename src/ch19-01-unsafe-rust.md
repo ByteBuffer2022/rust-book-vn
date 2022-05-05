@@ -2,7 +2,7 @@
 
 Tất cả các đoạn code đã trình bày trước đó đều được Rust bảo vệ và ngăn chặn nếu gặp lỗi ngay từ compile time (Rust's memory safety guarantees). Tuy nhiên, Rust cũng có một tính năng ẩn khác mà không hề được compiler kiểm định và soát lỗi khi biên dịch: đó là *unsafe Rust*. Nó cũng giống như Rust thông thường, tuy nhiên *unsafe Rust* tự do và khó kiểm soát hơn Rust.
 
-Tại sao phải sinh ra unsafe rust! Lý do là Rust compiler đôi khi tỏ ra quá an toàn khi thực hiện biên dịch chương trình. Đôi khi code của bạn rơi vào trường hợp không chắc chắn an toàn hay không, thì mặc định compiler sẽ từ chối và coi đây là một lỗi, mặc dù có thể không phải như vậy. Cơ chế này giúp ta ngăn ngừa các lỗi tiềm ẩn, tuy nhiên nếu lập trình viên cố tình muốn thực hiện các đoạn code này thì sao? Ta sẽ nói với compiler, "Hãy tin ở tôi, tôi hiểu mình đang làm gì". Đây là một sự đánh đổi, code của bạn sẽ được thực thi với một tỉ lệ rủi ro nào đó, tính toán sai có thể dẫn đến các lỗi về bộ nhớ (memory) như con trỏ null (null pointer), rò rỉ bộ nhớ (leaked memory), ...
+Tại sao phải sinh ra unsafe rust! Lý do là Rust compiler đôi khi tỏ ra quá an toàn khi thực hiện biên dịch chương trình. Khi code của bạn rơi vào trường hợp không chắc chắn an toàn hay không, thì mặc định compiler sẽ từ chối và coi đây là một lỗi, mặc dù có thể không phải như vậy. Cơ chế này giúp ta ngăn ngừa các lỗi tiềm ẩn, tuy nhiên nếu lập trình viên cố tình muốn thực hiện các đoạn code này thì sao? Ta sẽ nói với compiler, "Hãy tin ở tôi, tôi hiểu mình đang làm gì". Đây là một sự đánh đổi, code của bạn sẽ được thực thi với một tỉ lệ rủi ro nào đó, tính toán sai có thể dẫn đến các lỗi về bộ nhớ (memory) như truy cập vào con trỏ null (null pointer), rò rỉ bộ nhớ (leaked memory), ...
 
 Một lí do khác khiến cơ chế unsafe được tạo ra là Rust muốn tiếp cận với phần cứng của hệ điều hành giống như những ngôn ngữ lập trình bậc thấp, mà bản chất các ngôn ngữ này đều chạy cơ chế unsafe. Nếu Rust không cũng cấp unsafe, sẽ rất khó để bạn có thể làm được những điều này. Hãy cùng khám phá những điều có thê làm với unsafe Rust.
 
@@ -11,7 +11,7 @@ Một lí do khác khiến cơ chế unsafe được tạo ra là Rust muốn ti
 Để sử dụng unsafe Rust, dùng keyword `unsafe` và tạo một block chứa các unsafe code mà bạn muốn. Có 5 điều mà unsafe Rust có thể làm mà bạn sẽ không thể có được ở Rust thông thường:
 
 * Dereference một raw pointer (các khái niệm Dereference và raw pointer sẽ được giải thích sau)
-* Gọi unsafe function hoặc method
+* Gọi unsafe function hoặc unsafe method
 * Truy cập và chỉnh sửa một mutable static variable
 * Implement unsafe trait
 * Truy cập vào trường dữ liệu bên trong `union`
@@ -70,7 +70,7 @@ Chú ý rằng ở Listing 19-1 và 19-3, ta sử dụng immutable và mutable r
 
 Với những nguy hiểm tiềm tàng như vậy, tại sao raw pointer vẫn được sinh ra? Câu trả lời sẽ có trong phần tiếp theo, [“Calling an Unsafe Function or Method.”](#calling-an-unsafe-function-or-method)<!-- ignore -->. 
 
-### Calling an Unsafe Function or Method
+### Gọi đến Unsafe Function hoặc Unsafe Method
 
 Tạo một unsafe function hay unsafe method cũng giống như tạo function hay method thông thường, chỉ khác ở từ khóa unsafe ở phía trước.
 
@@ -88,7 +88,7 @@ Phải gọi hàm `dangerous` này trong một unsafe block riêng biệt. Nếu
 
 Phần thân của unsafe function hoạt động giống như `unsafe` blocks, vì vậy ta không cần phải dùng từ khóa `unsafe` cho thân hàm nữa.
 
-#### Creating a Safe Abstraction over Unsafe Code
+#### Tạo một Safe Abstraction bằng Unsafe Code
 
 Hàm có chưa một đoạn unsafe code không đồng nghĩa với việc cả hàm đó là unsafe. Trong thực tế, bọc unsafe code bởi một safe function là một việc làm rất phổ biến. Xét ví dụ sau, safe method `split_at_mut` sẽ bao bên ngoài của unsafe code. Chức năng của hàm này là chia một mutable slice thành hai phần và trả về 2 slices đó.
 
