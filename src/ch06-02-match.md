@@ -113,51 +113,46 @@ Giá trị `Some(5)` không khớp với mẫu `None`,vì vậy chúng ta tiếp
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:second_arm}}
 ```
 
-Does `Some(5)` match `Some(i)`? Why yes it does! We have the same variant. The
-`i` binds to the value contained in `Some`, so `i` takes the value `5`. The
-code in the match arm is then executed, so we add 1 to the value of `i` and
-create a new `Some` value with our total `6` inside.
+`Some(5)` có khớp với `Some(i)`? Tại sao lại có nó! Chúng ta có cùng một trường hợp. 
+ `i` liên kết với giá trị chứa trong `Some`, vì vậy `i` nhận giá trị `5`. 
+ Sau đó, đoạn code trong nhánh `match` được thực thi, vì vậy chúng ta cộng thêm 1 vào giá trị của `i` và 
+tạo ra một giá trị mới `Some` với tổng là `6`.
 
-Now let’s consider the second call of `plus_one` in Listing 6-5, where `x` is
-`None`. We enter the `match` and compare to the first arm.
+Bây giờ chúng ta hãy xem xét lời gọi hàm thứ hai của `plus_one` trong Listing 6-5, trong đó `x` là
+`None`. Chúng ta nhập `match` và so sánh giá trị ở nhánh đầu tiên.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:first_arm}}
 ```
 
-It matches! There’s no value to add to, so the program stops and returns the
-`None` value on the right side of `=>`. Because the first arm matched, no other
-arms are compared.
+Nó phù hợp! Không có giá trị nào để thêm vào, vì vậy chương trình dừng và trả về giá trị 
+`None` ở phía bên phải của `=>`. Bởi vì nhánh đầu tiên khớp với nhau, nên không có nhánh nào khác được so sánh.
 
-Combining `match` and enums is useful in many situations. You’ll see this
-pattern a lot in Rust code: `match` against an enum, bind a variable to the
-data inside, and then execute code based on it. It’s a bit tricky at first, but
-once you get used to it, you’ll wish you had it in all languages. It’s
-consistently a user favorite.
+Kết hợp `match` và `enum` rất hữu ích trong nhiều trường hợp. Bạn sẽ thấy mẫu này rất nhiều trong mã Rust: 
+ `match` chống lại một enum, liên kết một biến với dữ liệu bên trong, và sau đó thực thi mã dựa trên nó. 
+Lúc đầu hơi phức tạp, nhưng một khi bạn đã quen với nó, bạn sẽ ước bạn có nó trong tất cả các ngôn ngữ. Nó luôn là một sự yêu thích của người dùng.
 
-### Matches Are Exhaustive
+### Matches là toàn diện
 
-There’s one other aspect of `match` we need to discuss. Consider this version
-of our `plus_one` function that has a bug and won’t compile:
+Có một khía cạnh khác của `match` chúng ta cần thảo luận. Hãy xem xét phiên bản hàm `plus_one` này của chúng ta 
+ có một lỗi và sẽ không biên dịch:
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-10-non-exhaustive-match/src/main.rs:here}}
 ```
 
-We didn’t handle the `None` case, so this code will cause a bug. Luckily, it’s
-a bug Rust knows how to catch. If we try to compile this code, we’ll get this
-error:
+Chúng ta không xử lý trường hợp `None`, vì vậy mã này sẽ gây ra lỗi. May mắn thay, đó là một lỗi mà Rust biết cách bắt. 
+ Nếu chúng ta cố gắng biên dịch mã này, chúng ta sẽ gặp lỗi sau:
 
 ```console
 {{#include ../listings/ch06-enums-and-pattern-matching/no-listing-10-non-exhaustive-match/output.txt}}
 ```
 
-Rust knows that we didn’t cover every possible case and even knows which
-pattern we forgot! Matches in Rust are *exhaustive*: we must exhaust every last
-possibility in order for the code to be valid. Especially in the case of
-`Option<T>`, when Rust prevents us from forgetting to explicitly handle the
-`None` case, it protects us from assuming that we have a value when we might
-have null, thus making the billion-dollar mistake discussed earlier impossible.
+Rust biết rằng chúng ta không bao gồm trường hợp nào có thể xảy ra và thậm chí biết chúng ta đã quên mẫu nào!
+ Matches trong Rust là *toàn diện*: chúng ta phải sử dụng hết mọi khả năng để mã có hiệu lực. 
+Đặc biệt là trong trường hợp của `Option<T>`, khi Rust ngăn chúng ta quên xử lý rõ ràng trường hợp `None`, 
+nó bảo vệ chúng ta khỏi giả định rằng chúng ta có một giá trị khi chúng ta có thể có null, 
+ do đó làm cho sai lầm hàng tỷ đô la đã được thảo luận trước đó là không thể.
 
 ### Catch-all Patterns and the `_` Placeholder
 
