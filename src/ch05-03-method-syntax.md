@@ -1,18 +1,10 @@
-## Method Syntax
+## Method
 
-*Methods* are similar to functions: we declare them with the `fn` keyword and a
-name, they can have parameters and a return value, and they contain some code
-that’s run when the method is called from somewhere else. Unlike functions,
-methods are defined within the context of a struct (or an enum or a trait
-object, which we cover in Chapters 6 and 17, respectively), and their first
-parameter is always `self`, which represents the instance of the struct the
-method is being called on.
+*Method* (phương thức) khá tương đồng với *functions* (hàm) ở điểm: đều sử dụng từ khóa `fn` kèm theo tên, đều có tham số truyền vào và giá trị trả về, đều chứa các đoạn code để thực thi khi được gọi trong chương trình. Điểm khác biệt với functions ở chỗ, methods được định nghĩa ở bên trong struct (có thể là enum hoặc trait, ta sẽ đi sâu hơn trong chương 6 và 17); tham số đầu tiên của method luôn là `self`, đại diện cho instance của struct đó.
 
-### Defining Methods
+### Định nghĩa Methods
 
-Let’s change the `area` function that has a `Rectangle` instance as a parameter
-and instead make an `area` method defined on the `Rectangle` struct, as shown
-in Listing 5-13.
+Biến đổi hàm `area` thành phương thức `area` như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -20,84 +12,34 @@ in Listing 5-13.
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-13/src/main.rs}}
 ```
 
-<span class="caption">Listing 5-13: Defining an `area` method on the
-`Rectangle` struct</span>
+<span class="caption">Listing 5-13: Định nghĩa một phương thức `area` thuộc struct `Rectangle`</span>
 
-To define the function within the context of `Rectangle`, we start an `impl`
-(implementation) block for `Rectangle`. Everything within this `impl` block
-will be associated with the `Rectangle` type. Then we move the `area` function
-within the `impl` curly brackets and change the first (and in this case, only)
-parameter to be `self` in the signature and everywhere within the body. In
-`main`, where we called the `area` function and passed `rect1` as an argument,
-we can instead use *method syntax* to call the `area` method on our `Rectangle`
-instance. The method syntax goes after an instance: we add a dot followed by
-the method name, parentheses, and any arguments.
+Để định nghĩa các phương thức của `Rectangle`, ta sẽ sử dụng từ khóa `impl` (implementation) kèm theo một block của `Rectangle`. Mọi thứ ở trong `impl` block sẽ thuộc về `Rectangle`. Tiếp theo, đưa hàm `area` vào bên trong `impl` block và thêm `self` vào làm tham số đầu tiên của hàm đó. Trong hàm `main`, sử dụng *method syntax* để gọi phương thức `area` của `Rectangle` instance. Cú pháp ở đây được sử dụng bằng cách thêm dấu chấm sau khi gọi instance.
 
-In the signature for `area`, we use `&self` instead of `rectangle: &Rectangle`.
-The `&self` is actually short for `self: &Self`. Within an `impl` block, the
-type `Self` is an alias for the type that the `impl` block is for. Methods must
-have a parameter named `self` of type `Self` for their first parameter, so Rust
-lets you abbreviate this with only the name `self` in the first parameter spot.
-Note that we still need to use the `&` in front of the `self` shorthand to
-indicate this method borrows the `Self` instance, just as we did in `rectangle:
-&Rectangle`. Methods can take ownership of `self`, borrow `self` immutably as
-we’ve done here, or borrow `self` mutably, just as they can any other parameter.
+Phần khai báo của `area`, ta sử dụng `&self` thay vì `rectangle: &Rectangle`, `&self` là viết tắt của `self: &Self`. Ở trong `impl` block, `Self` đại diện cho kiểu dữ liệu mà nó được implement. Method phải có tham số `self` ở đầu tiên, vì vậy Rust giúp ta viết thuận tiện hơn với việc chỉ cần `&self` thay vì `self: &Self`. Để ý rằng vẫn cần có `&` ở trước `self` để báo hiệu việc mượn instance. Method có thể chiếm quyền sở hữu của `self`, vì vậy ta cần cân nhắc khi sử dụng.
 
-We’ve chosen `&self` here for the same reason we used `&Rectangle` in the
-function version: we don’t want to take ownership, and we just want to read the
-data in the struct, not write to it. If we wanted to change the instance that
-we’ve called the method on as part of what the method does, we’d use `&mut
-self` as the first parameter. Having a method that takes ownership of the
-instance by using just `self` as the first parameter is rare; this technique is
-usually used when the method transforms `self` into something else and you want
-to prevent the caller from using the original instance after the transformation.
+Sử dụng `&self` bởi cũng giống như `&Rectangle`: ta không muốn chiếm quyền sở hữu của biến, chỉ cần mượn để đọc. Nếu muốn thay đổi giá trị của instance, hãy sử dụng `&mut self` làm tham số đầu tiên của method. Method chiếm quyền sở hữu của instance bằng cách dùng `self` rất ít khi được dùng; kĩ thuật này chỉ được sử dụng khi ta không muốn người gọi phương thức có thể sử dụng tiếp instance này sau khi gọi mà thôi.
 
-The main reason for using methods instead of functions, in addition to providing
-method syntax and not having to repeat the type of `self` in every method’s
-signature, is for organization. We’ve put all the things we can do with an
-instance of a type in one `impl` block rather than making future users of our
-code search for capabilities of `Rectangle` in various places in the library we
-provide.
+Mục đích chính của việc sử dụng method thay vì function đó là: có thể nhóm mọi thứ liên quan đến instance của một kiểu dữ liệu vào với nhau, giúp cho việc quản lí code cũng như bảo trì code sau này trở nên dễ dàng hơn.
 
-Note that we can choose to give a method the same name as one of the struct’s
-fields. For example, we can define a method on `Rectangle` also named `width`:
-
+Chú ý rằng ta có thể đặt tên method trùng với tên trường của struct. Ví dụ, method `width` của `Rectangle`:
 <span class="filename">Filename: src/main.rs</span>
 
 ```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/no-listing-06-method-field-interaction/src/main.rs:here}}
 ```
 
-Here, we’re choosing to make the `width` method return `true` if the value in
-the instance’s `width` field is greater than 0, and `false` if the value is 0:
-we can use a field within a method of the same name for any purpose. In `main`,
-when we follow `rect1.width` with parentheses, Rust knows we mean the method
-`width`. When we don’t use parentheses, Rust knows we mean the field `width`.
+Ở đây, phương thức `width` sẽ trả về `true` nếu giá trị của `width` lớn hơn 0, và `false` nếu trong trường hợp còn lại. Trong hàm `main`, nếu sử dụng `rect1.width()`, Rust sẽ hiểu đây là method `width`, nếu không có cặp ngoặc tròn `()`, Rust sẽ hiểu đây là trường `width`.
 
-Often, but not always, when we give methods with the same name as a field we
-want it to only return the value in the field and do nothing else. Methods like
-this are called *getters*, and Rust does not implement them automatically for
-struct fields as some other languages do. Getters are useful because you can
-make the field private but the method public and thus enable read-only access
-to that field as part of the type’s public API. We will be discussing what
-public and private are and how to designate a field or method as public or
-private in Chapter 7.
+Thông thường, ta sẽ đặt tên method trùng với tên trường nếu chỉ muốn trả về giá trị của chính trường đó. Những method dạng này được gọi là *getters*, Rust không implement chúng một cách tự động như những ngôn ngữ khác. Getters rất hữu dụng vì bạn có thể điều khiển được quyền truy cập biến, trường trong struct; cho phép trường đó có thể được thay đổi hay không, hay chỉ có quyền đọc mà thôi. Chủ đề về quyền truy cập (public và private) sẽ được nói đến trong chương 7.
 
-> ### Where’s the `->` Operator?
+> ### Toán tử `->`
 >
-> In C and C++, two different operators are used for calling methods: you use
-> `.` if you’re calling a method on the object directly and `->` if you’re
-> calling the method on a pointer to the object and need to dereference the
-> pointer first. In other words, if `object` is a pointer,
-> `object->something()` is similar to `(*object).something()`.
+> Trong C và C++, có hai toán tử được dùng để gọi method: dùng `.` nếu bạn đang dùng trực tiếp object để gọi method, dùng `->` nếu gọi method dùng con trỏ trỏ đến object đó.
 >
-> Rust doesn’t have an equivalent to the `->` operator; instead, Rust has a
-> feature called *automatic referencing and dereferencing*. Calling methods is
-> one of the few places in Rust that has this behavior.
+> Rust không hỗ trợ toán tử `->`; thay vào đó, Rust cung cấp tính năng được gọi là *automatic referencing and dereferencing*.
 >
-> Here’s how it works: when you call a method with `object.something()`, Rust
-> automatically adds in `&`, `&mut`, or `*` so `object` matches the signature of
-> the method. In other words, the following are the same:
+> Đây là cách hoạt động: mỗi khi bạn gọi một method như `object.something()`, Rust sẽ tự động thêm `&`, `&mut` hay `*` vào object. Xem xét ví dụ sau:
 >
 > <!-- CAN'T EXTRACT SEE BUG https://github.com/rust-lang/mdBook/issues/1127 -->
 > ```rust
@@ -120,22 +62,12 @@ private in Chapter 7.
 > p1.distance(&p2);
 > (&p1).distance(&p2);
 > ```
->
-> The first one looks much cleaner. This automatic referencing behavior works
-> because methods have a clear receiver—the type of `self`. Given the receiver
-> and name of a method, Rust can figure out definitively whether the method is
-> reading (`&self`), mutating (`&mut self`), or consuming (`self`). The fact
-> that Rust makes borrowing implicit for method receivers is a big part of
-> making ownership ergonomic in practice.
+> 
+> Cách gọi method `p1.distance` phía trên sẽ dễ nhìn hơn cách phía dưới. Rust sẽ tự động thêm tham chiếu cho p1, ngoài ra Rust có thể kiểm tra được khi nào method chỉ được đọc (`&self`), có thể thay đổi đươc (`&mut self`) hay consuming (`self`). Đây là một cơ chế khá hay mà Rust hỗ trợ cho chúng ta trong quá trình lập trình.
 
-### Methods with More Parameters
+### Methods nhiều tham số
 
-Let’s practice using methods by implementing a second method on the `Rectangle`
-struct. This time, we want an instance of `Rectangle` to take another instance
-of `Rectangle` and return `true` if the second `Rectangle` can fit completely
-within `self` (the first `Rectangle`); otherwise it should return `false`. That
-is, once we’ve defined the `can_hold` method, we want to be able to write the
-program shown in Listing 5-14.
+Lần này ta sẽ thử implement thêm method thứ 2 của `Rectangle` struct. Method này có nhiệm vụ kiểm tra xem hình chữ nhật truyền vào có đặt vừa vào bên trong hình chữ nhật cho trước hay không. Method này sẽ có tên là `can_hold` với kiểu trả về là `bool`:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -143,31 +75,16 @@ program shown in Listing 5-14.
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-14/src/main.rs}}
 ```
 
-<span class="caption">Listing 5-14: Using the as-yet-unwritten `can_hold`
-method</span>
+<span class="caption">Listing 5-14: Sử dụng `can_hold` method</span>
 
-And the expected output would look like the following, because both dimensions
-of `rect2` are smaller than the dimensions of `rect1` but `rect3` is wider than
-`rect1`:
+Output sẽ trông giống như bên dưới, vì cả 2 chiều của `rect2` đều nhỏ hơn `rect1` còn `rect3` thì lớn hơn `rect1`:
 
 ```text
 Can rect1 hold rect2? true
 Can rect1 hold rect3? false
 ```
 
-We know we want to define a method, so it will be within the `impl Rectangle`
-block. The method name will be `can_hold`, and it will take an immutable borrow
-of another `Rectangle` as a parameter. We can tell what the type of the
-parameter will be by looking at the code that calls the method:
-`rect1.can_hold(&rect2)` passes in `&rect2`, which is an immutable borrow to
-`rect2`, an instance of `Rectangle`. This makes sense because we only need to
-read `rect2` (rather than write, which would mean we’d need a mutable borrow),
-and we want `main` to retain ownership of `rect2` so we can use it again after
-calling the `can_hold` method. The return value of `can_hold` will be a
-Boolean, and the implementation will check whether the width and height of
-`self` are both greater than the width and height of the other `Rectangle`,
-respectively. Let’s add the new `can_hold` method to the `impl` block from
-Listing 5-13, shown in Listing 5-15.
+Method mới này cũng sẽ được đặt trong `impl Rectangle` block. Đặt tên cho method là `can_hold`, có tham số truyền vào là một `Rectangle` khác. Như đoạn code dưới đây:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -175,28 +92,13 @@ Listing 5-13, shown in Listing 5-15.
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-15/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 5-15: Implementing the `can_hold` method on
-`Rectangle` that takes another `Rectangle` instance as a parameter</span>
-
-When we run this code with the `main` function in Listing 5-14, we’ll get our
-desired output. Methods can take multiple parameters that we add to the
-signature after the `self` parameter, and those parameters work just like
-parameters in functions.
+<span class="caption">Listing 5-15: Implementing `can_hold` method của struct `Rectangle`</span>
 
 ### Associated Functions
 
-All functions defined within an `impl` block are called *associated functions*
-because they’re associated with the type named after the `impl`. We can define
-associated functions that don’t have `self` as their first parameter (and thus
-are not methods) because they don’t need an instance of the type to work with.
-We’ve already used one function like this: the `String::from` function that’s
-defined on the `String` type.
+Tất cả các hàm được định nghĩa bên trong `impl` đều được gọi là *associated functions* vì chúng đều có liên quan đến struct được `impl`. Ta có thể định nghĩa associated functions mà không có `self` làm tham số truyền vào (do đó không gọi là methods) vì chúng không cần instance của struct đó để hoạt động. Ví dụ như hàm `from` trong `String::from` là một associated function.
 
-Associated functions that aren’t methods are often used for constructors that
-will return a new instance of the struct. For example, we could provide an
-associated function that would have one dimension parameter and use that as
-both width and height, thus making it easier to create a square `Rectangle`
-rather than having to specify the same value twice:
+Những associated functions mà không phải là method thường được dùng để khởi tạo instance cho struct.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -204,36 +106,22 @@ rather than having to specify the same value twice:
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/no-listing-03-associated-functions/src/main.rs:here}}
 ```
 
-To call this associated function, we use the `::` syntax with the struct name;
-`let sq = Rectangle::square(3);` is an example. This function is namespaced by
-the struct: the `::` syntax is used for both associated functions and
-namespaces created by modules. We’ll discuss modules in Chapter 7.
+Để gọi một associated function, sử dụng dấu `::` với tên của struct; `let sq = Rectangle::square(3);` là một ví dụ. Cú pháp `::` được sử dụng cho cả associated functions và namespaces để khởi tạo modules. Ta sẽ bàn thêm trong chương 7.
 
 ### Multiple `impl` Blocks
 
-Each struct is allowed to have multiple `impl` blocks. For example, Listing
-5-15 is equivalent to the code shown in Listing 5-16, which has each method
-in its own `impl` block.
+Mỗi struct có thể có nhiều `impl` blocks. Ví dụ , Listing 5-15 cũng tương đương với Listing 5-16, đều sở hữu các method như nhau.
 
 ```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-16/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 5-16: Rewriting Listing 5-15 using multiple `impl`
-blocks</span>
+<span class="caption">Listing 5-16: Viết lại Listing 5-15 sử dụng multiple `impl` blocks</span>
 
-There’s no reason to separate these methods into multiple `impl` blocks here,
-but this is valid syntax. We’ll see a case in which multiple `impl` blocks are
-useful in Chapter 10, where we discuss generic types and traits.
+Không có mục đích cụ thể nào cho việc tạo nhiều `impl` blocks cả, chỉ đơn giản là cú pháp này được chấp nhận trong Rust. Tuy nhiên đôi khi nó cũng khá hữu dụng, xem thêm chương 10 phần generic types và traits.
 
-## Summary
+## Tổng kết
 
-Structs let you create custom types that are meaningful for your domain. By
-using structs, you can keep associated pieces of data connected to each other
-and name each piece to make your code clear. In `impl` blocks, you can define
-functions that are associated with your type, and methods are a kind of
-associated function that let you specify the behavior that instances of your
-structs have.
+Structs giúp bạn có thể tạo ra một kiểu dữ liệu mà mình mong muốn. Sử dụng structs, ta có thể nhóm các hàm, biến có mối liên hệ với nhau và làm cho code rõ ràng, dễ hiểu hơn. Khi `impl` blocks, có 2 loại hàm là associated functions và method (một dạng đặc biệt của asscociated functions), giúp bạn thể hiện các hành vi (behavior) của instance đó.
 
-But structs aren’t the only way you can create custom types: let’s turn to
-Rust’s enum feature to add another tool to your toolbox.
+Structs không phải là cách duy nhất để tạo một kiểu dữ liệu mới: hãy xem thêm kiểu enum trong Rust.

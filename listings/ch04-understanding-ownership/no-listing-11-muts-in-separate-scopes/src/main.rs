@@ -4,7 +4,8 @@ fn main() {
 
     {
         let r1 = &mut s;
-    } // r1 goes out of scope here, so we can make a new reference with no problems.
+    } // r1 đi ra khỏi scope tại đây, vì vậy chúng ta có thể tạo một 
+      //tham chiếu mới mà không gặp vấn đề gì.
 
     let r2 = &mut s;
     // ANCHOR_END: here

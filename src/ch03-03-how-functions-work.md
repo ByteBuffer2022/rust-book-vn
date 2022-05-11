@@ -1,13 +1,12 @@
-## Functions
+## Hàm
 
-Functions are prevalent in Rust code. You’ve already seen one of the most
-important functions in the language: the `main` function, which is the entry
-point of many programs. You’ve also seen the `fn` keyword, which allows you to
-declare new functions.
+Hàm phổ biến trong Rust. Bạn đã thấy một trong những hàm quan trọng nhất trong ngôn
+ngữ này: đó là hàm `main`. Bạn cũng thấy từ khóa `fn` giúp cho phép bạn khai báo
+hàm mới.
 
-Rust code uses *snake case* as the conventional style for function and variable
-names, in which all letters are lowercase and underscores separate words.
-Here’s a program that contains an example function definition:
+Rust sử dụng *quy tắc con rắn (snake case)* làm quy ước cách đặt tên hàm và biến,
+trong đó tất cả các chữ cái phải viết thường và phân cách các từ bằng dấu gạch dưới.
+Bên dưới là một chương trình ví dụ về cách định nghĩa hàm:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -15,40 +14,40 @@ Here’s a program that contains an example function definition:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-16-functions/src/main.rs}}
 ```
 
-We define a function in Rust by entering `fn` followed by a function name and a
-set of parentheses. The curly brackets tell the compiler where the function
-body begins and ends.
+Chúng ta định nghĩa hàm trong Rust bằng cách gõ từ khóa `fn` theo sau là
+tên của hàm và một cặp dấu ngoặc đơn. Cặp dấu ngoặc nhọn cho trình biên dịch
+biết vị trí bắt đầu và kết thúc của thân hàm.
 
-We can call any function we’ve defined by entering its name followed by a set
-of parentheses. Because `another_function` is defined in the program, it can be
-called from inside the `main` function. Note that we defined `another_function`
-*after* the `main` function in the source code; we could have defined it before
-as well. Rust doesn’t care where you define your functions, only that they’re
-defined somewhere.
+Chúng ta có thể gọi bất kỳ hàm nào đã được định nghĩa bằng cách gõ tên hàm theo sau
+là cặp dấu ngoặc tròn. Do hàm `another_function` đã được định nghĩa trong chương trình,
+bạn có thể gọi hàm này từ bên trong hàm `main`. Lưu ý rằng chúng ta đã định nghĩa hàm `another_function`
+*sau* hàm `main` trong code; chúng ta cũng có thể định nghĩa nó trước hàm `main`.
+Rust không quan tâm bạn định nghĩa hàm ở đâu, Rust chỉ quan tâm hàm đã được định
+hay chưa.
 
-Let’s start a new binary project named *functions* to explore functions
-further. Place the `another_function` example in *src/main.rs* and run it. You
-should see the following output:
+Hãy bắt đầu một dự án nhị phân có tên *functions* để khám phá thêm về
+hàm. Lấy ví dụ hàm `another_function` cho vào *src/main.rs* và khởi chạy chương trình.
+Bạn sẽ thấy kết quả như bên dưới:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-16-functions/output.txt}}
 ```
 
-The lines execute in the order in which they appear in the `main` function.
-First, the “Hello, world!” message prints, and then `another_function` is
-called and its message is printed.
+Các dòng thực thi theo thứ tự xuất hiện trong hàm `main`.
+Đầu tiên, thông điệp “Hello, world!” được in ra, sau đó gọi hàm `another_function`
+và in thông điệp của nó ra.
 
-### Parameters
+### Tham số
 
-We can define functions to have *parameters*, which are special variables that
-are part of a function’s signature. When a function has parameters, you can
-provide it with concrete values for those parameters. Technically, the concrete
-values are called *arguments*, but in casual conversation, people tend to use
-the words *parameter* and *argument* interchangeably for either the variables
-in a function’s definition or the concrete values passed in when you call a
-function.
+Chúng ta có thể định nghĩa các hàm có các *tham số* - đây là những biến đặc biệt
+là một phần của chữ ký hàm. Khi một hàm có tham số đi kèm, bạn có thể cung cấp
+cho nó các giá trị tham số cụ thể. Về mặt kỹ thuật, các giá trị cụ thể này được
+gọi là *đối số (arguments)*, nhưng trong giao tiếp thông thường, mọi người có xu hướng
+sử dụng từ *tham số (parameter)* và *đối số (argument)* thay thế cho nhau cho
+các biến trong định nghĩa hàm hoặc giá trị cụ thể được chuyển vào khi bạn gọi
+hàm.
 
-In this version of `another_function` we add a parameter:
+Trong phiên bản này của hàm `another_function`, chúng ta thêm một tham số vào:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -56,24 +55,24 @@ In this version of `another_function` we add a parameter:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-17-functions-with-parameters/src/main.rs}}
 ```
 
-Try running this program; you should get the following output:
+Thử khởi chạy chương trình; bạn sẽ nhận được kết quả sau:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-17-functions-with-parameters/output.txt}}
 ```
 
-The declaration of `another_function` has one parameter named `x`. The type of
-`x` is specified as `i32`. When we pass `5` in to `another_function`, the
-`println!` macro puts `5` where the pair of curly brackets were in the format
+Khi khai báo hàm `another_function`, chúng ta có một tham số tên `x`. Kiểu của
+`x` được chỉ định là `i32`. Khi chúng ta chuyển giá trị `5` vào hàm `another_function`,
+`println!` macro sẽ đặt `5` vào vị trí của cặp dấu ngoặc nhọn để định dạng thành
 string.
 
-In function signatures, you *must* declare the type of each parameter. This is
-a deliberate decision in Rust’s design: requiring type annotations in function
-definitions means the compiler almost never needs you to use them elsewhere in
-the code to figure out what type you mean.
+Trong chữ ký hàm, bạn *buộc phải* khai báo kiểu của mọi tham số. Đây là một quyết
+định có chủ ý trong thiết kế của Rust: việc yêu cầu chú thích kiểu dữ liệu trong định nghĩa hàm
+có nghĩa là trình biên dịch sẽ không bao giờ yêu cầu bạn khai báo kiểu dữ liệu ở bất kỳ
+nơi khác trong code để tìm ra kiểu dữ liệu mà bạn muốn nói đến.
 
-When defining multiple parameters, separate the parameter declarations with
-commas, like this:
+Khi bạn định nghĩa hàm với nhiều tham số, phân cách việc khai báo tham số bằng dấu phẩy
+như sau:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -81,38 +80,38 @@ commas, like this:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-18-functions-with-multiple-parameters/src/main.rs}}
 ```
 
-This example creates a function named `print_labeled_measurement` with two
-parameters. The first parameter is named `value` and is an `i32`. The second is
-named `unit_label` and is type `char`. The function then prints text containing
-both the `value` and the `unit_label`.
+Ví dụ này tạo ra một hàm có tên `print_labeled_measurement` với hai
+tham số. Tham số thứ nhất có tên `value` và có kiểu `i32`. Tham số thứ hai có tên
+`unit_label` và có kiểu `char`. Sau đó hàm in ra đoạn văn bản chứa cả
+`value` và `unit_label`.
 
-Let’s try running this code. Replace the program currently in your *functions*
-project’s *src/main.rs* file with the preceding example and run it using `cargo
+Hãy thử khởi chạy code. Thay thế ví dụ vừa rồi vào file
+*src/main.rs* của dự án *functions* và khởi chạy nó với `cargo
 run`:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-18-functions-with-multiple-parameters/output.txt}}
 ```
 
-Because we called the function with `5` as the value for `value` and `'h'` as
-the value for `unit_label`, the program output contains those values.
+Bởi vì chúng ta đã gọi hàm với giá trị của `value` là `5` và `unit_label` là `'h'`,
+đầu ra của chương trình sẽ chứa các giá trị đó.
 
-### Statements and Expressions
+### Câu lệnh và Biểu thức
 
-Function bodies are made up of a series of statements optionally ending in an
-expression. So far, the functions we’ve covered haven’t included an ending
-expression, but you have seen an expression as part of a statement. Because
-Rust is an expression-based language, this is an important distinction to
-understand. Other languages don’t have the same distinctions, so let’s look at
-what statements and expressions are and how their differences affect the bodies
-of functions.
+Thân hàm được tạo thành từ một loạt các câu lệnh tùy ý kết thúc bằng
+một biểu thức. Cho đến bây giờ, các hàm mà chúng ta đã đề cập chưa có hàm nào kết
+bằng một biểu thức, nhưng bạn đã thấy biểu thức như một phần của câu lệnh. Bởi vì
+Rust là một ngôn ngữ dựa trên biểu thức, bạn cần hiểu về sự phân biệt quan trọng này.
+Những ngôn ngữ khác không có sự phân biệt giống như vậy, vì vậy hãy xem xét câu lệnh
+và biểu thức là gì và sự khác biệt của chúng ảnh hưởng như thế nào đến nội dung của
+hàm.
 
-*Statements* are instructions that perform some action and do not return a
-value. *Expressions* evaluate to a resulting value. Let’s look at some examples.
+*Câu lệnh (Statements)* là các hướng dẫn thực hiện một số hành động và không trả về 
+giá trị. *Biểu thức (Expressions)* tính toán để đưa ra một giá trị kết quả. Hãy xem xét một vài ví dụ.
 
-We’ve actually already used statements and expressions. Creating a variable and
-assigning a value to it with the `let` keyword is a statement. In Listing 3-1,
-`let y = 6;` is a statement.
+Chúng ta đã thực sự sử dụng câu lệnh và biểu thức. Tạo một biến và gán một giá trị
+cho nó với từ khóa `let` là một câu lệnh. Trong Listing 3-1,
+`let y = 6;` là một câu lệnh.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -122,11 +121,10 @@ assigning a value to it with the `let` keyword is a statement. In Listing 3-1,
 
 <span class="caption">Listing 3-1: A `main` function declaration containing one statement</span>
 
-Function definitions are also statements; the entire preceding example is a
-statement in itself.
+Việc định nghĩa một hàm cũng là một câu lệnh; toàn bộ ví dụ trước là một câu lệnh.
 
-Statements do not return values. Therefore, you can’t assign a `let` statement
-to another variable, as the following code tries to do; you’ll get an error:
+Câu lệnh không trả về giá trị. Do đó, bạn không thể gán một câu lệnh `let` statement
+vào một biến khác, bạn sẽ gặp lỗi nếu cố gắng làm như đoạn code bên dưới:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -134,25 +132,25 @@ to another variable, as the following code tries to do; you’ll get an error:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-19-statements-vs-expressions/src/main.rs}}
 ```
 
-When you run this program, the error you’ll get looks like this:
+Khi bạn chạy chương trình, bạn sẽ bắt gặp lỗi như thế này:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-19-statements-vs-expressions/output.txt}}
 ```
 
-The `let y = 6` statement does not return a value, so there isn’t anything for
-`x` to bind to. This is different from what happens in other languages, such as
-C and Ruby, where the assignment returns the value of the assignment. In those
-languages, you can write `x = y = 6` and have both `x` and `y` have the value
-`6`; that is not the case in Rust.
+Câu lệnh `let y = 6` không trả về một giá trị, do đó không có bất kỳ giá trị nào
+được gán cho `x`. Điều này khác biệt với những gì xảy ra trong các ngôn ngữ khác,
+như C và Ruby, trong đó phép gán trả về giá trị của phép gán đó. Trong những
+ngôn ngữ này, bạn có thể viết `x = y = 6`, cả `x` và `y` đều sẽ có giá trị là
+`6`; nhưng Rust thì không hiểu như vậy.
 
-Expressions evaluate to a value and make up most of the rest of the code that
-you’ll write in Rust. Consider a math operation, such as `5 + 6`, which is an
-expression that evaluates to the value `11`. Expressions can be part of
-statements: in Listing 3-1, the `6` in the statement `let y = 6;` is an
-expression that evaluates to the value `6`. Calling a function is an
-expression. Calling a macro is an expression. A new scope block created with
-curly brackets is an expression, for example:
+Biểu thức tính toán đưa ra một giá trị và tạo nên gần như toàn bộ phần còn lại của code mà
+bạn viết bằng Rust. Xét về một phép toán số học như `5 + 6`, đó là một
+biểu thức sẽ đưa ra kết quả là `11`. Biểu thức có thể là một phần của câu
+lệnh: trong Listing 3-1, giá trị `6` trong câu lệnh `let y = 6;` là một
+biểu thức đưa ra giá trị là `6`. Việc gọi một hàm cũng là một biểu
+thức. Gọi một macro là một biểu thức. Một khối phạm vi mới được tạo ra bằng
+dấu ngoặc nhọn là một biểu thức, ví dụ:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -160,7 +158,7 @@ curly brackets is an expression, for example:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-20-blocks-are-expressions/src/main.rs}}
 ```
 
-This expression:
+Biểu thức này:
 
 ```rust,ignore
 {
@@ -169,22 +167,22 @@ This expression:
 }
 ```
 
-is a block that, in this case, evaluates to `4`. That value gets bound to `y`
-as part of the `let` statement. Note that the `x + 1` line doesn’t have a
-semicolon at the end, unlike most of the lines you’ve seen so far. Expressions
-do not include ending semicolons. If you add a semicolon to the end of an
-expression, you turn it into a statement, and it will then not return a value.
-Keep this in mind as you explore function return values and expressions next.
+trong trường hợp này là một khối sẽ đưa ra giá trị là `4`. Giá trị đó được gán vào `y`
+như một phần của câu lệnh `let`. Lưu ý rằng dòng `x + 1` không có dấu chấm phẩy ở
+cuối câu, không giống như hầu hết các dòng code bạn đã thấy cho đến nay. Các biểu thức
+không kết thúc bằng dấu chấm phẩy. Nếu bạn thêm dấu chấm phẩy vào cuối biểu thức, nó sẽ
+trở thành một câu lệnh và câu lệnh thì không trả về giá trị.
+Hãy nhớ điều này khi bạn tìm hiểu về các hàm trả về giá trị và biểu thức ở phần kế tiếp.
 
-### Functions with Return Values
+### Hàm trả về giá trị
 
-Functions can return values to the code that calls them. We don’t name return
-values, but we must declare their type after an arrow (`->`). In Rust, the
-return value of the function is synonymous with the value of the final
-expression in the block of the body of a function. You can return early from a
-function by using the `return` keyword and specifying a value, but most
-functions return the last expression implicitly. Here’s an example of a
-function that returns a value:
+Hàm có thể trả về các giá trị cho code khi chúng được gọi. Chúng ta không đặt tên
+giá trị trả về, nhưng chúng ta buộc phải khai báo kiểu dữ liệu của chúng sau dấu mũi
+tên (`->`). Trong Rust, giá trị trả về của hàm đồng nghĩa với giá trị của biểu
+thức cuối cùng trong phần thân hàm. Bạn có thể trả về sớm giá trị của hàm bằng việc
+sử dụng từ khóa `return` và chỉ định giá trị trả về, nhưng trong hầu hết các hàm
+sẽ ngầm định trả về biểu thức cuối cùng. Dưới đây là một ví dụ về một hàm
+trả về giá trị:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -192,30 +190,30 @@ function that returns a value:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-21-function-return-values/src/main.rs}}
 ```
 
-There are no function calls, macros, or even `let` statements in the `five`
-function—just the number `5` by itself. That’s a perfectly valid function in
-Rust. Note that the function’s return type is specified too, as `-> i32`. Try
-running this code; the output should look like this:
+Không có gọi hàm, macros, hay thậm chí câu lệnh `let` trong hàm `five`
+ — chỉ có duy nhất số `5`. Đó là một hàm hợp lệ trong Rust.
+Lưu ý rằng phải biết được kiểu dữ liệu trả về của hàm như `-> i32`. Hãy
+khởi chạy code này; đầu ra sẽ như thế này:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-21-function-return-values/output.txt}}
 ```
 
-The `5` in `five` is the function’s return value, which is why the return type
-is `i32`. Let’s examine this in more detail. There are two important bits:
-first, the line `let x = five();` shows that we’re using the return value of a
-function to initialize a variable. Because the function `five` returns a `5`,
-that line is the same as the following:
+Số `5` trong hàm `five` là giá trị trả về của hàm, đó là lý do tại sao kiểu
+dữ liệu trả về là `i32`. Hãy xem xét điều này chi tiết hơn. Có 2 bits quan trọng:
+đầu tiên, dòng lệnh `let x = five();` cho biết rằng bạn đang sử dụng giá trị trả về
+của hàm để khởi tạo ra một biến. Bởi vì hàm `five` trả về giá trị `5`,
+dòng lệnh đó tương đương với dòng lệnh bên dưới:
 
 ```rust
 let x = 5;
 ```
 
-Second, the `five` function has no parameters and defines the type of the
-return value, but the body of the function is a lonely `5` with no semicolon
-because it’s an expression whose value we want to return.
+Thứ hai, hàm `five` không có tham số và hàm xác định kiểu dữ liệu của giá trị 
+trả về, nhưng trong phần thân hàm chỉ có số `5` không có dấu chấm phẩy
+bởi vì nó là một biểu thức chứa giá trị mà chúng ta muốn trả về.
 
-Let’s look at another example:
+Hãy xem xét một ví dụ khác:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -223,9 +221,9 @@ Let’s look at another example:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-22-function-parameter-and-return/src/main.rs}}
 ```
 
-Running this code will print `The value of x is: 6`. But if we place a
-semicolon at the end of the line containing `x + 1`, changing it from an
-expression to a statement, we’ll get an error.
+Code này sẽ in ra `The value of x is: 6`. Nhưng nếu chúng ta đặt dấu chấm phẩy
+vào cuối dòng chứa `x + 1`, nó sẽ từ biểu thức chuyển thành câu lệnh,
+chúng ta sẽ gặp lỗi ngay.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -233,16 +231,16 @@ expression to a statement, we’ll get an error.
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-23-statements-dont-return-values/src/main.rs}}
 ```
 
-Compiling this code produces an error, as follows:
+Biên dịch code này sẽ gây ra lỗi như sau:
 
 ```console
 {{#include ../listings/ch03-common-programming-concepts/no-listing-23-statements-dont-return-values/output.txt}}
 ```
 
-The main error message, “mismatched types,” reveals the core issue with this
-code. The definition of the function `plus_one` says that it will return an
-`i32`, but statements don’t evaluate to a value, which is expressed by `()`,
-the unit type. Therefore, nothing is returned, which contradicts the function
-definition and results in an error. In this output, Rust provides a message to
-possibly help rectify this issue: it suggests removing the semicolon, which
-would fix the error.
+Thông báo lỗi chính, “mismatched types,” cho thấy vấn đề cốt lõi trong
+code. Định nghĩa hàm `plus_one` nói rằng nó sẽ trả về một giá trị
+`i32`, nhưng câu lệnh không trả về giá trị được biểu thị bằng `()`,
+unit type. Do đó, không có gì để trả về, điều này mẫu thuẫn với định nghĩa
+của hàm và dẫn đến lỗi. Trong đầu ra này, Rust đưa ra một thông báo để có thể
+giúp khắc phục vấn đề này: Rust đề xuất loại bỏ dấu chấm phẩy để khắc phục
+lỗi.

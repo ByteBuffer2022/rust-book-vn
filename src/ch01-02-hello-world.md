@@ -30,7 +30,7 @@ Với Windows CMD:
 
 ### Viết và chạy một chương trình Rust
 
-Tiếp theo, tạo một file tên *main.rs*. Rust file luôn kết thúc với đuôi *.rs*. Nếu có hay từ
+Tiếp theo, tạo một file tên *main.rs*. Rust file luôn kết thúc với đuôi *.rs*. Nếu có hai từ
 trong tên file, hãy thêm dấu gạch dưới để tách nó. Ví dụ, dùng *hello_world.rs* thay vì *helloworld.rs*.
 
 Bây giờ mở file *main.rs* và nhập đoạn code ở Mục 1-1.
@@ -146,7 +146,7 @@ $ ./main # hoặc .\main.exe trên Windows
 
 Nếu *main.rs* là chương trình “Hello, world!”, terminal sẽ in ra `Hello, world!`
 
-Rust là ngôn ngữ đi trước thời đại, bạn
+Rust là ngôn ngữ biên dịch trước, bạn
 có thể biên dịch 1 chương trình và đưa file thực thi cho người khác, và họ có thể chạy nó mà không
 cần cài đặt Rust. Nếu bạn đưa người khác một file *.rb*, *.py*, hoặc
 *.js* họ cần cài Ruby, Python, JavaScript để chạy nó. Đánh đổi lại, các ngôn ngữ đó

@@ -1,4 +1,4 @@
-## Cài dặt
+## Cài đặt
 
 Đầu tiên chúng ta phải cài Rust. Chúng ta sẽ cài Rust thông qua `rustup` - Command line tool 
 quản lý phiên bản Rust và các tool liên quan.
@@ -43,14 +43,11 @@ Người dùng linux nên cài GCC hoặc Clang
 
 Trên Windows, truy cập [https://www.rust-lang.org/tools/install][install] và làm theo 
 hướng dẫn để cài Rust. Bạn cũng sẽ cần C++ build tools cho Visual Studio 2013 hoặc mới hơn. 
-Cách dễ nhất là cài [Build Tools for Visual Studio 2019][visualstudio]. Hãy đảm bảm “C++ build tools”
+Cách dễ nhất là cài [Build Tools for Visual Studio 2019][visualstudio]. Hãy đảm bảo “C++ build tools”
 được chọn.
 
 [install]: https://www.rust-lang.org/tools/install
 [visualstudio]: https://visualstudio.microsoft.com/visual-cpp-build-tools/
-
-The rest of this book uses commands that work in both *cmd.exe* and PowerShell.
-If there are specific differences, we’ll explain which to use.
 
 ### Cập nhật và gỡ cài đặt
 

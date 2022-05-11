@@ -1,32 +1,26 @@
 ## Packages and Crates
 
-The first parts of the module system we’ll cover are packages and crates.
+Các phần đầu tiên của module system chúng ta sẽ bao gồm packages và crates.
 
-A *package* is one or more crates that provide a set of functionality. A
-package contains a *Cargo.toml* file that describes how to build those crates.
+Một *package* là một hoặc nhiều crates cung cấp một loạt các chức năng. Một
+package chứa một file *Cargo.toml* mô tả cách build các crate của package đó.
 
-A *crate* can be a binary crate or a library crate. *Binary crates* are
-programs you can compile to an executable that you can run, such as a
-command-line program or a server. They must have a function called `main` that
-defines what happens when the executable runs. All the crates we’ve created so
-far have been binary crates.
+Một *crate* có thể là một binary crate hoặc một library crate. *Binary crates* là các chương trình bạn có thể biên dịch và thực thi để chạy,
+chẳng hạn như một command-line program hoặc một server. Chúng ta cần có một function được gọi là `main`, function này
+xác định điều gì xảy ra khi chạy thực thi. Tất cả các crates được tạo ra thường là binary crates.
 
-*Library crates* don’t have a `main` function, and they don’t compile to an
-executable. They define functionality intended to be shared with multiple
-projects. For example, the `rand` crate we used in [Chapter 2][rand]<!-- ignore
---> provides functionality that generates random numbers.
+*Library crates* không có `main` function, và chúng không được biên dịch để thực thi. 
+Chúng định nghĩa các chức năng dự định để chia sẻ với nhiều projects.
+Ví dụ, crate `rand` chúng tôi sử dụng trong [Chapter 2][rand]<!-- ignore--> cung cấp chức năng tạo các số ngẫu nhiên.
 
-The *crate root* is a source file that the Rust compiler starts from and makes
-up the root module of your crate (we’ll explain modules in depth in the
-[“Defining Modules to Control Scope and Privacy”][modules]<!-- ignore -->
-section).
+*crate root* là một file mà nguồn mà trình biên dịch Rust bắt đầu và tạo thành các root module
+(chúng tôi sẽ giải thích về module sâu hơn trong phần [“Defining Modules to Control Scope and Privacy”][modules]<!-- ignore -->).
 
-Several rules determine what a package can contain. A package can contain at
-most one library crate. It can contain as many binary crates as you’d like, but
-it must contain at least one crate (either library or binary).
+Một số quy tắc xác định những gì mà một package có thể chứa. Một package có thể chứa nhiều nhất một library crate. 
+Nó có thể chứa bao nhiêu binary crates tùy thích, nhưng nó
+phải chứa ít nhất một crate (hoặc là library hoặc binary).
 
-Let’s walk through what happens when we create a package. First, we enter the
-command `cargo new`:
+Hãy xem điều gì xảy ra khi chúng ta tạo ra một package. Đầu tiên chúng ta gõ lệnh `cargo new`:
 
 ```console
 $ cargo new my-project
@@ -38,20 +32,19 @@ $ ls my-project/src
 main.rs
 ```
 
-When we entered the command, Cargo created a *Cargo.toml* file, giving us a
-package. Looking at the contents of *Cargo.toml*, there’s no mention of
-*src/main.rs* because Cargo follows a convention that *src/main.rs* is the
-crate root of a binary crate with the same name as the package. Likewise, Cargo
-knows that if the package directory contains *src/lib.rs*, the package contains
-a library crate with the same name as the package, and *src/lib.rs* is its
-crate root. Cargo passes the crate root files to `rustc` to build the library
+Khi chúng ta nhập lệnh, Cargo tạo một file *Cargo.toml* , cho chúng ta một
+package. Nhìn vào nội dung của *Cargo.toml*, Không đề cập đến
+*src/main.rs* bởi vì Cargo tuân theo một quy ước rằng *src/main.rs* là
+crate root của một binary crate cùng tên với package. Hơn nữa, Cargo
+biết rằng nếu thư mục package chứa *src/lib.rs*, package chứa
+một library crate có cùng tên với package, và *src/lib.rs* là
+crate root của nó. Cargo đưa các file crate root tới `rustc` để build the library
 or binary.
 
-Here, we have a package that only contains *src/main.rs*, meaning it only
-contains a binary crate named `my-project`. If a package contains *src/main.rs*
-and *src/lib.rs*, it has two crates: a binary and a library, both with the same
-name as the package. A package can have multiple binary crates by placing files
-in the *src/bin* directory: each file will be a separate binary crate.
+Ở đây chúng ta có một package chỉ chứa *src/main.rs*, có nghĩa là nó chỉ
+chứa một binary crate tên là `my-project`. Nếu một package chứa *src/main.rs*
+và *src/lib.rs*, nó có 2 crates: một binary và một library, cả hai đều cùng tên với package. 
+Một package có thể chứa nhiều binary crates bằng cách đặt các files trong thư mục *src/bin* : mỗi file sẽ là một binary crate riêng biệt.
 
 [modules]: ch07-02-defining-modules-to-control-scope-and-privacy.html
 [rand]: ch02-00-guessing-game-tutorial.html#generating-a-random-number
