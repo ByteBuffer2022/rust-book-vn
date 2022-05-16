@@ -113,113 +113,98 @@ Giá trị `Some(5)` không khớp với mẫu `None`,vì vậy chúng ta tiếp
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:second_arm}}
 ```
 
-Does `Some(5)` match `Some(i)`? Why yes it does! We have the same variant. The
-`i` binds to the value contained in `Some`, so `i` takes the value `5`. The
-code in the match arm is then executed, so we add 1 to the value of `i` and
-create a new `Some` value with our total `6` inside.
+`Some(5)` có khớp với `Some(i)`? Tại sao lại có nó! Chúng ta có cùng một trường hợp. 
+ `i` liên kết với giá trị chứa trong `Some`, vì vậy `i` nhận giá trị `5`. 
+ Sau đó, đoạn code trong nhánh `match` được thực thi, vì vậy chúng ta cộng thêm 1 vào giá trị của `i` và 
+tạo ra một giá trị mới `Some` với tổng là `6`.
 
-Now let’s consider the second call of `plus_one` in Listing 6-5, where `x` is
-`None`. We enter the `match` and compare to the first arm.
+Bây giờ chúng ta hãy xem xét lời gọi hàm thứ hai của `plus_one` trong Listing 6-5, trong đó `x` là
+`None`. Chúng ta nhập `match` và so sánh giá trị ở nhánh đầu tiên.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-05/src/main.rs:first_arm}}
 ```
 
-It matches! There’s no value to add to, so the program stops and returns the
-`None` value on the right side of `=>`. Because the first arm matched, no other
-arms are compared.
+Nó phù hợp! Không có giá trị nào để thêm vào, vì vậy chương trình dừng và trả về giá trị 
+`None` ở phía bên phải của `=>`. Bởi vì nhánh đầu tiên khớp với nhau, nên không có nhánh nào khác được so sánh.
 
-Combining `match` and enums is useful in many situations. You’ll see this
-pattern a lot in Rust code: `match` against an enum, bind a variable to the
-data inside, and then execute code based on it. It’s a bit tricky at first, but
-once you get used to it, you’ll wish you had it in all languages. It’s
-consistently a user favorite.
+Kết hợp `match` và `enum` rất hữu ích trong nhiều trường hợp. Bạn sẽ thấy mẫu này rất nhiều trong mã Rust: 
+ `match` chống lại một enum, liên kết một biến với dữ liệu bên trong, và sau đó thực thi mã dựa trên nó. 
+Lúc đầu hơi phức tạp, nhưng một khi bạn đã quen với nó, bạn sẽ ước bạn có nó trong tất cả các ngôn ngữ. Nó luôn là một sự yêu thích của người dùng.
 
-### Matches Are Exhaustive
+### Matches là đầy đủ
 
-There’s one other aspect of `match` we need to discuss. Consider this version
-of our `plus_one` function that has a bug and won’t compile:
+Có một khía cạnh khác của `match` chúng ta cần thảo luận. Hãy xem xét phiên bản hàm `plus_one` này của chúng ta 
+ có một lỗi và sẽ không biên dịch:
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-10-non-exhaustive-match/src/main.rs:here}}
 ```
 
-We didn’t handle the `None` case, so this code will cause a bug. Luckily, it’s
-a bug Rust knows how to catch. If we try to compile this code, we’ll get this
-error:
+Chúng ta không xử lý trường hợp `None`, vì vậy mã này sẽ gây ra lỗi. May mắn thay, đó là một lỗi mà Rust biết cách bắt. 
+ Nếu chúng ta cố gắng biên dịch mã này, chúng ta sẽ gặp lỗi sau:
 
 ```console
 {{#include ../listings/ch06-enums-and-pattern-matching/no-listing-10-non-exhaustive-match/output.txt}}
 ```
 
-Rust knows that we didn’t cover every possible case and even knows which
-pattern we forgot! Matches in Rust are *exhaustive*: we must exhaust every last
-possibility in order for the code to be valid. Especially in the case of
-`Option<T>`, when Rust prevents us from forgetting to explicitly handle the
-`None` case, it protects us from assuming that we have a value when we might
-have null, thus making the billion-dollar mistake discussed earlier impossible.
+Rust biết rằng chúng ta không bao gồm trường hợp nào có thể xảy ra và thậm chí biết chúng ta đã quên mẫu nào!
+ Matches trong Rust là *đầy đủ*: chúng ta phải sử dụng hết mọi khả năng để mã có hiệu lực. 
+Đặc biệt là trong trường hợp của `Option<T>`, khi Rust ngăn chúng ta quên xử lý rõ ràng trường hợp `None`, 
+nó bảo vệ chúng ta khỏi giả định rằng chúng ta có một giá trị khi chúng ta có thể có null, 
+ do đó làm cho sai lầm hàng tỷ đô la đã được thảo luận trước đó là không thể.
 
 ### Catch-all Patterns and the `_` Placeholder
 
-Using enums, we can also take special actions for a few particular values, but
-for all other values take one default action. Imagine we’re implementing a game
-where, if you roll a 3 on a dice roll, your player doesn’t move, but instead
-gets a new fancy hat. If you roll a 7, your player loses a fancy hat. For all
-other values, your player moves that number of spaces on the game board. Here’s
-a `match` that implements that logic, with the result of the dice roll
-hardcoded rather than a random value, and all other logic represented by
-functions without bodies because actually implementing them is out of scope for
-this example:
+Sử dụng enum, chúng ta cũng có thể thực hiện các hành động đặc biệt đối với một số giá trị cụ thể, 
+ nhưng đối với tất cả các giá trị khác thì thực hiện một hành động mặc định. Hãy tưởng tượng chúng tôi đang triển khai một trò chơi trong đó, 
+ nếu bạn tung một con xúc xắc là 3, người chơi sẽ không di chuyển, 
+ nhưng thay vào đó nhận được một chiếc mũ mới nhiều màu sắc. Nếu bạn tung ra 7, người chơi sẽ mất một chiếc mũ. 
+ Đối với tất cả các giá trị khác, người chơi của bạn di chuyển số khoảng trắng đó trên bảng trò chơi. 
+ Đây là một triển khai logic `match`, với kết quả của cuộn xúc xắc được mã hóa cứng chứ không phải là một giá trị ngẫu nhiên, 
+ và tất cả các logic khác được đại diện bởi các hàm không có phần thân bởi vì thực sự việc triển khai chúng nằm ngoài phạm vi của ví dụ này:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-15-binding-catchall/src/main.rs:here}}
 ```
 
-For the first two arms, the patterns are the literal values 3 and 7. For the
-last arm that covers every other possible value, the pattern is the variable
-we’ve chosen to name `other`. The code that runs for the `other` arm uses the
-variable by passing it to the `move_player` function.
+Đối với hai nhánh đầu tiên, các mẫu là các giá trị 3 và 7. Đối với nhánh cuối cùng bao gồm mọi giá trị có thể có khác, 
+ biến chúng ta đã chọn để đặt tên `other`. Mã chạy cho nhánh `other` sử dụng biến bằng cách chuyển nó đến hàm `move_player`.
 
-This code compiles, even though we haven’t listed all the possible values a
-`u8` can have, because the last pattern will match all values not specifically
-listed. This catch-all pattern meets the requirement that `match` must be
-exhaustive. Note that we have to put the catch-all arm last because the
-patterns are evaluated in order. Rust will warn us if we add arms after a
-catch-all because those later arms would never match!
+Biên dịch đoạn code này, mặc dù chúng tôi chưa liệt kê tất cả các giá trị có thể có của một `u8`, 
+vì mẫu cuối cùng sẽ khớp với tất cả các giá trị không được liệt kê cụ thể. 
+ Mẫu tổng hợp này đáp ứng yêu cầu rằng `match` phải đầy đủ. Lưu ý rằng chúng ta phải đặt nhánh thu thập tất cả cuối cùng vì các mẫu được đánh giá theo thứ tự. 
+ Rust sẽ cảnh báo chúng ta nếu chúng ta thêm nhánh nào đó sau khi bắt được tất cả vì những nhánh sau đó sẽ không bao giờ khớp với nhau!
 
-Rust also has a pattern we can use when we don’t want to use the value in the
-catch-all pattern: `_`, which is a special pattern that matches any value and
-does not bind to that value. This tells Rust we aren’t going to use the value,
-so Rust won’t warn us about an unused variable.
+Rust cũng có một mẫu mà chúng ta có thể sử dụng khi không muốn sử dụng giá trị trong mẫu tổng hợp: `_`, 
+là một mẫu đặc biệt phù hợp với bất kỳ giá trị nào và không liên kết với giá trị đó. 
+ Điều này cho Rust biết rằng chúng ta sẽ không sử dụng giá trị,
+vì vậy Rust sẽ không cảnh báo chúng ta về một biến không được sử dụng.
 
-Let’s change the rules of the game to be that if you roll anything other than
-a 3 or a 7, you must roll again. We don’t need to use the value in that case,
-so we can change our code to use `_` instead of the variable named `other`:
+Hãy thay đổi quy tắc của trò chơi thành nếu bạn tung bất kỳ thứ gì khác ngoài số 3 hoặc số 7, 
+ bạn sẽ phải tung lại. Chúng ta không cần sử dụng giá trị trong trường hợp đó, vì vậy chúng ta có thể thay đổi mã của mình để sử dụng `_` 
+ thay vì biến có tên `other`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-16-underscore-catchall/src/main.rs:here}}
 ```
 
-This example also meets the exhaustiveness requirement because we’re explicitly
-ignoring all other values in the last arm; we haven’t forgotten anything.
+Ví dụ này cũng đáp ứng yêu cầu đầy đủ vì chúng ta đang bỏ qua tất cả các giá trị khác trong nhánh cuối cùng; chúng ta đã không quên bất cứ điều gì.
 
-If we change the rules of the game one more time, so that nothing else happens
-on your turn if you roll anything other than a 3 or a 7, we can express that
-by using the unit value (the empty tuple type we mentioned in [“The Tuple
-Type”][tuples]<!-- ignore --> section) as the code that goes with the `_` arm:
+Nếu chúng tôi thay đổi các quy tắc của trò chơi một lần nữa, để không có gì khác xảy ra trong lượt của bạn nếu bạn tung bất kỳ thứ gì khác ngoài con 3 hoặc con 7, 
+ chúng ta có thể thể hiện điều đó bằng cách sử dụng giá trị đơn vị (loại tuple trống mà chúng tôi đã đề cập trong phần [“The Tuple
+Type”][tuples]<!-- ignore -->) như mã đi với nhánh `_`:
 
 ```rust
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-17-underscore-unit/src/main.rs:here}}
 ```
 
-Here, we’re telling Rust explicitly that we aren’t going to use any other value
-that doesn’t match a pattern in an earlier arm, and we don’t want to run any
-code in this case.
+Ở đây, chúng ta đang nói với Rust một cách rõ ràng rằng chúng ta sẽ không sử dụng bất kỳ giá trị nào khác không khớp với một mẫu trong nhánh trước đó, 
+ và chúng tôi không muốn chạy bất kỳ mã nào trong trường hợp này.
 
-There’s more about patterns and matching that we’ll cover in [Chapter
-18][ch18-00-patterns]<!-- ignore -->. For now, we’re going to move on to the
-`if let` syntax, which can be useful in situations where the `match` expression
-is a bit wordy.
+Có nhiều thông tin hơn về các mẫu và matchings mà chúng ta sẽ đề cập đến ở [Chapter
+18][ch18-00-patterns]<!-- ignore -->. Bây giờ, chúng ta sẽ chuyển sang cú pháp `if let`, có thể hữu ích trong các tình huống mà `match` diễn đạt hơi dài dòng.
+
 
 [tuples]: ch03-02-data-types.html#the-tuple-type
 [ch18-00-patterns]: ch18-00-patterns.html
