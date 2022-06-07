@@ -1,51 +1,26 @@
 ## Advanced Traits
 
-We first covered traits in the [“Traits: Defining Shared
-Behavior”][traits-defining-shared-behavior]<!-- ignore --> section of Chapter
-10, but we didn’t discuss the more advanced details. Now that you know more
-about Rust, we can get into the nitty-gritty.
+Traits đã được nhắc đến trong chương 10 [“Traits: Defining Shared Behavior”][traits-defining-shared-behavior]<!-- ignore -->, tuy nhiên đó chỉ là những kiến thức cơ bản nhất và traits mà thôi. Trong chương này, ta sẽ đi sâu hơn vào những tính năng nâng cao hơn của traits.
 
-### Specifying Placeholder Types in Trait Definitions with Associated Types
+### Sử dụng Associated Types khi định nghĩa Trait
 
-*Associated types* connect a type placeholder with a trait such that the trait
-method definitions can use these placeholder types in their signatures. The
-implementor of a trait will specify the concrete type to be used in this type’s
-place for the particular implementation. That way, we can define a trait that
-uses some types without needing to know exactly what those types are until the
-trait is implemented.
+*Associated types* có thể được sử dụng khi định nghĩa Trait mà khi implement nó ta hoàn toàn biết trước được kiểu dữ liệu mà trait đó muốn sử dụng.
 
-We’ve described most of the advanced features in this chapter as being rarely
-needed. Associated types are somewhere in the middle: they’re used more rarely
-than features explained in the rest of the book but more commonly than many of
-the other features discussed in this chapter.
+Các tính năng nâng cao khác ở chương này đa số đều ít khi được sử dụng, tuy nhiên associated types lại ở khoảng giữa: nó không được sử dụng quá nhiều như những tính năng khác được mô tả ở trong cuốn sách này nhưng lại được sử dụng phổ biến hơn các tính năng nâng cao khác.
 
-One example of a trait with an associated type is the `Iterator` trait that the
-standard library provides. The associated type is named `Item` and stands in
-for the type of the values the type implementing the `Iterator` trait is
-iterating over. In [“The `Iterator` Trait and the `next`
-Method”][the-iterator-trait-and-the-next-method]<!-- ignore --> section of
-Chapter 13, we mentioned that the definition of the `Iterator` trait is as
-shown in Listing 19-12.
+Một ví dụ điển hình của việc sử dụng associated type trong trait là `Iterator` của thư viện chuẩn trong Rust. Associated type có tên là `Item` ở trong trường hợp này. Trong phần [“The `Iterator` Trait and the `next` Method”][the-iterator-trait-and-the-next-method]<!-- ignore -->, ta đã đề cập đến phần định nghĩa của `Iterator` trait
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-12/src/lib.rs}}
 ```
 
-<span class="caption">Listing 19-12: The definition of the `Iterator` trait
-that has an associated type `Item`</span>
+<span class="caption">Listing 19-12: Định nghĩa `Iterator` trait sử dụng associated type `Item`</span>
 
-The type `Item` is a placeholder type, and the `next` method’s definition shows
-that it will return values of type `Option<Self::Item>`. Implementors of the
-`Iterator` trait will specify the concrete type for `Item`, and the `next`
-method will return an `Option` containing a value of that concrete type.
+Kiểu `Item` còn được gọi là placeholder type, `next` method sẽ trả về một kiểu `Option<Self::Item>`. Các struct có implement `Iterator` này đều sẽ có một kiểu dữ liệu duy nhất và cố định là `Item`, `next` method làm nhiệm vụ trả về `Option` chứa Item đó.
 
-Associated types might seem like a similar concept to generics, in that the
-latter allow us to define a function without specifying what types it can
-handle. So why use associated types?
+Đến đây ta có thể thấy khá nhiều điểm tương đồng giữa associated type và generics type, vậy tại sao phải sử dụng associated types?
 
-Let’s examine the difference between the two concepts with an example from
-Chapter 13 that implements the `Iterator` trait on the `Counter` struct. In
-Listing 13-21, we specified that the `Item` type was `u32`:
+Ví dụ sau sẽ cho ta thấy sự khác biệt giữa 2 cách dùng. Ở chương 13, listing 13-21 sử dụng associated type `Item` bằng `u32`:
 
 <span class="filename">Filename: src/lib.rs</span>
 
@@ -53,50 +28,25 @@ Listing 13-21, we specified that the `Item` type was `u32`:
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-13-21-reproduced/src/lib.rs:ch19}}
 ```
 
-This syntax seems comparable to that of generics. So why not just define the
-`Iterator` trait with generics, as shown in Listing 19-13?
+Và cú pháp dùng generics được mô tả trong listing 19-13?
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-13/src/lib.rs}}
 ```
 
-<span class="caption">Listing 19-13: A hypothetical definition of the
-`Iterator` trait using generics</span>
+<span class="caption">Listing 19-13: Đinh nghĩa `Iterator` trait sử dụng generics</span>
 
-The difference is that when using generics, as in Listing 19-13, we must
-annotate the types in each implementation; because we can also implement
-`Iterator<String> for Counter` or any other type, we could have multiple
-implementations of `Iterator` for `Counter`. In other words, when a trait has a
-generic parameter, it can be implemented for a type multiple times, changing
-the concrete types of the generic type parameters each time. When we use the
-`next` method on `Counter`, we would have to provide type annotations to
-indicate which implementation of `Iterator` we want to use.
+Sự khác biệt ở đây là khi dùng generics, ta phải chú thích kiểu dữ liệu cho mỗi lần implement; hoàn toàn có thể implement `Iterator<String> for Counter` hoặc bất kì kiểu dữ liệu nào khác ngoài `u32`, do đó ta có thể có rất nhiều các phiên bản khác nhau của `Iterator` cho `Counter`. Nói một cách khác, khi một trait sử dụng generics parameter, nó có thể implement rất nhiều lần, thay đổi kiểu dữ liệu cho mỗi lần đó. Khi sử dụng method `next`, ta bắt buộc phải cung cấp kiểu dữ liệu để thể hiện `Iterator` nào được sử dụng.
 
-With associated types, we don’t need to annotate types because we can’t
-implement a trait on a type multiple times. In Listing 19-12 with the
-definition that uses associated types, we can only choose what the type of
-`Item` will be once, because there can only be one `impl Iterator for Counter`.
-We don’t have to specify that we want an iterator of `u32` values everywhere
-that we call `next` on `Counter`.
+Với associated types, ta không cần phải chú thích kiểu dữ liệu như vậy bởi trait này không thể implement nhiều lần, `Iterator` chỉ có `Item` với kiểu dữ liệu duy nhất là `u32` mà thôi.
 
-### Default Generic Type Parameters and Operator Overloading
+### Tham số Generic Type mặc định và nạp chồng toán tử (Operator Overloading)
 
-When we use generic type parameters, we can specify a default concrete type for
-the generic type. This eliminates the need for implementors of the trait to
-specify a concrete type if the default type works. The syntax for specifying a
-default type for a generic type is `<PlaceholderType=ConcreteType>` when
-declaring the generic type.
+Khi sử dụng generic type, ta có thể chỉ định tham số mặc định cho nó. Cú pháp ở đây là `<PlaceholderType=ConcreteType>`.
 
-A great example of a situation where this technique is useful is with operator
-overloading. *Operator overloading* is customizing the behavior of an operator
-(such as `+`) in particular situations.
+Một ví dụ tuyệt vời nhất cho trường hợp này là khi dùng đến nạp chồng toán tử (operator overloading). *Operator overloading* dùng để biến tấu hành vi của một toán tử  (như là `+`) trong vài trường hợp cụ thể.
 
-Rust doesn’t allow you to create your own operators or overload arbitrary
-operators. But you can overload the operations and corresponding traits listed
-in `std::ops` by implementing the traits associated with the operator. For
-example, in Listing 19-14 we overload the `+` operator to add two `Point`
-instances together. We do this by implementing the `Add` trait on a `Point`
-struct:
+Rust không cho phép bạn tạo mới một toán tử hay nạp chồng một toán tử bất kì. Tuy nhiên, bạn có thể nạp chồng một toán tử nếu toán tử đó nằm trong thư viện `std::ops` bằng cách implement toán tử nằm trong chính thư viện này. Ví dụ trong listing 19-4, ta sẽ nạp chồng toán tử `+` để cộng 2 `Point` với nhau. Để làm được điều này, ta phải implement `Add` trait cho `Point` struct:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -104,16 +54,11 @@ struct:
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-14/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-14: Implementing the `Add` trait to overload
-the `+` operator for `Point` instances</span>
+<span class="caption">Listing 19-14: Implementing `Add` trait để nạp chồng toán tử `+` cho instances `Point`</span>
 
-The `add` method adds the `x` values of two `Point` instances and the `y`
-values of two `Point` instances to create a new `Point`. The `Add` trait has an
-associated type named `Output` that determines the type returned from the `add`
-method.
+Method `add` sẽ cộng hoành độ và tung độ tương ứng của 2 `Point`. Trait `Add` lúc này sẽ có một associated type là `Output`.
 
-The default generic type in this code is within the `Add` trait. Here is its
-definition:
+Generic type mặc định được nằm trong phần định nghĩa `Add` trait, như sau:
 
 ```rust
 trait Add<Rhs=Self> {
@@ -123,26 +68,11 @@ trait Add<Rhs=Self> {
 }
 ```
 
-This code should look generally familiar: a trait with one method and an
-associated type. The new part is `Rhs=Self`: this syntax is called *default
-type parameters*. The `Rhs` generic type parameter (short for “right hand
-side”) defines the type of the `rhs` parameter in the `add` method. If we don’t
-specify a concrete type for `Rhs` when we implement the `Add` trait, the type
-of `Rhs` will default to `Self`, which will be the type we’re implementing
-`Add` on.
+Ta có thể thấy phần khác biệt ở đây là `Rhs=Self`: cú pháp này được gọi là *default type parameters*. `Rhs` (viết tắt của "right hand side") sẽ định nghĩa kiểu dữ liệu cho biến `rhs` được dùng trong method `add`. Nếu ta không chỉ định kiểu dữ liệu cho `Rhs` khi implement, `Rhs` khi đó sẽ mặc định có kiểu `Self`.
 
-When we implemented `Add` for `Point`, we used the default for `Rhs` because we
-wanted to add two `Point` instances. Let’s look at an example of implementing
-the `Add` trait where we want to customize the `Rhs` type rather than using the
-default.
+Khi implement `Add` cho `Point`, ta sẽ sử dụng kiểu mặc định cho `Rhs` vì mục đích cuối cùng là cộng 2 `Point` instances. Cùng xem ví dụ mà ở đây ta sẽ implement `Add` trait và không sử dụng kiểu mặc định cho `Rhs` nữa.
 
-We have two structs, `Millimeters` and `Meters`, holding values in different
-units. This thin wrapping of an existing type in another struct is known as the
-*newtype pattern*, which we describe in more detail in the [“Using the Newtype
-Pattern to Implement External Traits on External Types”][newtype]<!-- ignore
---> section. We want to add values in millimeters to values in meters and have
-the implementation of `Add` do the conversion correctly. We can implement `Add`
-for `Millimeters` with `Meters` as the `Rhs`, as shown in Listing 19-15.
+Ở đây có 2 structs, `Millimeters` và `Meters`, thể hiện giá trị ở các đơn vị đo khác nhau. Các struct này sẽ bao bên ngoài của kiểu dữ liệu đã tồn tại (`u32`), cách làm này được gọi là *newtype pattern* (xem thêm trong phần [“Using the Newtype Pattern to Implement External Traits on External Types”][newtype]<!-- ignore-->). Ở đây ta sẽ cộng giá trị ở đơn vị millimeters với giá trị ở đơn vị meters với việc bắt buộc phải chuyển đổi đơn vị đo.
 
 <span class="filename">Filename: src/lib.rs</span>
 
@@ -150,41 +80,24 @@ for `Millimeters` with `Meters` as the `Rhs`, as shown in Listing 19-15.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-15/src/lib.rs}}
 ```
 
-<span class="caption">Listing 19-15: Implementing the `Add` trait on
-`Millimeters` to add `Millimeters` to `Meters`</span>
+<span class="caption">Listing 19-15: Implementing `Add` trait cho `Millimeters` để cộng `Millimeters` với `Meters`</span>
 
-To add `Millimeters` and `Meters`, we specify `impl Add<Meters>` to set the
-value of the `Rhs` type parameter instead of using the default of `Self`.
+Để làm được điều này, ta sẽ chỉ định `impl Add<Meters>` để set giá trị cho tham số `Rhs` thay vì dùng tham số mặc định `Self`.
 
-You’ll use default type parameters in two main ways:
+Bạn sẽ sử dụng kiểu tham số mặc định với mục đích:
 
-* To extend a type without breaking existing code
-* To allow customization in specific cases most users won’t need
+* Để mở rộng một kiểu dữ liệu mà không làm thay đổi source code đã tồn tại.
+* Cho phép tuỳ biến một trường hợp cụ thể  nào đó.
 
-The standard library’s `Add` trait is an example of the second purpose:
-usually, you’ll add two like types, but the `Add` trait provides the ability to
-customize beyond that. Using a default type parameter in the `Add` trait
-definition means you don’t have to specify the extra parameter most of the
-time. In other words, a bit of implementation boilerplate isn’t needed, making
-it easier to use the trait.
+Trait `Add` ở trong thư viện chuẩn mà ta vừa sử dụng là một ví dụ cho mục đích thứ 2: ta sẽ phải cộng 2 kiểu khác nhau, tuy nhiên `Add` trait còn cung cấp khả năng tuỳ biến nhiều hơn như vậy. Sử dụng kiểu tham số mặc định (default type parameter) trong phần định nghĩa trait sẽ giúp bạn không bắt buộc phải thêm tham số trong đa số các trường hợp.
 
-The first purpose is similar to the second but in reverse: if you want to add a
-type parameter to an existing trait, you can give it a default to allow
-extension of the functionality of the trait without breaking the existing
-implementation code.
+Mục đích thứ nhất thì ngược lại với mục đích thứ hai: nếu muốn cộng một kiểu dữ liệu cho một trait có trước, bạn có thể cho nó một tham số mặc định để có thể tăng khả năng tuỳ biến mà không cần phải thay đổi logic của source code đã có sẵn.
 
-### Fully Qualified Syntax for Disambiguation: Calling Methods with the Same Name
+### Gọi các method có cùng tên
 
-Nothing in Rust prevents a trait from having a method with the same name as
-another trait’s method, nor does Rust prevent you from implementing both traits
-on one type. It’s also possible to implement a method directly on the type with
-the same name as methods from traits.
+Rust không ngăn cản việc bạn tạo method có cùng tên với method của trait khác, cũng như cấm việc implement 2 trait có cùng một kiểu. Ta hoàn toàn có thể implement một method có cùng tên với các method của các traits khác.
 
-When calling methods with the same name, you’ll need to tell Rust which one you
-want to use. Consider the code in Listing 19-16 where we’ve defined two traits,
-`Pilot` and `Wizard`, that both have a method called `fly`. We then implement
-both traits on a type `Human` that already has a method named `fly` implemented
-on it. Each `fly` method does something different.
+Khi gọi các methods có cùng tên , bạn sẽ cần chỉ ra đâu là method mà bạn cần. Xem xét Listing 19-16 sau đây, có 2 trait là `Pilot` và `Wizard` đều định nghĩa method `fly`. Sau đó implement cả 2 cho kiểu `Human` cũng đã có sẵn method là `fly`.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -192,12 +105,9 @@ on it. Each `fly` method does something different.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-16/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-16: Two traits are defined to have a `fly`
-method and are implemented on the `Human` type, and a `fly` method is
-implemented on `Human` directly</span>
+<span class="caption">Listing 19-16: Định nghĩa method `fly`</span>
 
-When we call `fly` on an instance of `Human`, the compiler defaults to calling
-the method that is directly implemented on the type, as shown in Listing 19-17.
+Khi gọi `fly` ở `Human` instance, compiler sẽ mặc định gọi method nào được implement *trực tiếp*, được thể hiện trong Listing 19-17.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -205,15 +115,11 @@ the method that is directly implemented on the type, as shown in Listing 19-17.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-17/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-17: Calling `fly` on an instance of
-`Human`</span>
+<span class="caption">Listing 19-17: Gọi `fly` ở instance `Human`</span>
 
-Running this code will print `*waving arms furiously*`, showing that Rust
-called the `fly` method implemented on `Human` directly.
+Kết quả là dòng chữ `*waving arms furiously*` được in ra, thể hiện rằng Rust đã gọi `fly` trực tiếp từ `Human`.
 
-To call the `fly` methods from either the `Pilot` trait or the `Wizard` trait,
-we need to use more explicit syntax to specify which `fly` method we mean.
-Listing 19-18 demonstrates this syntax.
+Nếu muốn gọi methods `fly` từ `Pilot` hoặc `Wizard`, ta cần phải khai báo rõ ràng hơn bằng một cú pháp khác trong Listing 19-18.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -221,32 +127,17 @@ Listing 19-18 demonstrates this syntax.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-18/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-18: Specifying which trait’s `fly` method we
-want to call</span>
+<span class="caption">Listing 19-18: Chỉ định method `fly` nào sẽ được gọi</span>
 
-Specifying the trait name before the method name clarifies to Rust which
-implementation of `fly` we want to call. We could also write
-`Human::fly(&person)`, which is equivalent to the `person.fly()` that we used
-in Listing 19-18, but this is a bit longer to write if we don’t need to
-disambiguate.
-
-Running this code prints the following:
+Sau khi chạy, ta sẽ được kết quả:
 
 ```console
 {{#include ../listings/ch19-advanced-features/listing-19-18/output.txt}}
 ```
 
-Because the `fly` method takes a `self` parameter, if we had two *types* that
-both implement one *trait*, Rust could figure out which implementation of a
-trait to use based on the type of `self`.
+Ở đây, method `fly` có tham số `self`, vì vậy ta có thể truyền `person` vào và Rust có thể tìm ra trait nào cần sử dụng trong trường hợp này.
 
-However, associated functions that are not methods don’t have a `self`
-parameter. When there are multiple types or traits that define non-method
-functions with the same function name, Rust doesn't always know which type you
-mean unless you use *fully qualified syntax*. For example, the `Animal` trait
-in Listing 19-19 has the associated non-method function `baby_name`, and the
-`Animal` trait is implemented for the struct `Dog`. There’s also an associated
-non-method function `baby_name` defined on `Dog` directly.
+Vậy trong trường hợp sử dụng associated functions (không có tham số `self`) thì sao? Rust sẽ không thể biết được bạn cần gọi method của trait nào nếu không sử dụng *fully qualified syntax*. Xét ví dụ dưới đây:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -254,29 +145,15 @@ non-method function `baby_name` defined on `Dog` directly.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-19/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-19: A trait with an associated function and a
-type with an associated function of the same name that also implements the
-trait</span>
+<span class="caption">Listing 19-19: Gọi một associated function có cùng tên với các associated function của traits khác</span>
 
-This code is for an animal shelter that wants to name all puppies Spot, which
-is implemented in the `baby_name` associated function that is defined on `Dog`.
-The `Dog` type also implements the trait `Animal`, which describes
-characteristics that all animals have. Baby dogs are called puppies, and that
-is expressed in the implementation of the `Animal` trait on `Dog` in the
-`baby_name` function associated with the `Animal` trait.
-
-In `main`, we call the `Dog::baby_name` function, which calls the associated
-function defined on `Dog` directly. This code prints the following:
+Trong hàm `main`, hàm `Dog::baby_name` được gọi, khi đó ta sẽ có kết quả:
 
 ```console
 {{#include ../listings/ch19-advanced-features/listing-19-19/output.txt}}
 ```
 
-This output isn’t what we wanted. We want to call the `baby_name` function that
-is part of the `Animal` trait that we implemented on `Dog` so the code prints
-`A baby dog is called a puppy`. The technique of specifying the trait name that
-we used in Listing 19-18 doesn’t help here; if we change `main` to the code in
-Listing 19-20, we’ll get a compilation error.
+Kết quả này không phải cái ta mong muốn. Hàm `baby_name` phải in ra dòng chữ `A baby dog is called a puppy`. Do vậy, kĩ thuật được sử dụng trong Listing 19-18 không áp dụng được trong trường hợp này; nếu thay đổi code như là Listing 19-20 thì sao:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -284,22 +161,15 @@ Listing 19-20, we’ll get a compilation error.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-20/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-20: Attempting to call the `baby_name`
-function from the `Animal` trait, but Rust doesn’t know which implementation to
-use</span>
+<span class="caption">Listing 19-20: Gọi hàm `baby_name` từ trait `Animal`</span>
 
-Because `Animal::baby_name` doesn’t have a `self` parameter, and there could be
-other types that implement the `Animal` trait, Rust can’t figure out which
-implementation of `Animal::baby_name` we want. We’ll get this compiler error:
+Vì `Animal::baby_name` không có tham số `self`, và có thể có các struct khác cũng sẽ implement `Animal` trait, do đó Rust không thể biết được hàm `Animal::baby_name` sẽ sử dụng implementation nào. Lỗi sẽ như sau:
 
 ```console
 {{#include ../listings/ch19-advanced-features/listing-19-20/output.txt}}
 ```
 
-To disambiguate and tell Rust that we want to use the implementation of
-`Animal` for `Dog` as opposed to the implementation of `Animal` for some other
-type, we need to use fully qualified syntax. Listing 19-21 demonstrates how to
-use fully qualified syntax.
+Vậy để pass qua được lỗi này, cùng xem Listing 19-21:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -307,32 +177,21 @@ use fully qualified syntax.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-21/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-21: Using fully qualified syntax to specify
-that we want to call the `baby_name` function from the `Animal` trait as
-implemented on `Dog`</span>
+<span class="caption">Listing 19-21: Sử dụng fully qualified syntax để chỉ định hàm `baby_name` được implement từ `Dog` sẽ được gọi</span>
 
-We’re providing Rust with a type annotation within the angle brackets, which
-indicates we want to call the `baby_name` method from the `Animal` trait as
-implemented on `Dog` by saying that we want to treat the `Dog` type as an
-`Animal` for this function call. This code will now print what we want:
+Ta sẽ cung cấp cho Rust một kiểu chú thích trong cặp ngoặc `<>`, trong đó sẽ chỉ rõ rằng phương thức `baby_name` của `Animal` trait được implement từ `Dog`. Khi đó kết quả sẽ như ta mong muốn:
 
 ```console
 {{#include ../listings/ch19-advanced-features/listing-19-21/output.txt}}
 ```
 
-In general, fully qualified syntax is defined as follows:
+Một cách tổng quát, fully qualified syntax được định nghĩa như sau:
 
 ```rust,ignore
 <Type as Trait>::function(receiver_if_method, next_arg, ...);
 ```
 
-For associated functions that aren’t methods, there would not be a `receiver`:
-there would only be the list of other arguments. You could use fully qualified
-syntax everywhere that you call functions or methods. However, you’re allowed
-to omit any part of this syntax that Rust can figure out from other information
-in the program. You only need to use this more verbose syntax in cases where
-there are multiple implementations that use the same name and Rust needs help
-to identify which implementation you want to call.
+Sẽ không có `receiver` trong trường hợp đó là một associated functions chứ không phải methods. Bạn có thể sẽ phải sử dụng fully qualified syntax, tuy nhiên hoàn toàn có thể bỏ qua một phải phần nếu Rust có đủ thông tin để tự mình tìm ra được bạn sẽ muốn gọi hàm nào, giống như các ví dụ đã bàn ở trên.
 
 ### Using Supertraits to Require One Trait’s Functionality Within Another Trait
 
