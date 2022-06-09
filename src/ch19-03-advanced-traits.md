@@ -1,6 +1,6 @@
 ## Advanced Traits
 
-Traits đã được nhắc đến trong chương 10 [“Traits: Defining Shared Behavior”][traits-defining-shared-behavior]<!-- ignore -->, tuy nhiên đó chỉ là những kiến thức cơ bản nhất và traits mà thôi. Trong chương này, ta sẽ đi sâu hơn vào những tính năng nâng cao hơn của traits.
+Traits đã được nhắc đến trong chương 10 [“Traits: Defining Shared Behavior”][traits-defining-shared-behavior]<!-- ignore -->, tuy nhiên đó chỉ là những kiến thức cơ bản nhất của traits mà thôi. Trong chương này, ta sẽ đi sâu hơn vào những tính năng nâng cao của traits.
 
 ### Sử dụng Associated Types khi định nghĩa Trait
 
@@ -8,7 +8,7 @@ Traits đã được nhắc đến trong chương 10 [“Traits: Defining Shared
 
 Các tính năng nâng cao khác ở chương này đa số đều ít khi được sử dụng, tuy nhiên associated types lại ở khoảng giữa: nó không được sử dụng quá nhiều như những tính năng khác được mô tả ở trong cuốn sách này nhưng lại được sử dụng phổ biến hơn các tính năng nâng cao khác.
 
-Một ví dụ điển hình của việc sử dụng associated type trong trait là `Iterator` của thư viện chuẩn trong Rust. Associated type có tên là `Item` ở trong trường hợp này. Trong phần [“The `Iterator` Trait and the `next` Method”][the-iterator-trait-and-the-next-method]<!-- ignore -->, ta đã đề cập đến phần định nghĩa của `Iterator` trait
+Một ví dụ điển hình của việc sử dụng associated type trong trait là `Iterator` của thư viện chuẩn trong Rust. Associated type có tên là `Item` ở trong trường hợp này. Trong phần [“The `Iterator` Trait and the `next` Method”][the-iterator-trait-and-the-next-method]<!-- ignore -->, ta đã đề cập đến định nghĩa của `Iterator` trait
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-12/src/lib.rs}}
@@ -16,7 +16,7 @@ Một ví dụ điển hình của việc sử dụng associated type trong trai
 
 <span class="caption">Listing 19-12: Định nghĩa `Iterator` trait sử dụng associated type `Item`</span>
 
-Kiểu `Item` còn được gọi là placeholder type, `next` method sẽ trả về một kiểu `Option<Self::Item>`. Các struct có implement `Iterator` này đều sẽ có một kiểu dữ liệu duy nhất và cố định là `Item`, `next` method làm nhiệm vụ trả về `Option` chứa Item đó.
+Kiểu `Item` còn được gọi là placeholder type, `next` method sẽ trả về một kiểu `Option<Self::Item>`. Các struct implement `Iterator` này đều sẽ có một kiểu dữ liệu duy nhất và cố định là `Item`, `next` method làm nhiệm vụ trả về `Option` chứa Item đó.
 
 Đến đây ta có thể thấy khá nhiều điểm tương đồng giữa associated type và generics type, vậy tại sao phải sử dụng associated types?
 
@@ -83,15 +83,6 @@ Khi implement `Add` cho `Point`, ta sẽ sử dụng kiểu mặc định cho `R
 <span class="caption">Listing 19-15: Implementing `Add` trait cho `Millimeters` để cộng `Millimeters` với `Meters`</span>
 
 Để làm được điều này, ta sẽ chỉ định `impl Add<Meters>` để set giá trị cho tham số `Rhs` thay vì dùng tham số mặc định `Self`.
-
-Bạn sẽ sử dụng kiểu tham số mặc định với mục đích:
-
-* Để mở rộng một kiểu dữ liệu mà không làm thay đổi source code đã tồn tại.
-* Cho phép tuỳ biến một trường hợp cụ thể  nào đó.
-
-Trait `Add` ở trong thư viện chuẩn mà ta vừa sử dụng là một ví dụ cho mục đích thứ 2: ta sẽ phải cộng 2 kiểu khác nhau, tuy nhiên `Add` trait còn cung cấp khả năng tuỳ biến nhiều hơn như vậy. Sử dụng kiểu tham số mặc định (default type parameter) trong phần định nghĩa trait sẽ giúp bạn không bắt buộc phải thêm tham số trong đa số các trường hợp.
-
-Mục đích thứ nhất thì ngược lại với mục đích thứ hai: nếu muốn cộng một kiểu dữ liệu cho một trait có trước, bạn có thể cho nó một tham số mặc định để có thể tăng khả năng tuỳ biến mà không cần phải thay đổi logic của source code đã có sẵn.
 
 ### Gọi các method có cùng tên
 
@@ -193,17 +184,11 @@ Một cách tổng quát, fully qualified syntax được định nghĩa như sa
 
 Sẽ không có `receiver` trong trường hợp đó là một associated functions chứ không phải methods. Bạn có thể sẽ phải sử dụng fully qualified syntax, tuy nhiên hoàn toàn có thể bỏ qua một phải phần nếu Rust có đủ thông tin để tự mình tìm ra được bạn sẽ muốn gọi hàm nào, giống như các ví dụ đã bàn ở trên.
 
-### Using Supertraits to Require One Trait’s Functionality Within Another Trait
+### Sử dụng Supertraits để gọi hàm của một trait từ trait khác.
 
-Sometimes, you might need one trait to use another trait’s functionality. In
-this case, you need to rely on the dependent trait also being implemented.
-The trait you rely on is a *supertrait* of the trait you’re implementing.
+Trong một vài trường hợp, ta cần sử dụng hàm của một trait từ trait khác. Khi đó, bạn cần phải dựa vào *supertrait*!
 
-For example, let’s say we want to make an `OutlinePrint` trait with an
-`outline_print` method that will print a value framed in asterisks. That is,
-given a `Point` struct that implements `Display` to result in `(x, y)`, when we
-call `outline_print` on a `Point` instance that has `1` for `x` and `3` for
-`y`, it should print the following:
+Ví dụ, ta có một trait là `OutlinePrint` với method `outline_print` sẽ in ra màn hình một giá trị với khung bao quanh. Nếu có một struct `Point` implement `Display` trait, khi gọi method `outline_print` với đầu vào x bằng 1 và y bằng 3, ta sẽ có kết quả:
 
 ```text
 **********
@@ -213,12 +198,7 @@ call `outline_print` on a `Point` instance that has `1` for `x` and `3` for
 **********
 ```
 
-In the implementation of `outline_print`, we want to use the `Display` trait’s
-functionality. Therefore, we need to specify that the `OutlinePrint` trait will
-work only for types that also implement `Display` and provide the functionality
-that `OutlinePrint` needs. We can do that in the trait definition by specifying
-`OutlinePrint: Display`. This technique is similar to adding a trait bound to
-the trait. Listing 19-22 shows an implementation of the `OutlinePrint` trait.
+Trong phần cài đặt hàm `outline_print`, ta sẽ cần đến hàm ở bên trong `Display` trait. Cú pháp ở đây là `OutlinePrint::Display`. Xem thêm ở listing 19-22:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -226,18 +206,11 @@ the trait. Listing 19-22 shows an implementation of the `OutlinePrint` trait.
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-22/src/main.rs:here}}
 ```
 
-<span class="caption">Listing 19-22: Implementing the `OutlinePrint` trait that
-requires the functionality from `Display`</span>
+<span class="caption">Listing 19-22: Implementing `OutlinePrint` trait sử dụng hàm của `Display`</span>
 
-Because we’ve specified that `OutlinePrint` requires the `Display` trait, we
-can use the `to_string` function that is automatically implemented for any type
-that implements `Display`. If we tried to use `to_string` without adding a
-colon and specifying the `Display` trait after the trait name, we’d get an
-error saying that no method named `to_string` was found for the type `&Self` in
-the current scope.
+Do `OutlinePrint` yêu cầu sử dụng `Display`, ta có thể sử dụng hàm `to_string` của `Display` trait. Nếu không sử dụng cú pháp `:Display` như trên, ta sẽ gặp lỗi *no method named `to_string` was found for the types `&Self` in current scope*.
 
-Let’s see what happens when we try to implement `OutlinePrint` on a type that
-doesn’t implement `Display`, such as the `Point` struct:
+Tuy nhiên, hãy xem điều gì xảy ra nếu ta implement `OutlinePrint` cho một struct không implement `Display`, ví dụ như `Point`:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -245,46 +218,24 @@ doesn’t implement `Display`, such as the `Point` struct:
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-02-impl-outlineprint-for-point/src/main.rs:here}}
 ```
 
-We get an error saying that `Display` is required but not implemented:
+Lỗi ở đây do `Display` là bắt buộc phải được implement, nhưng Point chưa làm điều đó:
 
 ```console
 {{#include ../listings/ch19-advanced-features/no-listing-02-impl-outlineprint-for-point/output.txt}}
 ```
 
-To fix this, we implement `Display` on `Point` and satisfy the constraint that
-`OutlinePrint` requires, like so:
+Vì vậy, hãy implement `Display` cho struct `Point`:
 
 <span class="filename">Filename: src/main.rs</span>
 
 ```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-03-impl-display-for-point/src/main.rs:here}}
 ```
+### Sử dụng Newtype Pattern để bỏ qua Orphan rule
 
-Then implementing the `OutlinePrint` trait on `Point` will compile
-successfully, and we can call `outline_print` on a `Point` instance to display
-it within an outline of asterisks.
+Trong chương 10 phần [“Implementing a Trait on a Type”][implementing-a-trait-on-a-type]<!-- ignore -->, ta đã đề cập đến orphan rule, đó là một quy tắc cho phép implement trait cho một type miễn là trait hoặc type đó thuộc crate mà ta đang implement. Tuy nhiên ta hoàn toàn có thể lách luật bằng cách sử dụng *newtype pattern*, liên quan đến việc tạo một kiểu mới bằng tuple struct. (Đã đề cập đến trong phần [“Using Tuple Structs without Named Fields to Create Different Types”][tuple-structs]<!-- ignore --> của chương 5). Tuple struct này sẽ có 1 trường duy nhất và bọc bên ngoài kiểu mà ta muốn implement (wrapper type). Khi đó wrapper type này sẽ thuộc local của crate và ta hoàn toàn có thể implement trait cho wrapper type này.
 
-### Using the Newtype Pattern to Implement External Traits on External Types
-
-In Chapter 10 in the [“Implementing a Trait on a
-Type”][implementing-a-trait-on-a-type]<!-- ignore --> section, we mentioned
-the orphan rule that states we’re allowed to implement a trait on a type as
-long as either the trait or the type are local to our crate. It’s possible to
-get around this restriction using the *newtype pattern*, which involves
-creating a new type in a tuple struct. (We covered tuple structs in the
-[“Using Tuple Structs without Named Fields to Create Different
-Types”][tuple-structs]<!-- ignore --> section of Chapter 5.) The tuple struct
-will have one field and be a thin wrapper around the type we want to implement
-a trait for. Then the wrapper type is local to our crate, and we can implement
-the trait on the wrapper. *Newtype* is a term that originates from the Haskell
-programming language. There is no runtime performance penalty for using this
-pattern, and the wrapper type is elided at compile time.
-
-As an example, let’s say we want to implement `Display` on `Vec<T>`, which the
-orphan rule prevents us from doing directly because the `Display` trait and the
-`Vec<T>` type are defined outside our crate. We can make a `Wrapper` struct
-that holds an instance of `Vec<T>`; then we can implement `Display` on
-`Wrapper` and use the `Vec<T>` value, as shown in Listing 19-23.
+Ví dụ, giả sử ta muốn implement `Display` cho `Vec<T>`, trait và type này đều mắc phải orphan rule (vì đều không nằm trong local của crate), vì vậy ta không thể implement `Display` cho `Vec<T>` một cách trực tiếp. Ta cần phải tạo một wapper type có tên `Wrapper` bao bên ngoài của `Vev<T>`; sau đó implement `Display` cho `Wrapper`, như listing 19-23.
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -292,28 +243,13 @@ that holds an instance of `Vec<T>`; then we can implement `Display` on
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-23/src/main.rs}}
 ```
 
-<span class="caption">Listing 19-23: Creating a `Wrapper` type around
-`Vec<String>` to implement `Display`</span>
+<span class="caption">Listing 19-23: Tạo `Wrapper` type bao bên ngoài `Vec<String>` để implement `Display`</span>
 
-The implementation of `Display` uses `self.0` to access the inner `Vec<T>`,
-because `Wrapper` is a tuple struct and `Vec<T>` is the item at index 0 in the
-tuple. Then we can use the functionality of the `Display` type on `Wrapper`.
+Ta sẽ sử dụng `self.0` để truy cập vào biến `Vec<T>` như ví dụ trên.
 
-The downside of using this technique is that `Wrapper` is a new type, so it
-doesn’t have the methods of the value it’s holding. We would have to implement
-all the methods of `Vec<T>` directly on `Wrapper` such that the methods
-delegate to `self.0`, which would allow us to treat `Wrapper` exactly like a
-`Vec<T>`. If we wanted the new type to have every method the inner type has,
-implementing the `Deref` trait (discussed in Chapter 15 in the [“Treating Smart
-Pointers Like Regular References with the `Deref`
-Trait”][smart-pointer-deref]<!-- ignore --> section) on the `Wrapper` to return
-the inner type would be a solution. If we don’t want the `Wrapper` type to have
-all the methods of the inner type—for example, to restrict the `Wrapper` type’s
-behavior—we would have to implement just the methods we do want manually.
+Với việc sử dụng `Wrapper`, ta có thể implement mọi method cho `Vec<T>` một cách gián tiếp. Nếu bạn muốn `Wapper` có mọi method mà `Vec<T>` có, hãy implement `Deref` trait (được nói đến ở chương 15 [“Treating Smart Pointers Like Regular References with the `Deref` Trait”][smart-pointer-deref]<!-- ignore -->).
 
-Now you know how the newtype pattern is used in relation to traits; it’s also a
-useful pattern even when traits are not involved. Let’s switch focus and look
-at some advanced ways to interact with Rust’s type system.
+Bây giờ bạn đã hiểu về newtype pattern trong Rust rồi đó, nó thực sự hữu dụng khi đừng bên cạnh trait. Và bây giờ, hãy chuyển qua các phần khác trong chương nhé.
 
 [newtype]: ch19-03-advanced-traits.html#using-the-newtype-pattern-to-implement-external-traits-on-external-types
 [implementing-a-trait-on-a-type]:
